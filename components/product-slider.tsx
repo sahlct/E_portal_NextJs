@@ -59,14 +59,14 @@ export function ProductSlider({ products }: ProductSliderProps) {
       )}
 
       {/* Products Container */}
-      <div ref={scrollRef} onScroll={checkScroll} className="flex gap-6 overflow-x-auto hide-scrollbar pb-4">
+      <div ref={scrollRef} onScroll={checkScroll} className="flex gap-8 overflow-x-auto hide-scrollbar pb-4">
         {products.map((product) => {
           const isInCart = items.some((item) => item.id === product.id)
 
           return (
             <div
               key={product.id}
-              className="flex-shrink-0 w-64 bg-card rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow"
+              className="flex-shrink-0 w-72 bg-card rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow"
             >
               <Link href={`/product/${product.id}`}>
                 <div className="relative h-48 bg-secondary overflow-hidden group/image">
@@ -76,7 +76,7 @@ export function ProductSlider({ products }: ProductSliderProps) {
                     className="w-full h-full object-cover group-hover/image:scale-110 transition-transform duration-300"
                   />
                   {product.originalPrice && (
-                    <div className="absolute top-2 right-2 bg-red-500 text-white px-3 py-1 rounded-full text-sm font-semibold">
+                    <div className="absolute top-2 right-2 bg-red-500 text-white px-2 py-0.5 rounded-full text-xs font-semibold">
                       Sale
                     </div>
                   )}
@@ -85,13 +85,13 @@ export function ProductSlider({ products }: ProductSliderProps) {
 
               <div className="p-4">
                 <Link href={`/product/${product.id}`}>
-                  <h3 className="font-semibold text-sm mb-2 line-clamp-2 hover:text-primary transition-colors">
+                  <h3 className="font-semibold text-sm mb-2 line-clamp-2 hover:text-yellow-600 transition-colors">
                     {product.title}
                   </h3>
                 </Link>
 
                 {/* Rating */}
-                <div className="flex items-center gap-1 mb-3">
+                {/* <div className="flex items-center gap-1 mb-3">
                   <div className="flex">
                     {[...Array(5)].map((_, i) => (
                       <Star
@@ -103,11 +103,15 @@ export function ProductSlider({ products }: ProductSliderProps) {
                     ))}
                   </div>
                   <span className="text-xs text-muted-foreground">({product.reviews})</span>
-                </div>
+                </div> */}
+
+                <p className="line-clamp-2 text-xs my-2">
+                  {product.description}
+                </p>
 
                 {/* Price */}
                 <div className="flex items-center gap-2 mb-4">
-                  <span className="text-lg font-bold text-primary">${product.price}</span>
+                  <span className="text-lg font-bold text-blue-600">${product.price}</span>
                   {product.originalPrice && (
                     <span className="text-sm text-muted-foreground line-through">${product.originalPrice}</span>
                   )}
@@ -129,10 +133,10 @@ export function ProductSlider({ products }: ProductSliderProps) {
                         })
                       }
                     }}
-                    className={`flex-1 py-2 rounded-lg text-sm font-semibold transition-opacity flex items-center justify-center gap-2 ${
+                    className={`flex-1 py-1.5 rounded-lg text-sm font-semibold transition-opacity flex items-center justify-center gap-2 ${
                       isInCart
                         ? "bg-red-500 text-white hover:opacity-90"
-                        : "bg-primary text-primary-foreground hover:opacity-90"
+                        : "bg-gradient-to-r from-yellow-500 to-orange-400 cursor-pointer text-primary-foreground hover:opacity-90"
                     }`}
                   >
                     {isInCart ? (
@@ -148,7 +152,7 @@ export function ProductSlider({ products }: ProductSliderProps) {
                     )}
                   </button>
                   <Link href={`/product/${product.id}`} className="flex-1">
-                    <button className="w-full border border-primary text-primary py-2 rounded-lg text-sm font-semibold hover:bg-primary/10 transition-colors">
+                    <button className="w-full border border-yellow-600 text-yellow-600 py-1.5 rounded-lg text-sm font-semibold hover:bg-yellow-500/10 cursor-pointer transition-colors">
                       Details
                     </button>
                   </Link>

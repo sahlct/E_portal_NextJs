@@ -1,47 +1,49 @@
 "use client"
 
-import { useEffect, useRef } from "react"
-import gsap from "gsap"
+import Marquee from "react-fast-marquee"
 import { brands } from "@/lib/dummy-data"
 
 export function BrandsMarquee() {
-  const marqueeRef = useRef<HTMLDivElement>(null)
-
-  useEffect(() => {
-    if (!marqueeRef.current) return
-
-    const marquee = marqueeRef.current
-    const marqueeContent = marquee.querySelector(".marquee-content") as HTMLElement
-
-    if (!marqueeContent) return
-
-    // Clone content for seamless loop
-    const clone = marqueeContent.cloneNode(true)
-    marquee.appendChild(clone)
-
-    gsap.to(".marquee-content", {
-      x: -marqueeContent.offsetWidth,
-      duration: 40,
-      ease: "none",
-      repeat: -1,
-    })
-  }, [])
+  // If brands may be undefined or empty, provide a safe fallback
+  const items = Array.isArray(brands) && brands.length ? brands : [
+    // optional example fallback — you can remove these lines if brands always exists
+    { id: "example-1", name: "Example", logo: "/placeholder.svg" },
+    { id: "example-2", name: "Example 2", logo: "/placeholder.svg" },
+    { id: "example-3", name: "Example 3", logo: "/placeholder.svg" },
+  ]
 
   return (
-    <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <section className="max-w-8xl mx-auto">
       <h2 className="text-3xl font-bold mb-8 text-center">Top Brands</h2>
-      <div ref={marqueeRef} className="overflow-hidden bg-secondary rounded-lg py-6">
-        <div className="marquee-content flex gap-16 px-8 whitespace-nowrap">
-          {brands.map((brand) => (
-            <div key={brand.id} className="flex-shrink-0 flex items-center justify-center">
-              <img
-                src={brand.logo || "/placeholder.svg"}
-                alt={brand.name}
-                className="h-10 object-contain opacity-70 hover:opacity-100 transition-opacity"
-              />
-            </div>
-          ))}
-        </div>
+
+      <div className="bg-white rounded-lg py-6 overflow-hidden">
+        {/* react-fast-marquee ensures a single horizontal row */}
+        <Marquee
+          pauseOnHover
+          speed={80}
+          gradient={true}        // disables left/right fade so logos are fully visible
+          direction="left"
+          // optionally: play={true} // default is true
+        >
+          <div className="flex items-center space-x-16 whitespace-nowrap">
+            {items.map((brand) => (
+              <div
+                key={brand.id}
+                className="flex-shrink-0 flex items-center justify-center"
+                aria-label={brand.name || "brand"}
+              >
+                <img
+                  src={brand.logo || "/placeholder.svg"}
+                  alt={brand.name || ""}
+                  className="h-10 sm:h-12 md:h-14 object-contain transition-opacity"
+                  draggable={false}
+                  // prevent image drag from interrupting marquee
+                  onDragStart={(e) => e.preventDefault()}
+                />
+              </div>
+            ))}
+          </div>
+        </Marquee>
       </div>
     </section>
   )

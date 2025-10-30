@@ -26,11 +26,9 @@ export function Navbar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2 font-bold text-xl">
-            <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-primary-foreground">
-              T
-            </div>
-            <span className="hidden sm:inline">TechHub</span>
+          <Link href="/" className="flex items-center gap-2 font-bold text-2xl">
+            <img src="/logo_only.png" alt="" className="h-10" />
+            <span className="hidden sm:inline">EA Portal</span>
           </Link>
 
           {/* Desktop Navigation */}

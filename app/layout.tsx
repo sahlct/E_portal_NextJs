@@ -1,26 +1,26 @@
-import type React from "react"
-import type { Metadata } from "next"
-import { Geist, Geist_Mono } from "next/font/google"
-import "./globals.css"
-import { ThemeProvider } from "@/components/theme-provider"
-import { QueryProvider } from "@/components/query-provider"
-import { Navbar } from "@/components/navbar"
-import { Footer } from "@/components/footer"
-import { CartProvider } from "@/context/cart-context"
+import type React from "react";
+import type { Metadata } from "next";
+import { Geist, Geist_Mono } from "next/font/google";
+import "./globals.css";
+import { ThemeProvider } from "@/components/theme-provider";
+import { QueryProvider } from "@/components/query-provider";
+import { Navbar } from "@/components/navbar";
+import { Footer } from "@/components/footer";
+import { CartProvider } from "@/context/cart-context";
 
-const geistSans = Geist({ subsets: ["latin"] })
-const geistMono = Geist_Mono({ subsets: ["latin"] })
+const geistSans = Geist({ subsets: ["latin"] });
+const geistMono = Geist_Mono({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "TechHub - Electronics & Gadgets",
+  title: "EA Portal ",
   description: "Premium electronics, laptops, accessories, and more",
-    generator: 'v0.app'
-}
+  generator: "Sahal",
+};
 
 export default function RootLayout({
   children,
 }: {
-  children: React.ReactNode
+  children: React.ReactNode;
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
@@ -36,5 +36,5 @@ export default function RootLayout({
         </ThemeProvider>
       </body>
     </html>
-  )
+  );
 }

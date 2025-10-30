@@ -9,24 +9,24 @@ export function HeroSection() {
   }, [])
 
   return (
-    <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <section className="max-w-8xl mx-auto px-4 sm:px-6 lg:px-20 py-12">
       <div className="hero-content grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
         <div>
-          <h1 className="text-5xl font-bold mb-4 text-balance">Premium Electronics & Gadgets</h1>
+          <h1 className="text-4xl font-bold mb-4 text-balance">EA Portal - The Complete Electronic Makkah</h1>
           <p className="text-lg text-muted-foreground mb-6">
-            Discover the latest technology from top brands. Quality products at competitive prices.
+            Discover the latest technology from top brands. Quality products at competitive prices. Lorem ipsum, dolor sit amet consectetur adipisicing elit. Autem, sapiente inventore aliquam porro placeat quis totam odit earum iusto quia velit beatae perferendis exercitationem, cum impedit suscipit labore modi nemo.
           </p>
           <div className="flex gap-4">
-            <button className="bg-primary text-primary-foreground px-8 py-3 rounded-lg font-semibold hover:opacity-90 transition-opacity">
+            <button className="bg-yellow-600 cursor-pointer text-primary-foreground px-8 py-2 rounded-lg font-semibold hover:opacity-90 transition-opacity">
               Shop Now
             </button>
-            <button className="border-2 border-primary text-primary px-8 py-3 rounded-lg font-semibold hover:bg-primary/10 transition-colors">
+            <button className="border-2 border-yellow-600/80 text-yellow-600 px-8 py-2 rounded-lg font-semibold hover:bg-yellow-500/10 cursor-pointer transition-colors">
               Learn More
             </button>
           </div>
         </div>
         <div className="flex justify-center">
-          <img src="/modern-laptop-workspace.png" alt="Hero" className="rounded-lg shadow-lg max-w-md w-full" />
+          <img src="/about_pic.jpg" alt="Hero" className="rounded-lg shadow-lg max-w-md w-full" />
         </div>
       </div>
     </section>

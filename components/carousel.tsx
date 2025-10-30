@@ -58,7 +58,7 @@ export function Carousel({ slides }: CarouselProps) {
   }
 
   return (
-    <div className="relative w-full h-96 overflow-hidden bg-secondary rounded-lg">
+    <div className="relative w-full h-96 overflow-hidden bg-secondary">
       {/* Slides */}
       {slides.map((slide, index) => (
         <div
@@ -68,10 +68,10 @@ export function Carousel({ slides }: CarouselProps) {
           }`}
         >
           <img src={slide.image || "/placeholder.svg"} alt={slide.title} className="w-full h-full object-cover" />
-          <div className="absolute inset-0 bg-black/40 flex flex-col justify-center items-start p-8">
+          <div className="absolute inset-0 bg-black/40 flex flex-col justify-center items-center p-8">
             <h2 className="text-4xl font-bold text-white mb-2 text-balance">{slide.title}</h2>
             <p className="text-lg text-white/90 mb-6">{slide.subtitle}</p>
-            <button className="bg-primary text-primary-foreground px-8 py-3 rounded-lg font-semibold hover:opacity-90 transition-opacity">
+            <button className="bg-yellow-600 cursor-pointer text-primary-foreground px-8 py-2 rounded-lg font-semibold hover:opacity-90 transition-opacity">
               {slide.cta}
             </button>
           </div>
@@ -81,14 +81,14 @@ export function Carousel({ slides }: CarouselProps) {
       {/* Controls */}
       <button
         onClick={prev}
-        className="absolute left-4 top-1/2 -translate-y-1/2 z-10 bg-white/80 hover:bg-white p-2 rounded-full transition-colors"
+        className="absolute cursor-pointer left-4 top-1/2 -translate-y-1/2 z-10 bg-white/80 hover:bg-white p-2 rounded-full transition-colors"
         aria-label="Previous slide"
       >
         <ChevronLeft className="w-6 h-6 text-black" />
       </button>
       <button
         onClick={next}
-        className="absolute right-4 top-1/2 -translate-y-1/2 z-10 bg-white/80 hover:bg-white p-2 rounded-full transition-colors"
+        className="absolute cursor-pointer right-4 top-1/2 -translate-y-1/2 z-10 bg-white/80 hover:bg-white p-2 rounded-full transition-colors"
         aria-label="Next slide"
       >
         <ChevronRight className="w-6 h-6 text-black" />
@@ -104,7 +104,7 @@ export function Carousel({ slides }: CarouselProps) {
               setAutoplay(false)
               setTimeout(() => setAutoplay(true), 10000)
             }}
-            className={`w-2 h-2 rounded-full transition-all ${index === current ? "bg-white w-8" : "bg-white/50"}`}
+            className={`w-2 h-2 cursor-pointer rounded-full transition-all ${index === current ? "bg-white w-8" : "bg-white/50"}`}
             aria-label={`Go to slide ${index + 1}`}
           />
         ))}
