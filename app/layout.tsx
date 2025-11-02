@@ -7,6 +7,7 @@ import { QueryProvider } from "@/components/query-provider";
 import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
 import { CartProvider } from "@/context/cart-context";
+import { Toaster } from "react-hot-toast";
 
 const geistSans = Geist({ subsets: ["latin"] });
 const geistMono = Geist_Mono({ subsets: ["latin"] });
@@ -28,9 +29,11 @@ export default function RootLayout({
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
           <QueryProvider>
             <CartProvider>
-              <Navbar />
+              
+              {/* <Navbar /> */}
+               <Toaster position="bottom-right" />
               <main className="min-h-screen">{children}</main>
-              <Footer />
+              {/* <Footer /> */}
             </CartProvider>
           </QueryProvider>
         </ThemeProvider>
