@@ -6,19 +6,18 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
   LayoutDashboard,
-  Users,
-  FileText,
+  Award,
   Menu,
   ChevronLeft,
   ChevronRight,
   ChevronUp,
   ChevronDown,
-  Folder,
   Settings,
   LogOut,
-  Home,
   Fan,
+  ShoppingCart,
 } from "lucide-react";
+
 
 // Example sidebar menu items (adjust as per your project routes)
 const menuItems = [
@@ -38,7 +37,7 @@ const menuItems = [
   },
   {
     name: "Products",
-    icon: Folder,
+    icon:   ShoppingCart,
     children: [
       { name: "Categories", path: "/admin/protected/category" },
       { name: "Products", path: "/admin/protected/logs" },
@@ -47,7 +46,7 @@ const menuItems = [
   },
   {
     name: "Brands",
-    icon: Settings,
+    icon: Award,
     path: "/admin/protected/brand",
   },
   {
@@ -106,14 +105,9 @@ const Sidebar = memo(
                 alt="Logo"
                 className={`ms-3 pe-2 ${isCollapsed ? "h-8" : "h-12"}`}
               />
-              <h1 className="text-2xl font-bold text-yellow-500">EA Portal</h1>
+              <h1 className={`text-white ${isCollapsed ? "hidden" : "block"} text-2xl font-bold text-yellow-500`}>EA Portal</h1>
             </div>
 
-            {/* <img
-              src="/images/logo_icon.png"
-              alt="Icon"
-              className={`h-8 w-8 ${isCollapsed ? "block" : "hidden"}`}
-            /> */}
             <button
               onClick={toggleSidebar}
               className="hidden lg:block text-cyan-200 hover:text-white"

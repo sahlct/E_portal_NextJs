@@ -147,7 +147,7 @@ export default function CategoryPage() {
       {/* Table */}
       <DataTable
         columns={[
-          { key: "sno", label: "S.No", render: (_, i) => (i ?? 0) + 1 + (page - 1) * 10 },
+          { key: "sno", label: "S.No", render: (_ : any, i: any) => (i ?? 0) + 1 + (page - 1) * 10 },
           { key: "category_name", label: "Category Name" },
           {
             key: "category_image",

@@ -172,7 +172,7 @@ export default function CarouselPage() {
       {/* Table */}
       <DataTable
         columns={[
-          { key: "sno", label: "S.No", render: (_, i) => (i ?? 0) + 1 + (page - 1) * 10 },
+          { key: "sno", label: "S.No", render: (_ : any, i : any) => (i ?? 0) + 1 + (page - 1) * 10 },
           { key: "title", label: "Title" },
           { key: "sub_title", label: "Sub Title" },
           {

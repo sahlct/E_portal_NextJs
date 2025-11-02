@@ -7,12 +7,14 @@ import { IconEdit, IconPlus, IconTrash, IconX } from "@tabler/icons-react";
 import {
   getBrands,
   deleteMultipleBrands,
-  activateMultipleBrands,
-  deactivateMultipleBrands,
+  updateMultipleBrandStatus,
   createBrands,
+  updateBrand,
 } from "@/lib/api/brand";
-import DynamicFormModal from "@/components/admin/dynamicModal";
 import ConfirmDeleteModal from "@/components/admin/deleteModal";
+import BrandFormModal from "@/components/admin/brandFormModal";
+import TableFilter from "@/components/admin/filter_button";
+import { useDebounce } from "@/hooks/debounce";
 
 export default function BrandsPage() {
   const [brands, setBrands] = useState<any[]>([]);
@@ -24,11 +26,21 @@ export default function BrandsPage() {
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [deleteTargetIds, setDeleteTargetIds] = useState<string[] | null>(null);
   const [previewImage, setPreviewImage] = useState<string | null>(null);
+  const [editBrand, setEditBrand] = useState<any | null>(null);
+  const [filters, setFilters] = useState<{ status?: string }>({});
+  const [page, setPage] = useState(1);
+  const [search, setSearch] = useState("");
+  const debouncedSearch = useDebounce(search, 500);
 
   const fetchBrands = async () => {
     try {
       setLoading(true);
-      const res = await getBrands(1, 100, Number(statusFilter));
+      const res = await getBrands(
+        page,
+        10,
+        debouncedSearch,
+        filters.status ? Number(filters.status) : undefined
+      );
       setBrands(res.data || []);
     } catch {
       toast.error("Failed to load brands");
@@ -39,24 +51,30 @@ export default function BrandsPage() {
 
   useEffect(() => {
     fetchBrands();
-  }, [statusFilter]);
+  }, [page, debouncedSearch, filters]);
 
   const toggleSelect = (id: string) =>
-    setSelected((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
+    setSelected((prev) =>
+      prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]
+    );
 
   const handleBulkAction = async () => {
-    if (selected.length === 0) return toast.error("Please select at least one brand.");
+    if (selected.length === 0)
+      return toast.error("Please select at least one brand.");
     try {
       if (actionType === "delete") {
         setDeleteTargetIds(selected);
         setDeleteOpen(true);
-      } else if (actionType === "active") {
-        await activateMultipleBrands(selected);
-        toast.success("Selected brands activated");
-      } else if (actionType === "inactive") {
-        await deactivateMultipleBrands(selected);
-        toast.success("Selected brands deactivated");
+      } else if (actionType === "active" || actionType === "inactive") {
+        const status = actionType === "active" ? 1 : 0;
+        await updateMultipleBrandStatus(selected, status);
+        toast.success(
+          status === 1
+            ? "Selected brands activated successfully"
+            : "Selected brands deactivated successfully"
+        );
       }
+
       setSelected([]);
       fetchBrands();
     } catch {
@@ -77,11 +95,13 @@ export default function BrandsPage() {
     }
   };
 
-  const createSubmit = async (formData: FormData) => {
-    const files = formData.getAll("brand_logo").filter(Boolean) as File[];
-    const status = formData.get("status") as string;
-    if (!files.length) throw new Error("Please select at least one logo");
-    await createBrands(files);
+  const handleSubmit = async (id: string | null, formData: FormData) => {
+    if (id) {
+      await updateBrand(id, formData);
+    } else {
+      const files = formData.getAll("brand_logo").filter(Boolean) as File[];
+      await createBrands(files);
+    }
   };
 
   return (
@@ -89,16 +109,7 @@ export default function BrandsPage() {
       <div className="flex flex-wrap items-center justify-between mb-6 gap-3">
         <div className="flex items-center gap-3">
           <select
-            className="border rounded-lg px-4 py-2"
-            value={statusFilter}
-            onChange={(e) => setStatusFilter(e.target.value)}
-          >
-            <option value="1">Active</option>
-            <option value="0">Inactive</option>
-          </select>
-
-          <select
-            className="border rounded-lg px-3 py-2"
+            className="border cursor-pointer rounded-lg px-3 py-2"
             value={actionType}
             onChange={(e) => setActionType(e.target.value)}
           >
@@ -111,7 +122,7 @@ export default function BrandsPage() {
             className={`px-4 py-2 rounded-lg text-white ${
               selected.length === 0
                 ? "bg-gray-400 cursor-not-allowed"
-                : "bg-red-500 hover:bg-red-600"
+                : "bg-red-600 cursor-pointer hover:bg-red-700"
             }`}
             disabled={selected.length === 0}
             onClick={handleBulkAction}
@@ -120,12 +131,33 @@ export default function BrandsPage() {
           </button>
         </div>
 
-        <button
-          onClick={() => setCreateOpen(true)}
-          className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg shadow"
-        >
-          <IconPlus size={18} /> New Brand
-        </button>
+        <div className="flex gap-2">
+          <TableFilter
+            fields={[
+              {
+                key: "status",
+                label: "Status",
+                options: [
+                  { label: "Active", value: "1" },
+                  { label: "Inactive", value: "0" },
+                ],
+              },
+            ]}
+            onChange={(f) => {
+              setFilters(f);
+              setPage(1);
+            }}
+          />
+          <button
+            onClick={() => {
+              setEditBrand(null);
+              setCreateOpen(true);
+            }}
+            className="bg-cyan-700 flex items-center gap-2 text-white px-4 py-2 rounded-md cursor-pointer hover:bg-cyan-800"
+          >
+            Add New Brands <IconPlus size={18} />
+          </button>
+        </div>
       </div>
 
       {loading ? (
@@ -135,7 +167,10 @@ export default function BrandsPage() {
       ) : (
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-5">
           {brands.map((brand) => (
-            <div key={brand._id} className="relative border rounded-xl shadow-sm hover:shadow-md transition p-2">
+            <div
+              key={brand._id}
+              className="relative border rounded-xl shadow-sm hover:shadow-md transition p-2"
+            >
               <input
                 type="checkbox"
                 className="absolute top-2 left-2 w-4 h-4 accent-blue-600"
@@ -146,18 +181,27 @@ export default function BrandsPage() {
                 src={brand.brand_logo}
                 alt="Brand"
                 onClick={() => setPreviewImage(brand.brand_logo)}
-                className="w-full h-32 object-contain rounded-md bg-gray-100 hover:scale-105 transition-transform cursor-pointer"
+                className="w-full h-32 object-contain rounded-md bg-gray-100 cursor-pointer"
               />
               <div className="flex items-center justify-between mt-2">
                 <span
                   className={`text-xs px-2 py-1 rounded-full ${
-                    brand.status === 1 ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"
+                    brand.status === 1
+                      ? "bg-green-100 text-green-700"
+                      : "bg-red-100 text-red-700"
                   }`}
                 >
                   {brand.status === 1 ? "Active" : "Inactive"}
                 </span>
                 <div className="flex items-center gap-2 text-gray-600">
-                  <button className="hover:text-blue-600" aria-label="Edit">
+                  <button
+                    className="hover:text-blue-600"
+                    onClick={() => {
+                      setEditBrand(brand);
+                      setCreateOpen(true);
+                    }}
+                    aria-label="Edit"
+                  >
                     <IconEdit size={16} />
                   </button>
                   <button
@@ -177,34 +221,16 @@ export default function BrandsPage() {
         </div>
       )}
 
-      <DynamicFormModal
-        title="Add New Brand"
+      <BrandFormModal
+        title={editBrand ? "Edit Brand" : "Add New Brand"}
         isOpen={createOpen}
         onClose={() => setCreateOpen(false)}
-        fields={[
-          {
-            name: "brand_logo",
-            label: "Brand Logos (Multiple)",
-            type: "file",
-            multiple: true,
-            required: true,
-          },
-          {
-            name: "status",
-            label: "Status",
-            type: "select",
-            required: true,
-            options: [
-              { label: "Active", value: "1" },
-              { label: "Inactive", value: "0" },
-            ],
-          },
-        ]}
-        onSubmit={createSubmit}
+        onSubmit={handleSubmit}
         onSuccess={() => {
           setCreateOpen(false);
           fetchBrands();
         }}
+        defaultValues={editBrand}
       />
 
       <ConfirmDeleteModal
@@ -212,7 +238,9 @@ export default function BrandsPage() {
         onClose={() => setDeleteOpen(false)}
         onConfirm={handleDeleteConfirmed}
         title="Confirm Delete"
-        message={`Are you sure you want to delete ${deleteTargetIds?.length ?? 0} brand(s)?`}
+        message={`Are you sure you want to delete ${
+          deleteTargetIds?.length ?? 0
+        } brand(s)?`}
       />
 
       {previewImage && (
@@ -228,7 +256,11 @@ export default function BrandsPage() {
             >
               <IconX size={20} />
             </button>
-            <img src={previewImage} alt="Preview" className="w-full h-auto max-h-[80vh] object-contain rounded-lg" />
+            <img
+              src={previewImage}
+              alt="Preview"
+              className="w-full h-auto max-h-[80vh] object-contain rounded-lg"
+            />
           </div>
         </div>
       )}
