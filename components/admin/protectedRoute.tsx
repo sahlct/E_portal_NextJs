@@ -41,12 +41,13 @@ export default function ProtectedRoute({
       if (res.ok) {
         return true;
       } else {
+        console.error("Token verification failed:", res);
         removeToken();
         router.replace("/admin/auth");
         return false;
       }
     } catch (err) {
-      console.error("Token verification failed:", err);
+      console.error("Token issue", err);
       removeToken();
       router.replace("/admin/auth");
       return false;

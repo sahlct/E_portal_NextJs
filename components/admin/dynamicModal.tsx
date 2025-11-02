@@ -50,13 +50,27 @@ export default function DynamicFormModal({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-3">
-      <div className="bg-white w-full max-w-lg rounded-lg shadow-lg overflow-hidden">
-        <div className="p-4 border-b flex justify-between items-center">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-[1px] p-2 sm:p-4 sm:pb-0">
+      <div
+        className="bg-white w-full max-w-lg rounded-2xl shadow-lg flex flex-col
+        max-h-[90vh] sm:max-h-[85vh]"
+      >
+        {/* Header */}
+        <div className="p-4 border-b flex justify-between items-center rounded-t-xl sticky top-0 bg-white z-10">
           <h2 className="text-lg font-semibold">{title}</h2>
-          <button onClick={onClose} className="text-gray-600 hover:text-gray-900">✕</button>
+          <button
+            onClick={onClose}
+            className="text-gray-600 cursor-pointer hover:text-gray-900 hover:scale-130 transition-transform text-xl leading-none"
+          >
+            ✕
+          </button>
         </div>
-        <form onSubmit={handleSubmit} className="p-4 space-y-4">
+
+        {/* Scrollable Form Section */}
+        <form
+          onSubmit={handleSubmit}
+          className="p-4 overflow-y-auto flex-1 space-y-4"
+        >
           {fields.map((f) => (
             <div key={f.name}>
               <label className="block text-sm font-medium mb-1">{f.label}</label>
@@ -76,7 +90,9 @@ export default function DynamicFormModal({
                 >
                   <option value="">Select {f.label}</option>
                   {f.options?.map((opt) => (
-                    <option key={opt.value} value={opt.value}>{opt.label}</option>
+                    <option key={opt.value} value={opt.value}>
+                      {opt.label}
+                    </option>
                   ))}
                 </select>
               ) : (
@@ -84,7 +100,9 @@ export default function DynamicFormModal({
                   type={f.type}
                   name={f.name}
                   required={f.required}
-                  defaultValue={f.type === "file" ? undefined : defaultValues?.[f.name]}
+                  defaultValue={
+                    f.type === "file" ? undefined : defaultValues?.[f.name]
+                  }
                   className="w-full border rounded-md p-2"
                   accept={f.type === "file" ? "image/*" : undefined}
                 />
@@ -92,18 +110,19 @@ export default function DynamicFormModal({
             </div>
           ))}
 
-          <div className="flex justify-end gap-3 pt-3 border-t">
+          {/* Footer (sticky bottom on scroll) */}
+          <div className="flex justify-end gap-3 py-3 border-t sticky bottom-0 bg-white z-10">
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300"
+              className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300 text-sm sm:text-base"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={loading}
-              className="px-4 py-2 bg-cyan-700 text-white rounded hover:bg-cyan-800"
+              className="px-4 py-2 bg-cyan-700 text-white rounded hover:bg-cyan-800 text-sm sm:text-base"
             >
               {loading ? "Saving..." : "Save"}
             </button>
