@@ -51,16 +51,13 @@ export default function DynamicFormModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-[1px] p-2 sm:p-4 sm:pb-0">
-      <div
-        className="bg-white w-full max-w-lg rounded-2xl shadow-lg flex flex-col
-        max-h-[90vh] sm:max-h-[85vh]"
-      >
+      <div className="bg-white w-full max-w-2xl rounded-2xl shadow-lg flex flex-col max-h-[90vh] sm:max-h-[85vh]">
         {/* Header */}
         <div className="p-4 border-b flex justify-between items-center rounded-t-xl sticky top-0 bg-white z-10">
           <h2 className="text-lg font-semibold">{title}</h2>
           <button
             onClick={onClose}
-            className="text-gray-600 cursor-pointer hover:text-gray-900 hover:scale-130 transition-transform text-xl leading-none"
+            className="text-gray-600 cursor-pointer hover:text-gray-900 hover:scale-125 transition-transform text-xl leading-none"
           >
             ✕
           </button>
@@ -71,9 +68,13 @@ export default function DynamicFormModal({
           onSubmit={handleSubmit}
           className="p-4 overflow-y-auto flex-1 space-y-4"
         >
+          {/* Dynamic Fields */}
           {fields.map((f) => (
             <div key={f.name}>
-              <label className="block text-sm font-medium mb-1">{f.label}</label>
+              <label className="block text-sm font-medium mb-1">
+                {f.label}
+              </label>
+
               {f.type === "textarea" ? (
                 <textarea
                   name={f.name}
@@ -110,7 +111,7 @@ export default function DynamicFormModal({
             </div>
           ))}
 
-          {/* Footer (sticky bottom on scroll) */}
+          {/* Footer */}
           <div className="flex justify-end gap-3 py-3 border-t sticky bottom-0 bg-white z-10">
             <button
               type="button"

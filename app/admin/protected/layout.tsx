@@ -16,6 +16,7 @@ import {
   LogOut,
   Fan,
   ShoppingCart,
+  Newspaper,
 } from "lucide-react";
 
 
@@ -40,14 +41,19 @@ const menuItems = [
     icon:   ShoppingCart,
     children: [
       { name: "Categories", path: "/admin/protected/category" },
-      { name: "Products", path: "/admin/protected/logs" },
-      { name: "Product SKUs", path: "/admin/protected/logs" },
+      { name: "Products", path: "/admin/protected/product" },
+      { name: "Product SKUs", path: "/admin/protected/sku" },
     ],
   },
   {
     name: "Brands",
     icon: Award,
     path: "/admin/protected/brand",
+  },
+  {
+    name: "Blogs",
+    icon: Newspaper,
+    path: "/admin/protected/blog",
   },
   {
     name: "Logout",
@@ -98,7 +104,7 @@ const Sidebar = memo(
           style={{ height: "100vh" }}
         >
           {/* Logo Section */}
-          <div className="flex items-center justify-between p-4 border-b border-cyan-700 flex-shrink-0">
+          <div className="flex items-center justify-between p-4 border-b border-cyan-700 shrink-0">
             <div className="flex justify-center items-center">
               <img
                 src="/logo_only.png"
