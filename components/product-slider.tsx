@@ -1,167 +1,211 @@
-"use client"
+"use client";
 
-import { useRef, useState } from "react"
-import { ChevronLeft, ChevronRight, Star, ShoppingCart, Trash2 } from "lucide-react"
-import Link from "next/link"
-import gsap from "gsap"
-import { useCart } from "@/context/cart-context"
-import type { Product } from "@/lib/dummy-data"
+import { useRef, useState, useEffect } from "react";
+import { ChevronLeft, ChevronRight, ShoppingCart, Trash2 } from "lucide-react";
+import Link from "next/link";
+import gsap from "gsap";
+import { useCart } from "@/context/cart-context";
 
-interface ProductSliderProps {
-  products: Product[]
+interface Product {
+  id: string;
+  title: string;
+  price: number;
+  originalPrice?: number;
+  description: string;
+  image: string;
+  category: string;
 }
 
-export function ProductSlider({ products }: ProductSliderProps) {
-  const scrollRef = useRef<HTMLDivElement>(null)
-  const [canScrollLeft, setCanScrollLeft] = useState(false)
-  const [canScrollRight, setCanScrollRight] = useState(true)
-  const { addToCart, removeFromCart, items } = useCart()
+interface Props {
+  products: Product[];
+}
+
+export function ProductSlider({ products }: Props) {
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const { addToCart, removeFromCart, items } = useCart();
+
+  const [showArrows, setShowArrows] = useState({
+    left: false,
+    right: false,
+  });
 
   const checkScroll = () => {
-    if (scrollRef.current) {
-      setCanScrollLeft(scrollRef.current.scrollLeft > 0)
-      setCanScrollRight(
-        scrollRef.current.scrollLeft < scrollRef.current.scrollWidth - scrollRef.current.clientWidth - 10,
-      )
-    }
-  }
+    const el = scrollRef.current;
+    if (!el) return;
 
-  const scroll = (direction: "left" | "right") => {
-    if (scrollRef.current) {
-      const scrollAmount = 400
-      gsap.to(scrollRef.current, {
-        scrollLeft: direction === "left" ? "-=" + scrollAmount : "+=" + scrollAmount,
-        duration: 0.6,
-        ease: "power2.inOut",
-      })
-      setTimeout(checkScroll, 600)
+    if (window.innerWidth >= 1024) {
+      const canScrollLeft = el.scrollLeft > 2; // exact check now works
+      const canScrollRight =
+        el.scrollLeft + el.clientWidth < el.scrollWidth - 2;
+
+      setShowArrows({
+        left: canScrollLeft,
+        right: canScrollRight,
+      });
+    } else {
+      setShowArrows({ left: false, right: false });
     }
-  }
+  };
+
+  useEffect(() => {
+    checkScroll();
+    window.addEventListener("resize", checkScroll);
+    return () => window.removeEventListener("resize", checkScroll);
+  }, [products]);
+
+  const scroll = (dir: "left" | "right") => {
+    const el = scrollRef.current;
+    if (!el) return;
+
+    const cardWidth = 270;
+    const gap = 24;
+    const scrollAmount = (cardWidth + gap) * 2;
+
+    gsap.to(el, {
+      scrollLeft:
+        dir === "left"
+          ? el.scrollLeft - scrollAmount
+          : el.scrollLeft + scrollAmount,
+      duration: 0.5,
+      ease: "power2.out",
+      onUpdate: checkScroll,
+      onComplete: checkScroll,
+    });
+  };
 
   return (
-    <div className="relative group">
-      {/* Scroll Buttons */}
-      {canScrollLeft && (
-        <button
-          onClick={() => scroll("left")}
-          className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white/90 hover:bg-white p-2 rounded-full shadow-lg transition-all opacity-0 group-hover:opacity-100"
+    <div className="relative w-full py-2">
+
+      {/* OUTER WRAPPER WITH PADDING (keeps arrows off padding) */}
+      <div className="px-10">
+
+        {/* LEFT ARROW */}
+        {showArrows.left && (
+          <button
+            onClick={() => scroll("left")}
+            className="
+              hidden lg:flex 
+              absolute left-3 top-1/2 -translate-y-1/2
+              bg-white p-3 rounded-full shadow-md hover:bg-gray-100
+              cursor-pointer z-20
+            "
+          >
+            <ChevronLeft className="w-5 h-5" />
+          </button>
+        )}
+
+        {/* RIGHT ARROW */}
+        {showArrows.right && (
+          <button
+            onClick={() => scroll("right")}
+            className="
+              hidden lg:flex 
+              absolute right-3 top-1/2 -translate-y-1/2
+              bg-white p-3 rounded-full shadow-md hover:bg-gray-100
+              cursor-pointer z-20
+            "
+          >
+            <ChevronRight className="w-5 h-5" />
+          </button>
+        )}
+
+        {/* SCROLL CONTAINER WITHOUT PADDING */}
+        <div
+          ref={scrollRef}
+          onScroll={checkScroll}
+          className="
+            flex gap-6 
+            overflow-x-auto hide-scrollbar 
+            scroll-smooth
+            pb-3
+            snap-x snap-mandatory
+          "
         >
-          <ChevronLeft className="w-6 h-6" />
-        </button>
-      )}
-      {canScrollRight && (
-        <button
-          onClick={() => scroll("right")}
-          className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white/90 hover:bg-white p-2 rounded-full shadow-lg transition-all opacity-0 group-hover:opacity-100"
-        >
-          <ChevronRight className="w-6 h-6" />
-        </button>
-      )}
+          {products.map((p) => {
+            const isInCart = items.some((i) => i.id === p.id);
 
-      {/* Products Container */}
-      <div ref={scrollRef} onScroll={checkScroll} className="flex gap-8 overflow-x-auto hide-scrollbar pb-4">
-        {products.map((product) => {
-          const isInCart = items.some((item) => item.id === product.id)
-
-          return (
-            <div
-              key={product.id}
-              className="flex-shrink-0 w-72 bg-card rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow"
-            >
-              <Link href={`/product/${product.id}`}>
-                <div className="relative h-48 bg-secondary overflow-hidden group/image">
-                  <img
-                    src={product.image || "/placeholder.svg"}
-                    alt={product.title}
-                    className="w-full h-full object-cover group-hover/image:scale-110 transition-transform duration-300"
-                  />
-                  {product.originalPrice && (
-                    <div className="absolute top-2 right-2 bg-red-500 text-white px-2 py-0.5 rounded-full text-xs font-semibold">
-                      Sale
-                    </div>
-                  )}
-                </div>
-              </Link>
-
-              <div className="p-4">
-                <Link href={`/product/${product.id}`}>
-                  <h3 className="font-semibold text-sm mb-2 line-clamp-2 hover:text-yellow-600 transition-colors">
-                    {product.title}
-                  </h3>
+            return (
+              <div
+                key={p.id}
+                className="
+                  snap-start
+                  flex-shrink-0 
+                  w-[300px]
+                  bg-white rounded-xl border shadow-sm
+                  hover:shadow-md transition
+                "
+              >
+                <Link href={`/product/${p.id}`}>
+                  <div className="h-44 bg-gray-100 rounded-t-xl overflow-hidden">
+                    <img
+                      src={p.image}
+                      className="w-full h-full object-cover hover:scale-110 transition duration-300"
+                    />
+                  </div>
                 </Link>
 
-                {/* Rating */}
-                {/* <div className="flex items-center gap-1 mb-3">
-                  <div className="flex">
-                    {[...Array(5)].map((_, i) => (
-                      <Star
-                        key={i}
-                        className={`w-3 h-3 ${
-                          i < Math.floor(product.rating) ? "fill-yellow-400 text-yellow-400" : "text-gray-300"
-                        }`}
-                      />
-                    ))}
+                <div className="p-4">
+                  <Link href={`/product/${p.id}`}>
+                    <h3 className="font-semibold text-sm mb-1 line-clamp-2 hover:text-blue-600">
+                      {p.title}
+                    </h3>
+                  </Link>
+
+                  <p className="text-xs text-gray-500 line-clamp-2">
+                    {p.description}
+                  </p>
+
+                  <div className="flex gap-2 items-center mt-3">
+                    <span className="font-bold text-blue-700 text-lg">
+                      ₹{p.price}
+                    </span>
+                    {p.originalPrice && (
+                      <span className="line-through text-gray-400 text-sm">
+                        ₹{p.originalPrice}
+                      </span>
+                    )}
                   </div>
-                  <span className="text-xs text-muted-foreground">({product.reviews})</span>
-                </div> */}
 
-                <p className="line-clamp-2 text-xs my-2">
-                  {product.description}
-                </p>
-
-                {/* Price */}
-                <div className="flex items-center gap-2 mb-4">
-                  <span className="text-lg font-bold text-blue-600">${product.price}</span>
-                  {product.originalPrice && (
-                    <span className="text-sm text-muted-foreground line-through">${product.originalPrice}</span>
-                  )}
-                </div>
-
-                {/* Buttons */}
-                <div className="flex flex-col sm:flex-row gap-2">
                   <button
                     onClick={() => {
-                      if (isInCart) {
-                        removeFromCart(product.id)
-                      } else {
+                      if (isInCart) removeFromCart(p.id);
+                      else
                         addToCart({
-                          id: product.id,
-                          title: product.title,
-                          price: product.price,
-                          image: product.image,
-                          category: product.category,
-                        })
-                      }
+                          id: p.id,
+                          title: p.title,
+                          price: p.price,
+                          image: p.image,
+                          category: p.category,
+                        });
                     }}
-                    className={`flex-1 py-1.5 rounded-lg text-sm font-semibold transition-opacity flex items-center justify-center gap-2 ${
-                      isInCart
-                        ? "bg-red-500 text-white hover:opacity-90"
-                        : "bg-gradient-to-r from-yellow-500 to-orange-400 cursor-pointer text-primary-foreground hover:opacity-90"
-                    }`}
+                    className={`
+                      w-full mt-4 flex items-center gap-2 justify-center
+                      text-sm font-semibold py-2 rounded-lg cursor-pointer transition
+                      ${
+                        isInCart
+                          ? "bg-gradient-to-r from-red-900 to-red-500 text-white hover:bg-red-600"
+                          : "bg-gradient-to-r from-yellow-500 to-orange-400 text-white hover:opacity-90"
+                      }
+                    `}
                   >
                     {isInCart ? (
                       <>
                         <Trash2 className="w-4 h-4" />
-                        Remove
+                        Remove from Cart
                       </>
                     ) : (
                       <>
                         <ShoppingCart className="w-4 h-4" />
-                        Add
+                        Add to Cart
                       </>
                     )}
                   </button>
-                  <Link href={`/product/${product.id}`} className="flex-1">
-                    <button className="w-full border border-yellow-600 text-yellow-600 py-1.5 rounded-lg text-sm font-semibold hover:bg-yellow-500/10 cursor-pointer transition-colors">
-                      Details
-                    </button>
-                  </Link>
                 </div>
               </div>
-            </div>
-          )
-        })}
+            );
+          })}
+        </div>
       </div>
     </div>
-  )
+  );
 }

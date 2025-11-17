@@ -37,11 +37,11 @@ export function CheckoutModal({ isOpen, onClose, total }: CheckoutModalProps) {
     setIsSubmitting(true)
 
     const orderDetails = items
-      .map((item) => `${item.title} x${item.quantity} - $${(item.price * item.quantity).toFixed(2)}`)
+      .map((item) => `${item.title} x${item.quantity} - AED ${(item.price * item.quantity).toFixed(2)}`)
       .join("\n")
 
     const message = `
-*New Order from TechHub*
+*New Order EA Portal*
 
 *Customer Details:*
 Name: ${formData.name}
@@ -54,7 +54,7 @@ Pincode: ${formData.pincode}
 *Order Items:*
 ${orderDetails}
 
-*Total Amount:* $${total.toFixed(2)}
+*Total Amount:* AED ${total.toFixed(2)}
     `.trim()
 
     const whatsappNumber = "919876543210" // Replace with your WhatsApp number

@@ -1,12 +1,12 @@
 "use client"
 
 import { Suspense } from "react"
-import { SingleProductPage } from "@/components/product/single-product-page"
+import  SingleProductPage  from "@/components/product/page"
 
-export default function ProductPage({ params }: { params: { id: string } }) {
+export default function ProductPage() {
   return (
     <Suspense fallback={<div className="text-center py-12">Loading product...</div>}>
-      <SingleProductPage productId={params.id} />
+      <SingleProductPage />
     </Suspense>
   )
 }

@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import { IconEdit, IconPlus, IconTrash, IconX } from "@tabler/icons-react";
+import { IconEdit, IconPlus, IconTrash, IconX, IconChevronLeft, IconChevronRight } from "@tabler/icons-react";
 
 import {
   getBrands,
@@ -29,19 +29,31 @@ export default function BrandsPage() {
   const [editBrand, setEditBrand] = useState<any | null>(null);
   const [filters, setFilters] = useState<{ status?: string }>({});
   const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
   const [search, setSearch] = useState("");
   const debouncedSearch = useDebounce(search, 500);
+
+  const limit = 18; // ✅ Show 18 items per page
 
   const fetchBrands = async () => {
     try {
       setLoading(true);
       const res = await getBrands(
         page,
-        10,
+        limit,
         debouncedSearch,
         filters.status ? Number(filters.status) : undefined
       );
+
       setBrands(res.data || []);
+
+      // ✅ Set total pages (from meta if available)
+      if (res.meta) {
+        const total = res.meta.total || 0;
+        setTotalPages(Math.ceil(total / limit));
+      } else {
+        setTotalPages(1);
+      }
     } catch {
       toast.error("Failed to load brands");
     } finally {
@@ -131,7 +143,7 @@ export default function BrandsPage() {
           </button>
         </div>
 
-        <div className="flex gap-2">
+        <div className="flex gap-2 items-center">
           <TableFilter
             fields={[
               {
@@ -147,6 +159,13 @@ export default function BrandsPage() {
               setFilters(f);
               setPage(1);
             }}
+          />
+          <input
+            type="text"
+            placeholder="Search..."
+            className="border rounded-lg px-3 py-2"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
           />
           <button
             onClick={() => {
@@ -165,60 +184,85 @@ export default function BrandsPage() {
       ) : brands.length === 0 ? (
         <p>No brands found.</p>
       ) : (
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-5">
-          {brands.map((brand) => (
-            <div
-              key={brand._id}
-              className="relative border rounded-xl shadow-sm hover:shadow-md transition p-2"
-            >
-              <input
-                type="checkbox"
-                className="absolute top-2 left-2 w-4 h-4 accent-blue-600"
-                checked={selected.includes(brand._id)}
-                onChange={() => toggleSelect(brand._id)}
-              />
-              <img
-                src={brand.brand_logo}
-                alt="Brand"
-                onClick={() => setPreviewImage(brand.brand_logo)}
-                className="w-full h-32 object-contain rounded-md bg-gray-100 cursor-pointer"
-              />
-              <div className="flex items-center justify-between mt-2">
-                <span
-                  className={`text-xs px-2 py-1 rounded-full ${
-                    brand.status === 1
-                      ? "bg-green-100 text-green-700"
-                      : "bg-red-100 text-red-700"
-                  }`}
-                >
-                  {brand.status === 1 ? "Active" : "Inactive"}
-                </span>
-                <div className="flex items-center gap-2 text-gray-600">
-                  <button
-                    className="hover:text-blue-600"
-                    onClick={() => {
-                      setEditBrand(brand);
-                      setCreateOpen(true);
-                    }}
-                    aria-label="Edit"
+        <>
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-5">
+            {brands.map((brand) => (
+              <div
+                key={brand._id}
+                className="relative border rounded-xl shadow-sm hover:shadow-md transition p-2"
+              >
+                <input
+                  type="checkbox"
+                  className="absolute top-2 left-2 w-4 h-4 accent-blue-600"
+                  checked={selected.includes(brand._id)}
+                  onChange={() => toggleSelect(brand._id)}
+                />
+                <img
+                  src={brand.brand_logo}
+                  alt="Brand"
+                  onClick={() => setPreviewImage(brand.brand_logo)}
+                  className="w-full h-32 object-contain rounded-md bg-gray-100 cursor-pointer"
+                />
+                <div className="flex items-center justify-between mt-2">
+                  <span
+                    className={`text-xs px-2 py-1 rounded-full ${
+                      brand.status === 1
+                        ? "bg-green-100 text-green-700"
+                        : "bg-red-100 text-red-700"
+                    }`}
                   >
-                    <IconEdit size={16} />
-                  </button>
-                  <button
-                    className="hover:text-red-600"
-                    onClick={() => {
-                      setDeleteTargetIds([brand._id]);
-                      setDeleteOpen(true);
-                    }}
-                    aria-label="Delete"
-                  >
-                    <IconTrash size={16} />
-                  </button>
+                    {brand.status === 1 ? "Active" : "Inactive"}
+                  </span>
+                  <div className="flex items-center gap-2 text-gray-600">
+                    <button
+                      className="hover:text-blue-600"
+                      onClick={() => {
+                        setEditBrand(brand);
+                        setCreateOpen(true);
+                      }}
+                      aria-label="Edit"
+                    >
+                      <IconEdit size={16} />
+                    </button>
+                    <button
+                      className="hover:text-red-600"
+                      onClick={() => {
+                        setDeleteTargetIds([brand._id]);
+                        setDeleteOpen(true);
+                      }}
+                      aria-label="Delete"
+                    >
+                      <IconTrash size={16} />
+                    </button>
+                  </div>
                 </div>
               </div>
+            ))}
+          </div>
+
+          {/* ✅ Pagination Controls */}
+          {totalPages > 1 && (
+            <div className="flex justify-center items-center gap-4 mt-8">
+              <button
+                className="px-3 py-2 rounded-lg border text-sm flex items-center gap-1 disabled:opacity-50"
+                onClick={() => setPage((p) => Math.max(p - 1, 1))}
+                disabled={page === 1}
+              >
+                <IconChevronLeft size={18} /> Previous
+              </button>
+              <span className="text-sm text-gray-700">
+                Page {page} of {totalPages}
+              </span>
+              <button
+                className="px-3 py-2 rounded-lg border text-sm flex items-center gap-1 disabled:opacity-50"
+                onClick={() => setPage((p) => Math.min(p + 1, totalPages))}
+                disabled={page === totalPages}
+              >
+                Next <IconChevronRight size={18} />
+              </button>
             </div>
-          ))}
-        </div>
+          )}
+        </>
       )}
 
       <BrandFormModal

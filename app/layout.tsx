@@ -30,10 +30,10 @@ export default function RootLayout({
           <QueryProvider>
             <CartProvider>
               
-              {/* <Navbar /> */}
+              <Navbar />
                <Toaster position="bottom-right" />
               <main className="min-h-screen">{children}</main>
-              {/* <Footer /> */}
+              <Footer />
             </CartProvider>
           </QueryProvider>
         </ThemeProvider>

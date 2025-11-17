@@ -22,7 +22,7 @@ export default function DataTable({
   search: string;
   setSearch: (v: string) => void;
   onEdit: (row: any) => void;
-  onDelete: (row: any) => void;
+  onDelete?: (row: any) => void;
   onRowClick?: (row: any) => void;
 }) {
   return (
@@ -65,18 +65,33 @@ export default function DataTable({
                     </td>
                   ))}
                   <td className="px-4 py-2 flex gap-2 justify-center">
-                    <button onClick={(e) => { e.stopPropagation(); onEdit(row); }}>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onEdit(row);
+                      }}
+                    >
                       <IconEdit size={18} className="text-cyan-700" />
                     </button>
-                    <button onClick={(e) => { e.stopPropagation(); onDelete(row); }}>
-                      <IconTrash size={18} className="text-red-600" />
-                    </button>
+                    {onDelete && (
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onDelete(row);
+                        }}
+                      >
+                        <IconTrash size={18} className="text-red-600" />
+                      </button>
+                    )}
                   </td>
                 </tr>
               ))
             ) : (
               <tr>
-                <td colSpan={columns.length + 1} className="text-center py-4 text-gray-500">
+                <td
+                  colSpan={columns.length + 1}
+                  className="text-center py-4 text-gray-500"
+                >
                   No records found
                 </td>
               </tr>

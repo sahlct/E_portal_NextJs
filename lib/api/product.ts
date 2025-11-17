@@ -27,6 +27,11 @@ export async function createProductWithVariation(formData: FormData) {
   return apiRequest("/api/products/with-variation", "POST", formData, true);
 }
 
+// Get variations by product id
+export async function getVariations(productId: string) {
+  return apiRequest(`/api/products/get-variations/${productId}`, "GET");
+}
+
 // Update product (with variations)
 export async function updateProductWithVariation(id: string, formData: FormData) {
   return apiRequest(`/api/products/with-variation/${id}`, "PUT", formData, true);

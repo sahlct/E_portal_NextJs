@@ -108,7 +108,7 @@ export default function CarouselPage() {
   };
 
   const fields = [
-    { name: "title", label: "Title", type: "text", required: true },
+    { name: "title", label: "Title", type: "text", required: false },
     { name: "sub_title", label: "Sub Title", type: "text", required: false },
     { name: "description", label: "Description", type: "textarea", required: false },
     {

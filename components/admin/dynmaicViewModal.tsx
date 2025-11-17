@@ -9,7 +9,7 @@ export default function DynamicViewModal({
   isOpen: boolean;
   onClose: () => void;
   title: string;
-  data?: Record<string, any>;
+  data?: Record<string, any> | null;
 }) {
   if (!isOpen) return null;
 

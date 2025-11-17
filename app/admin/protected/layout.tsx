@@ -43,6 +43,7 @@ const menuItems = [
       { name: "Categories", path: "/admin/protected/category" },
       { name: "Products", path: "/admin/protected/product" },
       { name: "Product SKUs", path: "/admin/protected/sku" },
+      { name: "Latest Products", path: "/admin/protected/latest-product" },
     ],
   },
   {

@@ -9,7 +9,7 @@ export function HeroSection() {
   }, [])
 
   return (
-    <section className="max-w-8xl mx-auto px-4 sm:px-6 lg:px-20 py-12">
+    <section className="max-w-8xl mx-auto px-4 sm:px-6 lg:px-28 py-8 lg:py-20">
       <div className="hero-content grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
         <div>
           <h1 className="text-4xl font-bold mb-4 text-balance">EA Portal - The Complete Electronic Makkah</h1>
@@ -26,7 +26,7 @@ export function HeroSection() {
           </div>
         </div>
         <div className="flex justify-center">
-          <img src="/about_pic.jpg" alt="Hero" className="rounded-lg shadow-lg max-w-md w-full" />
+          <img src="/about_pic.jpg" alt="Hero" className="rounded-lg shadow-lg max-w-lvh w-full" />
         </div>
       </div>
     </section>
