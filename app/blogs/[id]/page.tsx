@@ -2,42 +2,48 @@
 
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
-import { getBlogById } from "@/lib/api/blogs";
-import { CalendarDays, MapPin, Loader2 } from "lucide-react";
+import { getBlogById, getBlogs } from "@/lib/api/blogs";
+import { CalendarDays } from "lucide-react";
+import Link from "next/link";
 
 export default function BlogDetailsPage() {
   const { id } = useParams();
   const [blog, setBlog] = useState<any>(null);
+  const [recent, setRecent] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
+  // Load Single Blog
   const loadBlog = async () => {
     try {
-      setLoading(true);
       const res = await getBlogById(id as string);
       setBlog(res?.data);
     } catch (err) {
-      console.error("Error loading blog:", err);
-    } finally {
-      setLoading(false);
+      console.error(err);
+    }
+  };
+
+  // Load Latest Blogs (for Right Sidebar)
+  const loadRecentBlogs = async () => {
+    try {
+      const res = await getBlogs(1, 3); // 3 latest blogs
+      setRecent(res?.data || []);
+    } catch (err) {
+      console.error(err);
     }
   };
 
   useEffect(() => {
-    if (id) loadBlog();
+    if (id) {
+      Promise.all([loadBlog(), loadRecentBlogs()]).finally(() =>
+        setLoading(false)
+      );
+    }
   }, [id]);
 
-  if (loading) {
+  if (loading || !blog) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-background">
-        <Loader2 className="w-8 h-8 text-primary animate-spin" />
-      </div>
-    );
-  }
-
-  if (!blog) {
-    return (
-      <div className="flex items-center justify-center min-h-screen bg-background">
-        <p className="text-muted-foreground">Blog not found.</p>
+      <div className="min-h-screen flex justify-center items-center text-gray-500">
+        Loading...
       </div>
     );
   }
@@ -48,133 +54,93 @@ export default function BlogDetailsPage() {
         month: "long",
         day: "numeric",
       })
-    : null;
+    : "";
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* Hero Section */}
-      <div className="relative w-full h-72 md:h-[420px] bg-muted overflow-hidden">
-        <img
-          src={blog.blog_thumbnail || "/placeholder.svg"}
-          alt={blog.blog_title}
-          className="w-full h-full object-cover"
-        />
-        <div className="absolute inset-0 bg-black/40 flex flex-col justify-end">
-          <div className="max-w-6xl mx-auto px-6 py-8 text-white">
-            <h1 className="text-3xl md:text-5xl font-bold mb-2">
+    <div className="min-h-screen bg-white pb-8">
+      {/* CONTAINER */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+        
+        {/* Breadcrumb */}
+        <div className="text-sm text-gray-500 mb-4">
+          <Link href="/" className="hover:underline">Home</Link> /{" "}
+          <Link href="/blogs" className="hover:underline">Blog</Link> /{" "}
+          <span className="text-gray-700">{blog.blog_title}</span>
+        </div>
+
+        {/* MAIN GRID */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
+
+          {/* LEFT CONTENT */}
+          <div className="lg:col-span-2">
+
+            {/* Title */}
+            <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-3">
               {blog.blog_title}
             </h1>
-            {blog.blog_sec_title && (
-              <p className="text-lg text-gray-200 mb-3">
-                {blog.blog_sec_title}
-              </p>
-            )}
-            <div className="flex flex-wrap gap-4 text-sm text-gray-300">
-              {formattedDate && (
-                <span className="inline-flex items-center gap-2">
-                  <CalendarDays className="w-4 h-4" /> {formattedDate}
-                </span>
-              )}
-              {blog.place && (
-                <span className="inline-flex items-center gap-2">
-                  <MapPin className="w-4 h-4" /> {blog.place}
-                </span>
-              )}
-            </div>
-          </div>
-        </div>
-      </div>
 
-      {/* Main Content */}
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Blog Text */}
-          <div className="lg:col-span-2 space-y-6">
-            <div className="prose max-w-none text-gray-700 dark:text-gray-300 leading-relaxed">
-              {blog.description ? (
-                <p className="whitespace-pre-line">{blog.description}</p>
-              ) : (
-                <p className="text-muted-foreground italic">
-                  No description provided.
-                </p>
-              )}
+            {/* Author + Date */}
+            <div className="flex items-center gap-2 text-gray-500 text-sm mb-6">
+              <CalendarDays className="w-4 h-4" />
+              <span>{formattedDate}</span>
+              <span>•</span>
+              <span className="capitalize">{blog.author || "Admin"}</span>
             </div>
 
-            {/* Other Images */}
-            {Array.isArray(blog.other_images) && blog.other_images.length > 0 && (
-              <div>
-                <h2 className="text-2xl font-semibold mb-3">
-                  Additional Images
-                </h2>
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-                  {blog.other_images.map((img: string, i: number) => (
-                    <div
-                      key={i}
-                      className="rounded-xl overflow-hidden border border-border hover:shadow-md transition"
-                    >
-                      <img
-                        src={img}
-                        alt={`Blog image ${i + 1}`}
-                        className="w-full h-48 object-cover"
-                        loading="lazy"
-                      />
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
+            {/* Main Image */}
+            <div className="w-full rounded-xl overflow-hidden mb-6">
+              <img
+                src={blog.blog_thumbnail}
+                alt={blog.blog_title}
+                className="w-full h-auto object-cover"
+              />
+            </div>
+
+            {/* Description */}
+            <div className="text-gray-700 text-base leading-relaxed whitespace-pre-line">
+              {blog.description}
+            </div>
+
           </div>
 
-          {/* Sidebar */}
-          <aside className="space-y-6">
-            <div className="bg-card border border-border rounded-xl shadow-sm p-5">
-              <h3 className="font-semibold text-lg mb-3 text-foreground">
-                Blog Details
-              </h3>
-              <ul className="space-y-2 text-sm text-muted-foreground">
-                <li className="flex items-center gap-2">
-                  <span className="font-medium text-foreground">Status:</span>
-                  {blog.status === 1 ? (
-                    <span className="text-green-600 font-medium">Active</span>
-                  ) : (
-                    <span className="text-red-600 font-medium">Inactive</span>
-                  )}
-                </li>
-                {formattedDate && (
-                  <li className="flex items-center gap-2">
-                    <CalendarDays className="w-4 h-4" />
-                    {formattedDate}
-                  </li>
-                )}
-                {blog.place && (
-                  <li className="flex items-center gap-2">
-                    <MapPin className="w-4 h-4" />
-                    {blog.place}
-                  </li>
-                )}
-                <li className="text-xs text-gray-400">
-                  Created:{" "}
-                  {new Date(blog.created_at).toLocaleDateString("en-IN", {
+          {/* RIGHT SIDEBAR – RECENT BLOGS */}
+          <div className="space-y-6">
+            <h3 className="text-lg font-semibold text-gray-900">Recent Blogs</h3>
+
+            {recent.map((item) => {
+              const date = item.date
+                ? new Date(item.date).toLocaleDateString("en-IN", {
                     year: "numeric",
                     month: "short",
                     day: "numeric",
-                  })}
-                </li>
-              </ul>
-            </div>
+                  })
+                : "";
 
-            {/* Thumbnail Preview */}
-            <div className="bg-card border border-border rounded-xl overflow-hidden">
-              <img
-                src={blog.blog_thumbnail || "/placeholder.svg"}
-                alt="Thumbnail"
-                className="w-full h-48 object-cover"
-              />
-              <div className="p-4 text-center text-sm text-muted-foreground">
-                Thumbnail Preview
-              </div>
-            </div>
-          </aside>
+              return (
+                <Link
+                  href={`/blog/${item._id}`}
+                  key={item._id}
+                  className="flex gap-4 items-start group"
+                >
+                  <div className="w-20 h-20 rounded-lg overflow-hidden flex-shrink-0">
+                    <img
+                      src={item.blog_thumbnail}
+                      alt={item.blog_title}
+                      className="w-full h-full object-cover group-hover:scale-105 transition"
+                    />
+                  </div>
+
+                  <div>
+                    <p className="text-xs text-gray-500">{date}</p>
+                    <p className="font-medium text-gray-800 group-hover:text-blue-600">
+                      {item.blog_title}
+                    </p>
+                  </div>
+                </Link>
+              );
+            })}
+          </div>
+
         </div>
       </div>
     </div>

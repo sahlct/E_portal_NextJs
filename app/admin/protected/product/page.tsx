@@ -45,14 +45,21 @@ export default function ProductPage() {
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
   const [totalPages, setTotalPages] = useState(1);
-  const [categories, setCategories] = useState<{ label: string; value: string }[]>([]);
+  const [categories, setCategories] = useState<
+    { label: string; value: string }[]
+  >([]);
 
   const debouncedSearch = useDebounce(search, 500);
 
   // --- Load categories
   const loadCategories = async () => {
     try {
-      const res = await getCategories();
+      const res = await getCategories(
+        page,
+        100,
+        undefined,
+        1
+      );
       if (res?.data) {
         const formatted = res.data.map((cat: any) => ({
           label: cat.category_name || "Unnamed",
@@ -64,6 +71,21 @@ export default function ProductPage() {
       console.error("Error loading categories:", err);
     }
   };
+
+  // const loadCategories = async () => {
+  //   try {
+  //     const res = await getCategories(
+  //       page,
+  //       10,
+  //       debouncedSearch,
+  //       filters.status ? Number(filters.status) : undefined
+  //     );
+  //     setData(res?.data || []);
+  //     setTotalPages(res?.meta?.pages || 1);
+  //   } catch (err) {
+  //     console.error("Error loading categories:", err);
+  //   }
+  // };
 
   // --- Load products
   const loadProducts = async () => {
@@ -97,7 +119,7 @@ export default function ProductPage() {
 
       const formatted: Record<string, any> = {
         "Product Name": c.product_name || "—",
-        "Category": c.category_id || "—",
+        Category: c.category_id || "—",
         "Product Image": c.product_image ? (
           <a
             href={c.product_image}
@@ -110,7 +132,7 @@ export default function ProductPage() {
         ) : (
           "—"
         ),
-        "Status":
+        Status:
           c.status === 1 ? (
             <span className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-xs font-medium">
               Active
@@ -209,14 +231,22 @@ export default function ProductPage() {
       {/* Table */}
       <DataTable
         columns={[
-          { key: "sno", label: "S.No", render: (_: any, i: number) => i + 1 + (page - 1) * 10 },
+          {
+            key: "sno",
+            label: "S.No",
+            render: (_: any, i: number) => i + 1 + (page - 1) * 10,
+          },
           { key: "product_name", label: "Product Name" },
           {
             key: "product_image",
             label: "Image",
             render: (r: any) =>
               r.product_image ? (
-                <a href={r.product_image} target="_blank" className="text-blue-600 underline">
+                <a
+                  href={r.product_image}
+                  target="_blank"
+                  className="text-blue-600 underline"
+                >
                   View
                 </a>
               ) : (
@@ -229,9 +259,13 @@ export default function ProductPage() {
             label: "Status",
             render: (r: any) =>
               r.status === 1 ? (
-                <span className="bg-green-100 text-black px-3 py-0.5 rounded-full">Active</span>
+                <span className="bg-green-100 text-black px-3 py-0.5 rounded-full">
+                  Active
+                </span>
               ) : (
-                <span className="bg-red-100 text-black px-3 py-0.5 rounded-full">Inactive</span>
+                <span className="bg-red-100 text-black px-3 py-0.5 rounded-full">
+                  Inactive
+                </span>
               ),
           },
         ]}
@@ -308,7 +342,7 @@ function ProductFormModal({
     product?.variations || [{ name: "", options: [""] }]
   );
 
-    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
     try {
@@ -317,7 +351,9 @@ function ProductFormModal({
       // ✅ Correct transformation to match required payload
       const formattedVariations = variations.map((v) => ({
         variation_name: v.name.trim().toLowerCase(), // convert key & clean name
-        options: v.options.map((opt) => opt.trim().toLowerCase()).filter(Boolean), // ensure lowercase + remove empties
+        options: v.options
+          .map((opt) => opt.trim().toLowerCase())
+          .filter(Boolean), // ensure lowercase + remove empties
       }));
 
       console.log("Payload variations:", formattedVariations); // ✅ Debug log — remove in production
@@ -342,20 +378,26 @@ function ProductFormModal({
     }
   };
 
-
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
       <div className="bg-white w-full max-w-2xl rounded-2xl shadow-lg p-6 overflow-y-auto max-h-[90vh]">
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-lg font-semibold">{isEdit ? "Edit Product" : "Add Product"}</h2>
-          <button onClick={onClose} className="text-gray-600 hover:text-gray-900">
+          <h2 className="text-lg font-semibold">
+            {isEdit ? "Edit Product" : "Add Product"}
+          </h2>
+          <button
+            onClick={onClose}
+            className="text-gray-600 hover:text-gray-900"
+          >
             ✕
           </button>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block mb-1 font-medium text-sm">Product Name</label>
+            <label className="block mb-1 font-medium text-sm">
+              Product Name
+            </label>
             <input
               name="product_name"
               defaultValue={product?.product_name || ""}
@@ -382,8 +424,14 @@ function ProductFormModal({
           </div>
 
           <div>
-            <label className="block mb-1 font-medium text-sm">Product Image</label>
-            <input type="file" name="product_image" className="w-full border rounded p-2" />
+            <label className="block mb-1 font-medium text-sm">
+              Product Image
+            </label>
+            <input
+              type="file"
+              name="product_image"
+              className="w-full border rounded p-2"
+            />
           </div>
 
           <div>
@@ -419,7 +467,9 @@ function ProductFormModal({
                   />
                   <button
                     type="button"
-                    onClick={() => setVariations(variations.filter((_, idx) => idx !== i))}
+                    onClick={() =>
+                      setVariations(variations.filter((_, idx) => idx !== i))
+                    }
                     className="ml-2 text-red-600 hover:text-red-800"
                   >
                     <IconTrash size={16} />
@@ -472,7 +522,9 @@ function ProductFormModal({
 
             <button
               type="button"
-              onClick={() => setVariations([...variations, { name: "", options: [""] }])}
+              onClick={() =>
+                setVariations([...variations, { name: "", options: [""] }])
+              }
               className="px-3 py-1 bg-cyan-700 text-white rounded text-sm hover:bg-cyan-800"
             >
               + Add Variation

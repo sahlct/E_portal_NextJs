@@ -16,7 +16,7 @@ export function Navbar() {
     { href: "/", label: "Home" },
     { href: "/products", label: "Products" },
     { href: "/blogs", label: "Blogs" },
-    { href: "/brands", label: "Brands" },
+    // { href: "/brands", label: "Brands" },
     { href: "/about", label: "About" },
     { href: "/contact", label: "Contact" },
   ]
@@ -28,7 +28,7 @@ export function Navbar() {
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2 font-bold text-2xl">
             <img src="/logo_only.png" alt="" className="h-10" />
-            <span className="hidden sm:inline">EA Portal</span>
+            <span>EA Portal</span>
           </Link>
 
           {/* Desktop Navigation */}
@@ -57,9 +57,9 @@ export function Navbar() {
             </div>
 
             {/* Theme Toggle */}
-            <Button variant="ghost" size="icon" onClick={() => setTheme(theme === "dark" ? "light" : "dark")}>
+            {/* <Button variant="ghost" size="icon" onClick={() => setTheme(theme === "dark" ? "light" : "dark")}>
               {theme === "dark" ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
-            </Button>
+            </Button> */}
 
             {/* Cart */}
             <Link href="/cart" className="relative">

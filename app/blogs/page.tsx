@@ -103,7 +103,7 @@ function BlogCard({ blog }: { blog: Blog }) {
 
   return (
     <article className="bg-card border border-border rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
-      <div className="relative h-44 bg-secondary">
+      <div className="relative h-52 bg-secondary">
         <img
           src={blog.blog_thumbnail || "/placeholder.svg"}
           alt={blog.blog_title}
@@ -111,11 +111,11 @@ function BlogCard({ blog }: { blog: Blog }) {
           loading="lazy"
         />
         {/* Status chip if needed */}
-        {blog.status === 1 && (
+        {/* {blog.status === 1 && (
           <span className="absolute top-3 left-3 text-xs bg-green-600/90 text-white px-2 py-1 rounded-md">
             Published
           </span>
-        )}
+        )} */}
       </div>
 
       <div className="p-4">
@@ -157,7 +157,7 @@ function BlogCard({ blog }: { blog: Blog }) {
           </Link>
 
           {/* Optional: open thumbnail */}
-          {blog.blog_thumbnail ? (
+          {/* {blog.blog_thumbnail ? (
             <a
               href={blog.blog_thumbnail}
               target="_blank"
@@ -165,7 +165,7 @@ function BlogCard({ blog }: { blog: Blog }) {
             >
               Open image
             </a>
-          ) : null}
+          ) : null} */}
         </div>
       </div>
     </article>

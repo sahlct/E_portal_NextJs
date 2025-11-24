@@ -53,7 +53,7 @@ export function CartPageContent() {
                       <h3 className="font-semibold text-lg hover:text-primary transition-colors mb-2">{item.title}</h3>
                     </Link>
                     <p className="text-muted-foreground text-sm mb-4">{item.category}</p>
-                    <p className="text-lg font-bold text-primary">${item.price}</p>
+                    <p className="text-lg font-bold text-primary">AED {item.price}</p>
                   </div>
 
                   {/* Quantity & Actions */}
@@ -68,20 +68,20 @@ export function CartPageContent() {
                     <div className="flex items-center border border-border rounded-lg">
                       <button
                         onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                        className="px-3 py-1 hover:bg-secondary transition-colors"
+                        className="px-3 py-1 hover:bg-secondary transition-colors cursor-pointer"
                       >
                         <Minus className="w-4 h-4" />
                       </button>
                       <span className="px-4 py-1 border-l border-r border-border">{item.quantity}</span>
                       <button
                         onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                        className="px-3 py-1 hover:bg-secondary transition-colors"
+                        className="px-3 py-1 hover:bg-secondary transition-colors cursor-pointer"
                       >
                         <Plus className="w-4 h-4" />
                       </button>
                     </div>
 
-                    <p className="font-bold text-lg">${(item.price * item.quantity).toFixed(2)}</p>
+                    <p className="font-bold text-lg">AED {(item.price * item.quantity).toFixed(2)}</p>
                   </div>
                 </div>
               ))}
@@ -89,7 +89,7 @@ export function CartPageContent() {
 
             {/* Continue Shopping */}
             <Link href="/products" className="inline-block mt-8">
-              <button className="text-primary hover:opacity-80 transition-opacity flex items-center gap-2 font-semibold">
+              <button className="text-primary cursor-pointer hover:opacity-80 transition-opacity flex items-center gap-2 font-semibold">
                 <ArrowLeft className="w-4 h-4" />
                 Continue Shopping
               </button>
@@ -104,33 +104,33 @@ export function CartPageContent() {
               <div className="space-y-4 mb-6 pb-6 border-b border-border">
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Subtotal</span>
-                  <span className="font-semibold">${total.toFixed(2)}</span>
+                  <span className="font-semibold">AED {total.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Shipping</span>
-                  <span className="font-semibold">Free</span>
+                  <span className="font-semibold text-green-500">Free</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Tax</span>
-                  <span className="font-semibold">${(total * 0.1).toFixed(2)}</span>
+                  <span className="font-semibold text-red-500">Included</span>
                 </div>
               </div>
 
               <div className="flex justify-between mb-6 text-lg font-bold">
                 <span>Total</span>
-                <span className="text-primary">${(total * 1.1).toFixed(2)}</span>
+                <span className="text-primary">AED {(total)}</span>
               </div>
 
               <button
                 onClick={() => setIsCheckoutOpen(true)}
-                className="w-full bg-primary text-primary-foreground py-3 rounded-lg font-semibold hover:opacity-90 transition-opacity mb-3"
+                className="cursor-pointer w-full bg-primary text-primary-foreground py-3 rounded-lg font-semibold hover:opacity-90 transition-opacity mb-3"
               >
                 Proceed to Checkout
               </button>
 
               <button
                 onClick={() => clearCart()}
-                className="w-full border border-border text-foreground py-3 rounded-lg font-semibold hover:bg-secondary transition-colors"
+                className="cursor-pointer w-full border border-border text-foreground py-3 rounded-lg font-semibold hover:bg-secondary transition-colors"
               >
                 Clear Cart
               </button>

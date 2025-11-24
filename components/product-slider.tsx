@@ -114,7 +114,7 @@ export function ProductSlider({ products }: Props) {
           ref={scrollRef}
           onScroll={checkScroll}
           className="
-            flex gap-6 
+            flex gap-10
             overflow-x-auto hide-scrollbar 
             scroll-smooth
             pb-3
@@ -130,13 +130,14 @@ export function ProductSlider({ products }: Props) {
                 className="
                   snap-start
                   flex-shrink-0 
-                  w-[300px]
-                  bg-white rounded-xl border shadow-sm
-                  hover:shadow-md transition
+                  w-[260px]
+                  rounded-xl
+                  transition
+                  gap-2
                 "
               >
                 <Link href={`/product/${p.id}`}>
-                  <div className="h-44 bg-gray-100 rounded-t-xl overflow-hidden">
+                  <div className="h-48 bg-gray-100 rounded-xl overflow-hidden">
                     <img
                       src={p.image}
                       className="w-full h-full object-cover hover:scale-110 transition duration-300"
@@ -144,7 +145,7 @@ export function ProductSlider({ products }: Props) {
                   </div>
                 </Link>
 
-                <div className="p-4">
+                <div className="py-4">
                   <Link href={`/product/${p.id}`}>
                     <h3 className="font-semibold text-sm mb-1 line-clamp-2 hover:text-blue-600">
                       {p.title}

@@ -1,10 +1,12 @@
-"use client"
+"use client";
+
+import BrandsPage from "@/components/home/branspage";
 
 export default function AboutPage() {
   return (
     <div className="min-h-screen bg-background">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <h1 className="text-4xl font-bold mb-4">About TechHub</h1>
+        <h1 className="text-4xl font-bold mb-4">About EA Portal</h1>
         <p className="text-muted-foreground mb-8">Your trusted source for premium electronics and gadgets</p>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -28,6 +30,8 @@ export default function AboutPage() {
           </div>
         </div>
       </div>
+
+      <BrandsPage />
     </div>
   )
 }

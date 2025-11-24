@@ -264,7 +264,7 @@ export default function SingleProductPage() {
   // -----------------------------------------------------
   return (
     <div className="min-h-screen bg-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-10 lg:px-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 md:py-12 lg:px-12">
         {/* Back Button */}
         <button
           onClick={() => router.back()}
@@ -274,7 +274,7 @@ export default function SingleProductPage() {
           Back to Products
         </button>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
+        <div className="grid grid-cols-1 lg:grid-cols-12 md:gap-10 gap-6">
           {/* ---------------- LEFT (FIXED) ---------------- */}
           <div className="lg:col-span-5 lg:sticky lg:top-20 h-fit">
             <div className="bg-gray-50 border rounded-xl p-4">
@@ -296,7 +296,7 @@ export default function SingleProductPage() {
                   <button
                     key={i}
                     onClick={() => setMainImage(img)}
-                    className={`w-20 h-20 border rounded-md overflow-hidden cursor-pointer ${
+                    className={`sm:w-20 sm:h-20 h-16 w-16 border rounded-md overflow-hidden cursor-pointer ${
                       img === mainImage ? "ring-2 ring-cyan-600" : ""
                     }`}
                   >
@@ -313,10 +313,10 @@ export default function SingleProductPage() {
 
           {/* ---------------- RIGHT ---------------- */}
           <div className="lg:col-span-7 space-y-6">
-            <h1 className="text-3xl font-bold text-gray-900">
+            <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-3">
               {currentSku.product_sku_name}
             </h1>
-            <p className="text-gray-500">
+            <p className="text-gray-500 mb-3">
               {currentSku.product_id?.product_name}
             </p>
 
@@ -347,9 +347,9 @@ export default function SingleProductPage() {
                 {currentSku.is_out_of_stock ? "Out of Stock" : "In Stock"}
               </span>
 
-              <span className="text-gray-500 text-sm">
+              {/* <span className="text-gray-500 text-sm">
                 Max per order: {currentSku.single_order_limit}
-              </span>
+              </span> */}
             </div>
 
             {/* Variations */}
@@ -393,7 +393,7 @@ export default function SingleProductPage() {
                 onClick={handleAddOrRemove}
                 className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-lg font-medium cursor-pointer transition ${
                   isInCart
-                    ? "bg-red-500 text-white hover:opacity-90"
+                    ? "bg-gradient-to-r from-red-500 to-red-900 text-white hover:opacity-90"
                     : "bg-gradient-to-r from-yellow-500 to-orange-400 text-white hover:opacity-95"
                 }`}
               >
