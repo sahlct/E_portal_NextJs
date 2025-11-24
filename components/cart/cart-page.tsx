@@ -60,7 +60,7 @@ export function CartPageContent() {
                   <div className="flex flex-col items-end gap-4">
                     <button
                       onClick={() => removeFromCart(item.id)}
-                      className="text-red-500 hover:text-red-600 transition-colors"
+                      className="text-red-500 hover:text-red-600 transition-colors cursor-pointer"
                     >
                       <Trash2 className="w-5 h-5" />
                     </button>
@@ -139,7 +139,7 @@ export function CartPageContent() {
         </div>
       </div>
 
-      <CheckoutModal isOpen={isCheckoutOpen} onClose={() => setIsCheckoutOpen(false)} total={total * 1.1} />
+      <CheckoutModal isOpen={isCheckoutOpen} onClose={() => setIsCheckoutOpen(false)} total={total} />
     </div>
   )
 }

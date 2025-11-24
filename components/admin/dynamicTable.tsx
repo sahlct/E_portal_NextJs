@@ -70,6 +70,7 @@ export default function DataTable({
                         e.stopPropagation();
                         onEdit(row);
                       }}
+                      className="cursor-pointer"
                     >
                       <IconEdit size={18} className="text-cyan-700" />
                     </button>
@@ -79,6 +80,7 @@ export default function DataTable({
                           e.stopPropagation();
                           onDelete(row);
                         }}
+                        className="cursor-pointer"
                       >
                         <IconTrash size={18} className="text-red-600" />
                       </button>

@@ -75,7 +75,11 @@ export default function ProductSKU() {
             target="_blank"
             className="text-blue-600 underline"
           >
-            View
+            <img
+              src={c.thumbnail_image}
+              alt="sku"
+              className="w-16 h-16 object-cover rounded border"
+            />
           </a>
         ) : (
           "—"
@@ -168,7 +172,7 @@ export default function ProductSKU() {
               setEditMode(false);
               setOpenForm(true);
             }}
-            className="bg-cyan-700 flex items-center gap-2 text-white px-4 py-2 rounded-md hover:bg-cyan-800"
+            className="bg-cyan-700 flex items-center cursor-pointer gap-2 text-white px-4 py-2 rounded-md hover:bg-cyan-800"
           >
             Add SKU <IconPlus size={18} />
           </button>
@@ -188,6 +192,29 @@ export default function ProductSKU() {
             key: "product_id",
             label: "Product",
             render: (r: any) => r.product_id?.product_name || "—",
+          },
+          {
+            key: "thumbnail_image",
+            label: "Thumbnail",
+            render: (r: any) =>
+              r.thumbnail_image ? (
+                <a
+                  href={r.thumbnail_image}
+                  target="_blank"
+                  className="text-blue-600 underline"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                  }}
+                >
+                  <img
+                    src={r.thumbnail_image}
+                    alt="thumbnail"
+                    className="w-16 h-10 object-cover rounded border"
+                  />
+                </a>
+              ) : (
+                "—"
+              ),
           },
           {
             key: "status",
@@ -274,15 +301,27 @@ function SkuFormModal({
   const [products, setProducts] = useState<any[]>([]);
   const [variations, setVariations] = useState<any[]>([]);
   const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
-  const [selectedProductId, setSelectedProductId] = useState(sku?.product_id?._id || "");
-  const [existingImages, setExistingImages] = useState<string[]>(sku?.sku_image || []);
-  const [thumbnailPreview, setThumbnailPreview] = useState<string | null>(sku?.thumbnail_image || null);
+  const page = 1;
+  const [selectedProductId, setSelectedProductId] = useState(
+    sku?.product_id?._id || ""
+  );
+  const [existingImages, setExistingImages] = useState<string[]>(
+    sku?.sku_image || []
+  );
+  const [thumbnailPreview, setThumbnailPreview] = useState<string | null>(
+    sku?.thumbnail_image || null
+  );
   const [skuImages, setSkuImages] = useState<File[]>([]);
 
   // ✅ Load all products for dropdown
   useEffect(() => {
     (async () => {
-      const res = await getProducts();
+      const res = await getProducts(
+        page,
+        100,
+        undefined,
+        undefined,
+      );
       setProducts(res?.data || []);
     })();
   }, []);
@@ -356,7 +395,9 @@ function SkuFormModal({
       skuImages.forEach((file) => formData.append("sku_image", file));
 
       // Append existing images (to preserve them)
-      existingImages.forEach((url) => formData.append("existing_sku_image[]", url));
+      existingImages.forEach((url) =>
+        formData.append("existing_sku_image[]", url)
+      );
 
       if (isEdit) {
         await updateProductSkuWithVariation(sku._id, formData);
@@ -383,13 +424,17 @@ function SkuFormModal({
           <h2 className="text-lg font-semibold">
             {isEdit ? "Edit SKU" : "Add SKU"}
           </h2>
-          <button onClick={onClose}>✕</button>
+          <button onClick={onClose} className="cursor-pointer hover:scale-110">
+            ✕
+          </button>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* Product */}
           <div>
-            <label className="block mb-1 font-medium text-sm">Select Product</label>
+            <label className="block mb-1 font-medium text-sm">
+              Select Product
+            </label>
             <select
               name="product_id"
               required
@@ -430,7 +475,9 @@ function SkuFormModal({
           </div>
 
           <div>
-            <label className="block mb-1 font-medium text-sm">Description</label>
+            <label className="block mb-1 font-medium text-sm">
+              Description
+            </label>
             <textarea
               name="description"
               defaultValue={sku?.description || ""}
@@ -441,7 +488,9 @@ function SkuFormModal({
 
           {/* Thumbnail */}
           <div>
-            <label className="block mb-1 font-medium text-sm">Thumbnail Image</label>
+            <label className="block mb-1 font-medium text-sm">
+              Thumbnail Image
+            </label>
             <input
               type="file"
               name="thumbnail_image"
@@ -476,8 +525,15 @@ function SkuFormModal({
             {existingImages.length > 0 && (
               <div className="mt-2 flex flex-wrap gap-2">
                 {existingImages.map((img, i) => (
-                  <div key={i} className="relative w-20 h-20 border rounded overflow-hidden group">
-                    <img src={img} alt="existing" className="object-cover w-full h-full" />
+                  <div
+                    key={i}
+                    className="relative w-20 h-20 border rounded overflow-hidden group"
+                  >
+                    <img
+                      src={img}
+                      alt="existing"
+                      className="object-cover w-full h-full"
+                    />
                     <button
                       type="button"
                       onClick={() => handleExistingImageRemove(i)}
@@ -494,7 +550,10 @@ function SkuFormModal({
             {skuImages.length > 0 && (
               <div className="mt-2 flex flex-wrap gap-2">
                 {skuImages.map((file, i) => (
-                  <div key={i} className="relative w-20 h-20 border rounded overflow-hidden group">
+                  <div
+                    key={i}
+                    className="relative w-20 h-20 border rounded overflow-hidden group"
+                  >
                     <img
                       src={URL.createObjectURL(file)}
                       alt={file.name}
@@ -545,7 +604,9 @@ function SkuFormModal({
               />
             </div>
             <div>
-              <label className="block mb-1 font-medium text-sm">Single Order Limit</label>
+              <label className="block mb-1 font-medium text-sm">
+                Single Order Limit
+              </label>
               <input
                 name="single_order_limit"
                 type="number"
@@ -574,7 +635,9 @@ function SkuFormModal({
               <select
                 name="is_new"
                 defaultValue={
-                  sku?.is_new === true || sku?.is_new === "true" ? "true" : "false"
+                  sku?.is_new === true || sku?.is_new === "true"
+                    ? "true"
+                    : "false"
                 }
                 className="w-full border p-2 rounded"
               >
@@ -584,11 +647,14 @@ function SkuFormModal({
             </div>
 
             <div>
-              <label className="block mb-1 font-medium text-sm">Is Out of Stock</label>
+              <label className="block mb-1 font-medium text-sm">
+                Is Out of Stock
+              </label>
               <select
                 name="is_out_of_stock"
                 defaultValue={
-                  sku?.is_out_of_stock === true || sku?.is_out_of_stock === "true"
+                  sku?.is_out_of_stock === true ||
+                  sku?.is_out_of_stock === "true"
                     ? "true"
                     : "false"
                 }
@@ -624,7 +690,9 @@ function SkuFormModal({
                             (id) =>
                               !v.options.some((opt: any) => opt._id === id)
                           );
-                          return selectedId ? [...filtered, selectedId] : filtered;
+                          return selectedId
+                            ? [...filtered, selectedId]
+                            : filtered;
                         });
                       }}
                     >
@@ -646,14 +714,14 @@ function SkuFormModal({
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300"
+              className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300 cursor-pointer"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={loading}
-              className="px-4 py-2 bg-cyan-700 text-white rounded hover:bg-cyan-800"
+              className="px-4 py-2 bg-cyan-700 text-white rounded hover:bg-cyan-800 cursor-pointer"
             >
               {loading ? "Saving..." : "Save"}
             </button>
@@ -663,4 +731,3 @@ function SkuFormModal({
     </div>
   );
 }
-

@@ -70,7 +70,11 @@ export default function BlogPage() {
             rel="noopener noreferrer"
             className="text-blue-600 underline"
           >
-            View Thumbnail
+            <img
+              src={b.blog_thumbnail}
+              alt="thumbnail"
+              className="max-w-32 object-cover rounded border"
+            />
           </a>
         ) : (
           "—"
@@ -84,7 +88,11 @@ export default function BlogPage() {
                 target="_blank"
                 className="text-blue-600 underline"
               >
-                Image {idx + 1}
+                <img
+                  src={img}
+                  alt="image"
+                  className="w-24 h-20 object-cover rounded border"
+                />
               </a>
             ))}
           </div>
@@ -195,8 +203,13 @@ export default function BlogPage() {
                   href={r.blog_thumbnail}
                   target="_blank"
                   className="text-blue-600 underline"
+                  onClick={(e) => e.stopPropagation()}
                 >
-                  View
+                  <img
+                    src={r.blog_thumbnail}
+                    alt="thumbnail"
+                    className="w-20 h-16 object-cover rounded border"
+                  />
                 </a>
               ) : (
                 "—"

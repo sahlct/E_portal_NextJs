@@ -18,7 +18,7 @@ export default function DynamicViewModal({
       <div className="bg-white rounded-lg shadow-lg w-full max-w-lg overflow-hidden">
         <div className="p-4 border-b flex justify-between items-center">
           <h2 className="text-lg font-semibold">{title}</h2>
-          <button onClick={onClose} className="text-gray-600 hover:text-gray-900">✕</button>
+          <button onClick={onClose} className="text-gray-600 hover:text-gray-900 cursor-pointer">✕</button>
         </div>
         <div className="p-5 space-y-2 max-h-[70vh] overflow-auto">
           {data ? (

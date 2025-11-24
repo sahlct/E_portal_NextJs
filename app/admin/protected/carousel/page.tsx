@@ -55,38 +55,54 @@ export default function CarouselPage() {
       const c = res?.data || res;
 
       const formatted = {
-        "Title": c.title || "—",
+        Title: c.title || "—",
         "Sub Title": c.sub_title || "—",
-        "Description": (
+        Description: (
           <p className="text-gray-700 whitespace-pre-line">
             {c.description || "—"}
           </p>
         ),
         "Desktop File": c.desktop_file ? (
-          <a
-            href={c.desktop_file}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-blue-600 underline"
-          >
-            View Desktop Image
+          // <a
+          //   href={c.desktop_file}
+          //   target="_blank"
+          //   rel="noopener noreferrer"
+          //   className="text-blue-600 underline"
+          // >
+          //   View Desktop Image
+          // </a>
+
+          <a href={c.desktop_file} target="_blank" rel="noreferrer">
+            <img
+              src={c.desktop_file}
+              alt="sku"
+              className="max-w-40 object-cover rounded border"
+            />
           </a>
         ) : (
           "—"
         ),
         "Mobile File": c.mobile_file ? (
-          <a
-            href={c.mobile_file}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-blue-600 underline"
-          >
-            View Mobile Image
+          // <a
+          //   href={c.mobile_file}
+          //   target="_blank"
+          //   rel="noopener noreferrer"
+          //   className="text-blue-600 underline"
+          // >
+          //   View Mobile Image
+          // </a>
+
+          <a href={c.mobile_file} target="_blank" rel="noreferrer">
+            <img
+              src={c.mobile_file}
+              alt="sku"
+              className="max-w-40 object-cover rounded border"
+            />
           </a>
         ) : (
           "—"
         ),
-        "Status":
+        Status:
           c.status === 1 ? (
             <span className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-xs font-medium">
               Active
@@ -110,7 +126,12 @@ export default function CarouselPage() {
   const fields = [
     { name: "title", label: "Title", type: "text", required: false },
     { name: "sub_title", label: "Sub Title", type: "text", required: false },
-    { name: "description", label: "Description", type: "textarea", required: false },
+    {
+      name: "description",
+      label: "Description",
+      type: "textarea",
+      required: false,
+    },
     {
       name: "desktop_file",
       label: "Desktop Image",
@@ -172,13 +193,21 @@ export default function CarouselPage() {
       {/* Table */}
       <DataTable
         columns={[
-          { key: "sno", label: "S.No", render: (_ : any, i : any) => (i ?? 0) + 1 + (page - 1) * 10 },
-          { key: "title", label: "Title" },
-          { key: "sub_title", label: "Sub Title" },
+          {
+            key: "sno",
+            label: "S.No",
+            render: (_: any, i: any) => (i ?? 0) + 1 + (page - 1) * 10,
+          },
+          { key: "title", label: "Title", render: (r: any) => r.title || "—" },
+          {
+            key: "sub_title",
+            label: "Sub Title",
+            render: (r: any) => r.sub_title || "—",
+          },
           {
             key: "description",
             label: "Description",
-            render: (r : any) => (
+            render: (r: any) => (
               <div className="truncate max-w-[250px]" title={r.description}>
                 {r.description || "—"}
               </div>
@@ -187,10 +216,21 @@ export default function CarouselPage() {
           {
             key: "desktop_file",
             label: "Desktop Image",
-            render: (r : any) =>
+            render: (r: any) =>
               r.desktop_file ? (
-                <a href={r.desktop_file} target="_blank" className="text-blue-600 underline">
-                  View
+                <a
+                  href={r.desktop_file}
+                  target="_blank"
+                  className="text-blue-600 underline"
+                  onClick={(e) => {
+                    e.stopPropagation(); 
+                  }}
+                >
+                  <img
+                    src={r.desktop_file}
+                    alt=""
+                    className="max-w-32 object-cover rounded border"
+                  />
                 </a>
               ) : (
                 "—"
@@ -199,10 +239,21 @@ export default function CarouselPage() {
           {
             key: "mobile_file",
             label: "Mobile Image",
-            render: (r : any) =>
+            render: (r: any) =>
               r.mobile_file ? (
-                <a href={r.mobile_file} target="_blank" className="text-blue-600 underline">
-                  View
+                <a
+                  href={r.mobile_file}
+                  target="_blank"
+                  className="text-blue-600 underline"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                  }}
+                >
+                  <img
+                    src={r.mobile_file}
+                    alt=""
+                    className="max-w-32 object-cover rounded border"
+                  />
                 </a>
               ) : (
                 "—"
@@ -211,11 +262,15 @@ export default function CarouselPage() {
           {
             key: "status",
             label: "Status",
-            render: ( r: any) =>
+            render: (r: any) =>
               r.status === 1 ? (
-                <span className="bg-green-100 text-black px-3 py-0.5 rounded-full">Active</span>
+                <span className="bg-green-100 text-black px-3 py-0.5 rounded-full">
+                  Active
+                </span>
               ) : (
-                <span className="bg-red-100 text-black px-3 py-0.5 rounded-full">Inactive</span>
+                <span className="bg-red-100 text-black px-3 py-0.5 rounded-full">
+                  Inactive
+                </span>
               ),
           },
         ]}

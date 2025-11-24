@@ -63,7 +63,7 @@ export default function LatestProductPage() {
         Description: c.description || "—",
         Thumbnail: c.thumbnail_image ? (
           <a href={c.thumbnail_image} target="_blank" className="text-blue-600 underline">
-            View
+           <img src={c.thumbnail_image} alt="sku" className="w-20 h-16 object-cover rounded border" />
           </a>
         ) : (
           "—"
@@ -137,7 +137,7 @@ export default function LatestProductPage() {
             onClick={() => {
               setOpenAddModal(true);
             }}
-            className="bg-cyan-700 flex items-center gap-2 text-white px-4 py-2 rounded-md hover:bg-cyan-800"
+            className="bg-cyan-700 cursor-pointer flex items-center gap-2 text-white px-4 py-2 rounded-md hover:bg-cyan-800"
           >
             Add Latest Product <IconPlus size={18} />
           </button>
@@ -293,7 +293,7 @@ function AddLatestProductModal({
       >
         <div className="flex justify-between mb-3">
           <h2 className="text-lg font-semibold">Add Latest Products</h2>
-          <button onClick={onClose}>✕</button>
+          <button onClick={onClose} className="hover:scale-110 cursor-pointer">✕</button>
         </div>
 
         {/* ✅ Multi-select Field (Dropdown scrolls independently) */}
@@ -340,14 +340,14 @@ function AddLatestProductModal({
         <div className="flex justify-end gap-2 border-t pt-3 mt-6">
           <button
             onClick={onClose}
-            className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300"
+            className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300 cursor-pointer"
           >
             Cancel
           </button>
           <button
             onClick={handleSubmit}
             disabled={loading}
-            className="px-4 py-2 bg-cyan-700 text-white rounded hover:bg-cyan-800"
+            className="px-4 py-2 bg-cyan-700 text-white rounded hover:bg-cyan-800 cursor-pointer"
           >
             {loading ? "Saving..." : "Save"}
           </button>
@@ -383,7 +383,7 @@ function EditIsNewModal({ sku, onClose, onSuccess }: { sku: any; onClose: () => 
       <div className="bg-white rounded-2xl p-6 w-full max-w-md">
         <div className="flex justify-between mb-3">
           <h2 className="text-lg font-semibold">Edit Latest Status</h2>
-          <button onClick={onClose}>✕</button>
+          <button onClick={onClose} className="hover:scale-120 cursor-pointer">✕</button>
         </div>
 
         <div>
@@ -401,14 +401,14 @@ function EditIsNewModal({ sku, onClose, onSuccess }: { sku: any; onClose: () => 
         <div className="flex justify-end gap-2 border-t pt-3 mt-4">
           <button
             onClick={onClose}
-            className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300"
+            className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300 cursor-pointer"
           >
             Cancel
           </button>
           <button
             onClick={handleSubmit}
             disabled={loading}
-            className="px-4 py-2 bg-cyan-700 text-white rounded hover:bg-cyan-800"
+            className="px-4 py-2 bg-cyan-700 text-white rounded hover:bg-cyan-800 cursor-pointer"
           >
             {loading ? "Saving..." : "Save"}
           </button>

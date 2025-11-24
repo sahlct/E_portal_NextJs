@@ -82,11 +82,11 @@ ${orderDetails}
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-      <div className="bg-card rounded-lg max-w-md w-full max-h-[90vh] overflow-y-auto">
+      <div className="bg-card rounded-lg md:max-w-xl w-full max-h-[90vh] overflow-y-auto">
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-border sticky top-0 bg-card">
           <h2 className="text-2xl font-bold">Checkout</h2>
-          <button onClick={onClose} className="text-muted-foreground hover:text-foreground transition-colors">
+          <button onClick={onClose} className="cursor-pointer text-muted-foreground hover:text-foreground transition-colors">
             <X className="w-6 h-6" />
           </button>
         </div>
@@ -102,7 +102,7 @@ ${orderDetails}
               value={formData.name}
               onChange={handleChange}
               required
-              className="w-full px-4 py-2 border border-border rounded-lg bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+              className="w-full placeholder:text-gray-400 px-4 py-2 border border-border rounded-lg bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
               placeholder="John Doe"
             />
           </div>
@@ -116,7 +116,7 @@ ${orderDetails}
               value={formData.email}
               onChange={handleChange}
               required
-              className="w-full px-4 py-2 border border-border rounded-lg bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+              className="placeholder:text-gray-400 w-full px-4 py-2 border border-border rounded-lg bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
               placeholder="john@example.com"
             />
           </div>
@@ -130,7 +130,7 @@ ${orderDetails}
               value={formData.phone}
               onChange={handleChange}
               required
-              className="w-full px-4 py-2 border border-border rounded-lg bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+              className="w-full placeholder:text-gray-400 px-4 py-2 border border-border rounded-lg bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
               placeholder="+1 (555) 000-0000"
             />
           </div>
@@ -144,7 +144,7 @@ ${orderDetails}
               value={formData.address}
               onChange={handleChange}
               required
-              className="w-full px-4 py-2 border border-border rounded-lg bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+              className="w-full placeholder:text-gray-400 px-4 py-2 border border-border rounded-lg bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
               placeholder="123 Main Street"
             />
           </div>
@@ -158,7 +158,7 @@ ${orderDetails}
               value={formData.town}
               onChange={handleChange}
               required
-              className="w-full px-4 py-2 border border-border rounded-lg bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+              className="w-full placeholder:text-gray-400 px-4 py-2 border border-border rounded-lg bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
               placeholder="New York"
             />
           </div>
@@ -172,7 +172,7 @@ ${orderDetails}
               value={formData.pincode}
               onChange={handleChange}
               required
-              className="w-full px-4 py-2 border border-border rounded-lg bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+              className="w-full placeholder:text-gray-400 px-4 py-2 border border-border rounded-lg bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
               placeholder="10001"
             />
           </div>
@@ -186,13 +186,13 @@ ${orderDetails}
                   <span>
                     {item.title} x{item.quantity}
                   </span>
-                  <span>${(item.price * item.quantity).toFixed(2)}</span>
+                  <span>AED {(item.price * item.quantity).toFixed(2)}</span>
                 </div>
               ))}
             </div>
             <div className="flex justify-between font-bold text-lg">
               <span>Total:</span>
-              <span className="text-primary">${total.toFixed(2)}</span>
+              <span className="text-primary">AED {total.toFixed(2)}</span>
             </div>
           </div>
 
@@ -200,9 +200,9 @@ ${orderDetails}
           <button
             type="submit"
             disabled={isSubmitting}
-            className="w-full bg-primary text-primary-foreground py-3 rounded-lg font-semibold hover:opacity-90 transition-opacity disabled:opacity-50 mt-6"
+            className="w-full cursor-pointer bg-primary text-primary-foreground py-3 rounded-lg font-semibold hover:opacity-90 transition-opacity disabled:opacity-50 mt-6"
           >
-            {isSubmitting ? "Processing..." : "Proceed to WhatsApp"}
+            {isSubmitting ? "Processing..." : "Proceed to Order"}
           </button>
 
           <p className="text-xs text-muted-foreground text-center">

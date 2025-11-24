@@ -57,19 +57,26 @@ export default function CategoryPage() {
 
       const formatted = {
         "Category Name": c.category_name || "—",
-        "Image": c.category_image ? (
+        Image: c.category_image ? (
           <a
             href={c.category_image}
             target="_blank"
             rel="noopener noreferrer"
             className="text-blue-600 underline"
+            onClick={(e) => {
+              e.stopPropagation();
+            }}
           >
-            View Image
+            <img
+              src={c.category_image}
+              alt="sku"
+              className="max-w-32 object-cover rounded border"
+            />
           </a>
         ) : (
           "—"
         ),
-        "Status":
+        Status:
           c.status === 1 ? (
             <span className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-xs font-medium">
               Active
@@ -91,7 +98,12 @@ export default function CategoryPage() {
   };
 
   const fields = [
-    { name: "category_name", label: "Category Name", type: "text", required: true },
+    {
+      name: "category_name",
+      label: "Category Name",
+      type: "text",
+      required: true,
+    },
     {
       name: "category_image",
       label: "Category Image",
@@ -147,7 +159,11 @@ export default function CategoryPage() {
       {/* Table */}
       <DataTable
         columns={[
-          { key: "sno", label: "S.No", render: (_ : any, i: any) => (i ?? 0) + 1 + (page - 1) * 10 },
+          {
+            key: "sno",
+            label: "S.No",
+            render: (_: any, i: any) => (i ?? 0) + 1 + (page - 1) * 10,
+          },
           { key: "category_name", label: "Category Name" },
           {
             key: "category_image",
@@ -158,8 +174,15 @@ export default function CategoryPage() {
                   href={r.category_image}
                   target="_blank"
                   className="text-blue-600 underline"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                  }}
                 >
-                  View
+                 <img 
+                  src={r.category_image}
+                  alt="sku"
+                  className="w-14 h-10 object-cover rounded border"
+                />
                 </a>
               ) : (
                 "—"
@@ -170,9 +193,13 @@ export default function CategoryPage() {
             label: "Status",
             render: (r: any) =>
               r.status === 1 ? (
-                <span className="bg-green-100 text-black px-3 py-0.5 rounded-full">Active</span>
+                <span className="bg-green-100 text-black px-3 py-0.5 rounded-full">
+                  Active
+                </span>
               ) : (
-                <span className="bg-red-100 text-black px-3 py-0.5 rounded-full">Inactive</span>
+                <span className="bg-red-100 text-black px-3 py-0.5 rounded-full">
+                  Inactive
+                </span>
               ),
           },
         ]}

@@ -119,15 +119,22 @@ export default function ProductPage() {
 
       const formatted: Record<string, any> = {
         "Product Name": c.product_name || "—",
-        Category: c.category_id || "—",
+        Category: c.category_name || "—",
         "Product Image": c.product_image ? (
           <a
             href={c.product_image}
             target="_blank"
             rel="noopener noreferrer"
             className="text-blue-600 underline"
+            onClick={(e) => {
+              e.stopPropagation();
+            }}
           >
-            View Image
+            <img
+              src={c.product_image}
+              alt="product"
+              className="w-24 h-20 object-cover rounded border"
+            />
           </a>
         ) : (
           "—"
@@ -246,14 +253,21 @@ export default function ProductPage() {
                   href={r.product_image}
                   target="_blank"
                   className="text-blue-600 underline"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                  }}
                 >
-                  View
+                  <img
+                    src={r.product_image}
+                    alt="product"
+                    className="w-14 h-10 object-cover rounded border"
+                  />
                 </a>
               ) : (
                 "—"
               ),
           },
-          { key: "category_id", label: "Category ID" },
+          { key: "category_name", label: "Category" },
           {
             key: "status",
             label: "Status",
@@ -338,27 +352,88 @@ function ProductFormModal({
   categories: { label: string; value: string }[];
 }) {
   const [loading, setLoading] = useState(false);
+
+  // --------------------- FILE PREVIEW STATE ---------------------
+  const [imagePreview, setImagePreview] = useState<{
+    url: string;
+    file: File | null;
+    isImage: boolean;
+  } | null>(null);
+
+  // Load existing image preview on edit
+  useEffect(() => {
+    if (product?.product_image) {
+      const isImage =
+        product.product_image.endsWith(".png") ||
+        product.product_image.endsWith(".jpg") ||
+        product.product_image.endsWith(".jpeg") ||
+        product.product_image.endsWith(".webp");
+
+      setImagePreview({
+        url: product.product_image,
+        file: null,
+        isImage,
+      });
+    }
+  }, [product]);
+
+  const onImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const isImage = file.type.startsWith("image/");
+    const url = URL.createObjectURL(file);
+
+    setImagePreview({ url, file, isImage });
+  };
+
+  const removeImage = () => {
+    setImagePreview(null);
+    const input = document.querySelector(
+      'input[name="product_image"]'
+    ) as HTMLInputElement;
+    if (input) input.value = "";
+  };
+
+  // --------------------- VARIATIONS ---------------------
   const [variations, setVariations] = useState<Variation[]>(
-    product?.variations || [{ name: "", options: [""] }]
+    product?.variations || []
   );
 
+  // --------------------- SUBMIT ---------------------
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
+
     try {
       const formData = new FormData(e.currentTarget);
 
-      // ✅ Correct transformation to match required payload
-      const formattedVariations = variations.map((v) => ({
-        variation_name: v.name.trim().toLowerCase(), // convert key & clean name
+      // attach image file
+      if (imagePreview?.file) {
+        formData.set("product_image", imagePreview.file);
+      }
+
+      // ------------------ variation processing -------------------
+      let finalVariations = null;
+
+      const cleanVariations = variations.map((v) => ({
+        variation_name: v.name.trim().toLowerCase(),
         options: v.options
           .map((opt) => opt.trim().toLowerCase())
-          .filter(Boolean), // ensure lowercase + remove empties
+          .filter(Boolean),
       }));
 
-      console.log("Payload variations:", formattedVariations); // ✅ Debug log — remove in production
+      const hasValidVariation = cleanVariations.some(
+        (v) => v.variation_name && v.options.length > 0
+      );
 
-      formData.append("variations", JSON.stringify(formattedVariations));
+      if (hasValidVariation) {
+        finalVariations = cleanVariations;
+      } else {
+        finalVariations = null; // ← when no real variations
+      }
+
+      formData.append("variations", JSON.stringify(finalVariations));
 
       if (isEdit) {
         await updateProductWithVariation(product._id, formData);
@@ -378,6 +453,7 @@ function ProductFormModal({
     }
   };
 
+  // -------------------------------------------------------------------------------------
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
       <div className="bg-white w-full max-w-2xl rounded-2xl shadow-lg p-6 overflow-y-auto max-h-[90vh]">
@@ -387,13 +463,14 @@ function ProductFormModal({
           </h2>
           <button
             onClick={onClose}
-            className="text-gray-600 hover:text-gray-900"
+            className="text-gray-600 hover:text-gray-900 cursor-pointer"
           >
             ✕
           </button>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
+          {/* Product Name */}
           <div>
             <label className="block mb-1 font-medium text-sm">
               Product Name
@@ -406,6 +483,7 @@ function ProductFormModal({
             />
           </div>
 
+          {/* Category */}
           <div>
             <label className="block mb-1 font-medium text-sm">Category</label>
             <select
@@ -423,17 +501,45 @@ function ProductFormModal({
             </select>
           </div>
 
+          {/* Product Image + PREVIEW */}
           <div>
             <label className="block mb-1 font-medium text-sm">
               Product Image
             </label>
+
             <input
               type="file"
               name="product_image"
+              accept="*"
+              onChange={onImageChange}
               className="w-full border rounded p-2"
             />
+
+            {imagePreview && (
+              <div className="mt-2 flex items-center gap-3 border p-2 rounded bg-gray-50 relative w-fit">
+                <button
+                  type="button"
+                  className="absolute -top-2 -right-2 bg-red-600 text-white rounded-full px-1.5 py-0.5 cursor-pointer"
+                  onClick={removeImage}
+                >
+                  ✕
+                </button>
+
+                {imagePreview.isImage ? (
+                  <img
+                    src={imagePreview.url}
+                    className="w-24 h-24 object-cover rounded"
+                  />
+                ) : (
+                  <span className="text-sm text-gray-700">
+                    {imagePreview.file?.name || "Existing File"}
+                  </span>
+                )}
+              </div>
+            )}
           </div>
 
+          {/* Status */}
           <div>
             <label className="block mb-1 font-medium text-sm">Status</label>
             <select
@@ -447,11 +553,13 @@ function ProductFormModal({
             </select>
           </div>
 
-          {/* Variation Builder */}
+          {/* Variations */}
           <div className="border-t pt-3">
             <h3 className="font-medium text-gray-700 mb-2">Variations</h3>
+
             {variations.map((v, i) => (
               <div key={i} className="border rounded p-3 mb-3 bg-gray-50">
+                {/* Variation name */}
                 <div className="flex items-center justify-between mb-2">
                   <input
                     type="text"
@@ -463,19 +571,19 @@ function ProductFormModal({
                       setVariations(updated);
                     }}
                     className="border rounded p-2 flex-1"
-                    required
                   />
                   <button
                     type="button"
                     onClick={() =>
                       setVariations(variations.filter((_, idx) => idx !== i))
                     }
-                    className="ml-2 text-red-600 hover:text-red-800"
+                    className="ml-2 text-red-600 hover:text-red-800 cursor-pointer"
                   >
-                    <IconTrash size={16} />
+                    ✕
                   </button>
                 </div>
 
+                {/* Options */}
                 {v.options.map((opt, j) => (
                   <div key={j} className="flex items-center mb-2">
                     <input
@@ -488,7 +596,6 @@ function ProductFormModal({
                         setVariations(updated);
                       }}
                       className="border rounded p-2 flex-1"
-                      required
                     />
                     {v.options.length > 1 && (
                       <button
@@ -498,7 +605,7 @@ function ProductFormModal({
                           updated[i].options.splice(j, 1);
                           setVariations(updated);
                         }}
-                        className="ml-2 text-gray-600 hover:text-red-600"
+                        className="ml-2 text-gray-600 hover:text-red-600 cursor-pointer"
                       >
                         ✕
                       </button>
@@ -513,7 +620,7 @@ function ProductFormModal({
                     updated[i].options.push("");
                     setVariations(updated);
                   }}
-                  className="text-sm text-cyan-700 font-medium hover:underline"
+                  className="text-sm text-cyan-700 font-medium hover:underline cursor-pointer"
                 >
                   + Add Option
                 </button>
@@ -525,24 +632,25 @@ function ProductFormModal({
               onClick={() =>
                 setVariations([...variations, { name: "", options: [""] }])
               }
-              className="px-3 py-1 bg-cyan-700 text-white rounded text-sm hover:bg-cyan-800"
+              className="px-3 py-1 bg-cyan-700 text-white rounded text-sm hover:bg-cyan-800 cursor-pointer"
             >
               + Add Variation
             </button>
           </div>
 
+          {/* Footer */}
           <div className="flex justify-end gap-2 border-t pt-3">
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300"
+              className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300 cursor-pointer"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={loading}
-              className="px-4 py-2 bg-cyan-700 text-white rounded hover:bg-cyan-800"
+              className="px-4 py-2 bg-cyan-700 text-white rounded hover:bg-cyan-800 cursor-pointer"
             >
               {loading ? "Saving..." : "Save"}
             </button>
@@ -552,3 +660,4 @@ function ProductFormModal({
     </div>
   );
 }
+
