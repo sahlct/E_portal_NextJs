@@ -316,12 +316,7 @@ function SkuFormModal({
   // ✅ Load all products for dropdown
   useEffect(() => {
     (async () => {
-      const res = await getProducts(
-        page,
-        100,
-        undefined,
-        undefined,
-      );
+      const res = await getProducts(page, 100, undefined, undefined);
       setProducts(res?.data || []);
     })();
   }, []);
@@ -359,9 +354,8 @@ function SkuFormModal({
 
   // ✅ Handle image selection
   const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-      setSkuImages((prev) => [...prev, ...Array.from(e.target.files)]);
-    }
+    const files = Array.from(e.target.files || []);
+    if (files.length > 0) setSkuImages((p) => [...p, ...files]);
   };
 
   const handleImageRemove = (index: number) => {
@@ -380,24 +374,18 @@ function SkuFormModal({
   };
 
   // ✅ Submit SKU
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
+
     try {
       const formData = new FormData(e.currentTarget);
 
-      // Append variations
-      selectedOptions.forEach((optId) =>
-        formData.append("sku_variation_conf[]", optId)
-      );
+      selectedOptions.forEach((id) => formData.append("sku_variation_conf[]", id));
 
-      // Append new images
+      existingImages.forEach((url) => formData.append("existing_sku_image", url));
+
       skuImages.forEach((file) => formData.append("sku_image", file));
-
-      // Append existing images (to preserve them)
-      existingImages.forEach((url) =>
-        formData.append("existing_sku_image[]", url)
-      );
 
       if (isEdit) {
         await updateProductSkuWithVariation(sku._id, formData);
@@ -411,10 +399,9 @@ function SkuFormModal({
       onClose();
     } catch (err) {
       toast.error("Something went wrong");
-      console.error(err);
-    } finally {
-      setLoading(false);
     }
+
+    setLoading(false);
   };
 
   return (

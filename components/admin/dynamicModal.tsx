@@ -48,11 +48,24 @@ export default function DynamicFormModal({
       if (f.type === "file" && defaultValues[f.name]) {
         const value = defaultValues[f.name];
 
+        // ⛔ Skip if array (like other_images)
+        if (Array.isArray(value)) {
+          previews[f.name] = null;
+          return;
+        }
+
+        // ⛔ Skip if not string
+        if (typeof value !== "string") {
+          previews[f.name] = null;
+          return;
+        }
+
+        const lower = value.toLowerCase();
         const isImage =
-          value.endsWith(".png") ||
-          value.endsWith(".jpg") ||
-          value.endsWith(".jpeg") ||
-          value.endsWith(".webp");
+          lower.endsWith(".png") ||
+          lower.endsWith(".jpg") ||
+          lower.endsWith(".jpeg") ||
+          lower.endsWith(".webp");
 
         previews[f.name] = {
           url: value,
@@ -231,7 +244,13 @@ export default function DynamicFormModal({
                       type={f.type}
                       name={f.name}
                       required={f.required}
-                      defaultValue={defaultValues?.[f.name] || ""}
+                      defaultValue={
+                        f.type === "date" && defaultValues?.[f.name]
+                          ? new Date(defaultValues[f.name])
+                              .toISOString()
+                              .split("T")[0]
+                          : defaultValues?.[f.name] || ""
+                      }
                       className="w-full border rounded-md p-2"
                     />
                   )}

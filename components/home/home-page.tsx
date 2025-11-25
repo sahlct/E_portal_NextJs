@@ -7,6 +7,7 @@ import { ProductSlider } from "@/components/product-slider";
 import { CategoriesGrid } from "@/components/home/categories-grid";
 import { BrandsMarquee } from "@/components/home/brands-marquee";
 import { getProductSkus } from "@/lib/api/sku";
+import ListingCategorySliders from "./listingCategorySliders";
 
 export function HomePage() {
   const [mounted, setMounted] = useState(false);
@@ -89,6 +90,8 @@ export function HomePage() {
 
       {/* Brands Marquee */}
       <BrandsMarquee />
+
+       <ListingCategorySliders />
     </div>
   );
 }

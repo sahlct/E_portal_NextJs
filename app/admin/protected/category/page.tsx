@@ -19,7 +19,7 @@ import toast from "react-hot-toast";
 
 export default function CategoryPage() {
   const [data, setData] = useState<any[]>([]);
-  const [filters, setFilters] = useState<{ status?: string }>({});
+  const [filters, setFilters] = useState<{ status?: string ; is_listing?: string }>({});
   const [openForm, setOpenForm] = useState(false);
   const [openDelete, setOpenDelete] = useState(false);
   const [openView, setOpenView] = useState(false);
@@ -37,8 +37,10 @@ export default function CategoryPage() {
         page,
         10,
         debouncedSearch,
-        filters.status ? Number(filters.status) : undefined
+        filters.status ? Number(filters.status) : undefined,
+        filters.is_listing ? filters.is_listing : undefined
       );
+
       setData(res?.data || []);
       setTotalPages(res?.meta?.pages || 1);
     } catch (err) {
@@ -76,6 +78,7 @@ export default function CategoryPage() {
         ) : (
           "—"
         ),
+        "Show in Listing": c.is_listing ? "Yes" : "No",
         Status:
           c.status === 1 ? (
             <span className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-xs font-medium">
@@ -120,6 +123,18 @@ export default function CategoryPage() {
       ],
       required: true,
     },
+
+    // ⭐ NEW FIELD
+    {
+      name: "is_listing",
+      label: "Show in Listing?",
+      type: "select",
+      options: [
+        { label: "Yes", value: "true" },
+        { label: "No", value: "false" },
+      ],
+      required: true,
+    },
   ];
 
   return (
@@ -136,6 +151,14 @@ export default function CategoryPage() {
                 options: [
                   { label: "Active", value: "1" },
                   { label: "Inactive", value: "0" },
+                ],
+              },
+              {
+                key: "is_listing",
+                label: "Listing",
+                options: [
+                  { label: "Yes", value: "true" },
+                  { label: "No", value: "false" },
                 ],
               },
             ]}
@@ -178,16 +201,31 @@ export default function CategoryPage() {
                     e.stopPropagation();
                   }}
                 >
-                 <img 
-                  src={r.category_image}
-                  alt="sku"
-                  className="w-14 h-10 object-cover rounded border"
-                />
+                  <img
+                    src={r.category_image}
+                    alt="sku"
+                    className="w-14 h-10 object-cover rounded border"
+                  />
                 </a>
               ) : (
                 "—"
               ),
           },
+          {
+            key: "is_listing",
+            label: "Listing",
+            render: (r: any) =>
+              r.is_listing ? (
+                <span className="bg-blue-100 text-blue-800 px-3 py-0.5 rounded-full">
+                  Yes
+                </span>
+              ) : (
+                <span className="bg-gray-200 text-black px-3 py-0.5 rounded-full">
+                  No
+                </span>
+              ),
+          },
+
           {
             key: "status",
             label: "Status",

@@ -5,14 +5,17 @@ export async function getCategories(
   page = 1,
   limit = 10,
   search?: string,
-  status?: number
+  status?: number,
+  is_listing?: string
 ) {
   const params = new URLSearchParams({
     page: String(page),
     limit: String(limit),
   });
+
   if (search) params.append("search", search);
   if (status !== undefined) params.append("status", String(status));
+  if (is_listing !== undefined) params.append("is_listing", is_listing);
 
   return apiRequest(`/api/categories?${params.toString()}`, "GET");
 }
