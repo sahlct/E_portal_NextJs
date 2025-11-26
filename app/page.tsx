@@ -1,10 +1,15 @@
-import { Suspense } from "react"
-import { HomePage } from "@/components/home/home-page"
+// import { Suspense } from "react"
+// import { HomePage } from "@/components/home/home-page"
 
-export default function Home() {
-  return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <HomePage />
-    </Suspense>
-  )
+// export default function Home() {
+//   return (
+//     <Suspense fallback={<div>Loading...</div>}>
+//       <HomePage />
+//     </Suspense>
+//   )
+// }
+import { redirect } from 'next/navigation'
+
+export default function HomeRedirect() {
+  redirect('/public/home')
 }
