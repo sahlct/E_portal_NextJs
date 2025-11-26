@@ -65,7 +65,7 @@ export function CategoriesGrid() {
         {categories.map((category) => (
           <Link
             key={category._id}
-            href={`/products?category=${category._id}`}
+            href={`/public/products?category=${category._id}`}
             className="block"
           >
             <div className="relative h-48 rounded-lg overflow-hidden group cursor-pointer">

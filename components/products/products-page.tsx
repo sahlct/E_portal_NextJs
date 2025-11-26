@@ -156,7 +156,7 @@ export function ProductsPage() {
                   key={id}
                   className="rounded-lg overflow-hidden transition-all group"
                 >
-                  <Link href={`/product/${id}`}>
+                  <Link href={`/public/products/${id}`}>
                     <div className="relative md:h-48 h-36 overflow-hidden rounded-lg">
                       <img
                         src={image || "/placeholder.svg"}
@@ -172,7 +172,7 @@ export function ProductsPage() {
                   </Link>
 
                   <div className="py-4 flex flex-col">
-                    <Link href={`/product/${id}`}>
+                    <Link href={`/public/products/${id}`}>
                       <h3 className="font-semibold text-sm mb-2 line-clamp-2 hover:text-yellow-600 transition-colors">
                         {title}
                       </h3>

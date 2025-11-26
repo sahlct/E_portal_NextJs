@@ -188,7 +188,7 @@ export default function SingleProductPage() {
     const id = findMatchingSkuId(selectedByVariation);
     if (id && id !== currentSku._id) {
       loadSkuById(id);
-      router.replace(`/product/${id}`);
+      router.replace(`/public/products/${id}`);
     }
   }, [selectedByVariation]);
 
@@ -243,7 +243,7 @@ export default function SingleProductPage() {
         category: currentSku.product_id?.category_id ?? null,
       });
     }
-    router.push("/cart");
+    router.push("/public/cart");
   };
 
   // ------------------------------------------

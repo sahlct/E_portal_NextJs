@@ -13,12 +13,12 @@ export function Navbar() {
   const { items } = useCart()
 
   const navLinks = [
-    { href: "/", label: "Home" },
-    { href: "/products", label: "Products" },
-    { href: "/blogs", label: "Blogs" },
+    { href: "/public/home", label: "Home" },
+    { href: "/public/products", label: "Products" },
+    { href: "/public/blogs", label: "Blogs" },
     // { href: "/brands", label: "Brands" },
-    { href: "/about", label: "About" },
-    { href: "/contact", label: "Contact" },
+    { href: "/public/about", label: "About" },
+    { href: "/public/contact", label: "Contact" },
   ]
 
   return (
@@ -62,7 +62,7 @@ export function Navbar() {
             </Button> */}
 
             {/* Cart */}
-            <Link href="/cart" className="relative">
+            <Link href="/public/cart" className="relative">
               <Button variant="ghost" className="cursor-pointer" size="icon">
                 <ShoppingCart className="w-4 h-4" />
                 {items.length > 0 && (

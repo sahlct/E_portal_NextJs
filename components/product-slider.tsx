@@ -136,7 +136,7 @@ export function ProductSlider({ products }: Props) {
                   gap-2
                 "
               >
-                <Link href={`/product/${p.id}`}>
+                <Link href={`/public/products/${p.id}`}>
                   <div className="h-48 bg-gray-100 rounded-xl overflow-hidden">
                     <img
                       src={p.image}
@@ -146,7 +146,7 @@ export function ProductSlider({ products }: Props) {
                 </Link>
 
                 <div className="py-4">
-                  <Link href={`/product/${p.id}`}>
+                  <Link href={`/public/products/${p.id}`}>
                     <h3 className="font-semibold text-sm mb-1 line-clamp-2 hover:text-blue-600">
                       {p.title}
                     </h3>

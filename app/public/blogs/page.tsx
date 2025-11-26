@@ -150,7 +150,7 @@ function BlogCard({ blog }: { blog: Blog }) {
         <div className="flex items-center justify-between">
           {/* If you have a blog details page, wire this link accordingly */}
           <Link
-            href={`/blogs/${blog._id}`}
+            href={`/public/blogs/${blog._id}`}
             className="text-primary hover:opacity-80 font-medium text-sm"
           >
             Read more →

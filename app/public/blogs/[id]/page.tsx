@@ -63,8 +63,8 @@ export default function BlogDetailsPage() {
         
         {/* Breadcrumb */}
         <div className="text-sm text-gray-500 mb-4">
-          <Link href="/" className="hover:underline">Home</Link> /{" "}
-          <Link href="/blogs" className="hover:underline">Blog</Link> /{" "}
+          <Link href="/public/home" className="hover:underline">Home</Link> /{" "}
+          <Link href="/public/blogs" className="hover:underline">Blog</Link> /{" "}
           <span className="text-gray-700">{blog.blog_title}</span>
         </div>
 
@@ -118,7 +118,7 @@ export default function BlogDetailsPage() {
 
               return (
                 <Link
-                  href={`/blog/${item._id}`}
+                  href={`/public/blog/${item._id}`}
                   key={item._id}
                   className="flex gap-4 items-start group"
                 >
