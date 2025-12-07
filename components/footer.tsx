@@ -41,7 +41,7 @@ export function Footer() {
 
             <div className="flex gap-3 mt-4">
               {[
-                { Icon: Facebook, color: "bg-blue-600" },
+                { Icon: Facebook, color: "bg-blue-600", href:"" },
                 { Icon: Twitter, color: "bg-sky-500" },
                 { Icon: Instagram, color: "bg-red-500" },
                 { Icon: Linkedin, color: "bg-sky-700" },
@@ -107,10 +107,10 @@ export function Footer() {
           <div>
             <h4 className="font-semibold text-lg mb-4">Quick view</h4>
             <ul className="space-y-2 text-sm opacity-90">
-              <li><Link href="/service" className="hover:text-white">Service</Link></li>
-              <li><Link href="/store" className="hover:text-white">Find a Store</Link></li>
-              <li><Link href="/faqs" className="hover:text-white">FAQ’s</Link></li>
-              <li><Link href="/about" className="hover:text-white">About Us</Link></li>
+              <li><Link href="/service" className="hover:text-white">Products</Link></li>
+              <li><Link href="/store" className="hover:text-white">Blogs</Link></li>
+              <li><Link href="/faqs" className="hover:text-white">About Us</Link></li>
+              <li><Link href="/about" className="hover:text-white">Contact Us</Link></li>
             </ul>
           </div>
 

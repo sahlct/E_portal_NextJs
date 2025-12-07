@@ -15,6 +15,19 @@ export const metadata: Metadata = {
   title: "EA Portal ",
   description: "Premium electronics, laptops, accessories, and more",
   generator: "Sahal",
+  icons: {
+    icon: "/favicon.ico",
+    shortcut: "/favicon-16x16.png",
+    apple: "/apple-touch-icon.png",
+    other: [
+      {
+        rel: "icon",
+        url: "/favicon-32x32.png",
+        sizes: "32x32",
+      }
+    ],
+  },
+  manifest: "/site.webmanifest",
 };
 
 // Quicksand

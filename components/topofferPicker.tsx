@@ -2,9 +2,9 @@
 
 export default function TopOfferTicker() {
   const messages = [
-    "FREE Delivery over ₹499. Fulfilled by Amazon.",
-    "Flat $10 Instant Cashback on Wallet & UPI Transaction",
-    "Mega offers now on Amazon Fresh | Up to 40% Off",
+    "Support online 24 hours - Special discount's on all products",
+    "Fast shipping on all order - Save big every order",
+    "RMA Support - Return Material Authorization guarantee",
   ];
 
   return (

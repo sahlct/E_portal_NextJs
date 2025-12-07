@@ -10,8 +10,8 @@ export default function FeaturesBar() {
   const features = [
     {
       icon: <Truck className="w-10 h-10 text-orange-500" />,
-      title: "Free Delivery",
-      subtitle: "Free shipping on all order",
+      title: "Fast Delivery",
+      subtitle: "Fast shipping on all order",
     },
     {
       icon: <PiggyBank className="w-10 h-10 text-orange-500" />,
@@ -21,17 +21,17 @@ export default function FeaturesBar() {
     {
       icon: <Clock4 className="w-10 h-10 text-orange-500" />,
       title: "Online Support 24/7",
-      subtitle: "Support online 24 hours a day",
+      subtitle: "Support online 24 hours",
     },
     {
       icon: <DollarSign className="w-10 h-10 text-orange-500" />,
-      title: "Money Back Return",
-      subtitle: "Back guarantee under 7 days",
+      title: "RMA Support",
+      subtitle: "Return Material Authorization",
     },
     {
       icon: <Percent className="w-10 h-10 text-orange-500" />,
-      title: "Member Discount",
-      subtitle: "On every order over $120.00",
+      title: "Special Discount's",
+      subtitle: "discount's on all products",
     },
   ];
 
