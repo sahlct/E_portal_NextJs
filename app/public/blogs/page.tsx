@@ -25,7 +25,7 @@ export default function BlogsPage() {
   const loadBlogs = async () => {
     try {
       setLoading(true);
-      const res = await getBlogs(1, 10, undefined, 1); 
+      const res = await getBlogs(1, 10, undefined, 1);
       setBlogs(res?.data || []);
     } finally {
       setLoading(false);
@@ -38,38 +38,51 @@ export default function BlogsPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 md:py-16 py-8">
         {/* Header */}
         <section className="mb-10">
-          <div className="bg-purple-950 rounded-2xl overflow-hidden shadow-sm">
+          <div
+            style={{
+              backgroundImage:
+                "url('https://wordpress.templatetrip.com/WCM003_egudgets/wp-content/uploads/2023/08/banner-04.jpg')",
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+              backgroundRepeat: "no-repeat",
+            }}
+            className="md:rounded-2xl overflow-hidden shadow-sm md:h-[300px] h-52"
+          >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 p-8 md:p-12 items-center">
               <div>
-                <h1 className="text-4xl md:text-5xl font-bold text-primary-foreground mb-3">
+                <h1 className="md:text-4xl text-2xl lg:text-5xl font-medium text-primary-foreground mb-3 font-notosans">
                   Latest from Our Blog
                 </h1>
                 <p className="text-primary-foreground/90 text-base md:text-lg">
-                  Insights, launches, and behind-the-scenes stories from our team. Explore curated reads to stay up to date.
+                  Insights, launches, and behind-the-scenes stories from our
+                  team. Explore curated reads to stay up to date.
                 </p>
               </div>
-              <div className="bg-primary-foreground/10 rounded-xl h-56 md:h-64 flex items-center justify-center">
+              {/* <div className="bg-primary-foreground/10 rounded-xl h-56 md:h-64 flex items-center justify-center">
                 <img
                   src="https://img.freepik.com/free-vector/electronics-store-twitter-header_23-2151173093.jpg?semt=ais_hybrid&w=740&q=80"
                   alt="Blog Hero"
                   className="w-full h-full object-cover rounded-xl"
                 />
-              </div>
+              </div> */}
             </div>
           </div>
         </section>
 
         {/* Blogs Grid */}
         <section>
-          <h2 className="text-3xl font-bold mb-6">Featured Articles</h2>
+          <h2 className="text-3xl font-medium mb-6 font-notosans">Featured Articles</h2>
 
           {loading ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 md:gap-12 gap-6">
               {Array.from({ length: 6 }).map((_, i) => (
-                <div key={i} className="bg-card border border-border rounded-xl overflow-hidden shadow-sm">
+                <div
+                  key={i}
+                  className="bg-card border border-border rounded-xl overflow-hidden shadow-sm"
+                >
                   <div className="h-44 bg-muted animate-pulse" />
                   <div className="p-4 space-y-3">
                     <div className="h-5 w-3/4 bg-muted animate-pulse rounded" />
@@ -81,10 +94,12 @@ export default function BlogsPage() {
             </div>
           ) : blogs.length === 0 ? (
             <div className="text-center py-16 border border-dashed rounded-2xl">
-              <p className="text-muted-foreground">No blogs available right now.</p>
+              <p className="text-muted-foreground">
+                No blogs available right now.
+              </p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 md:gap-12 gap-6">
               {blogs.map((b) => (
                 <BlogCard key={b._id} blog={b} />
               ))}
@@ -98,8 +113,13 @@ export default function BlogsPage() {
 
 /* ---------------- Blog Card ---------------- */
 function BlogCard({ blog }: { blog: Blog }) {
-  const dateStr =
-    blog.date ? new Date(blog.date).toLocaleDateString("en-IN", { year: "numeric", month: "short", day: "numeric" }) : null;
+  const dateStr = blog.date
+    ? new Date(blog.date).toLocaleDateString("en-IN", {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+      })
+    : null;
 
   return (
     <article className="bg-card border border-border rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
@@ -119,7 +139,9 @@ function BlogCard({ blog }: { blog: Blog }) {
       </div>
 
       <div className="p-4">
-        <h3 className="text-lg font-semibold line-clamp-2 mb-1">{blog.blog_title}</h3>
+        <h3 className="text-lg font-semibold line-clamp-2 mb-1 font-notosans">
+          {blog.blog_title}
+        </h3>
         {blog.blog_sec_title ? (
           <p className="text-sm text-muted-foreground line-clamp-2 mb-3">
             {blog.blog_sec_title}

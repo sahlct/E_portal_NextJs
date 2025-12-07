@@ -75,7 +75,7 @@ export default function BlogDetailsPage() {
           <div className="lg:col-span-2">
 
             {/* Title */}
-            <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-3">
+            <h1 className="text-3xl md:text-4xl font-semibold text-gray-900 mb-3 font-notosans ">
               {blog.blog_title}
             </h1>
 
@@ -132,7 +132,7 @@ export default function BlogDetailsPage() {
 
                   <div>
                     <p className="text-xs text-gray-500">{date}</p>
-                    <p className="font-medium text-gray-800 group-hover:text-blue-600">
+                    <p className="font-medium text-gray-800 group-hover:text-blue-600 font-notosans">
                       {item.blog_title}
                     </p>
                   </div>

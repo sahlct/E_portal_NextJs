@@ -313,7 +313,7 @@ export default function SingleProductPage() {
 
           {/* ---------------- RIGHT ---------------- */}
           <div className="lg:col-span-7 space-y-6">
-            <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-3">
+            <h1 className="text-2xl md:text-3xl font-semibold text-gray-900 mb-3 font-notosans">
               {currentSku.product_sku_name}
             </h1>
             <p className="text-gray-500 mb-3">
@@ -322,8 +322,8 @@ export default function SingleProductPage() {
 
             {/* Price */}
             <div className="flex items-end gap-3">
-              <div className="text-3xl font-bold text-cyan-700">
-                ₹ {Number(currentSku.price).toLocaleString()}
+              <div className="text-3xl font-bold text-cyan-700 font-notosans">
+                AED {Number(currentSku.price).toLocaleString()}
               </div>
               {currentSku.mrp ? (
                 <div className="line-through text-gray-400">

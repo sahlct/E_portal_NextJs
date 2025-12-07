@@ -13,11 +13,11 @@ export default function BrandsPage() {
   const [brands, setBrands] = useState<Brand[]>([])
   const [loading, setLoading] = useState(true)
 
-  // ✅ Fetch brands from backend
+  //  Fetch brands from backend
   useEffect(() => {
     async function fetchBrands() {
       try {
-        const res = await getBrands(1, 100, undefined, 1) // /api/brands?page=1&limit=100&status=1
+        const res = await getBrands(1, 100, undefined, 1) 
         if (res?.data) setBrands(res.data)
       } catch (err) {
         console.error("❌ Failed to load brands:", err)
@@ -28,12 +28,12 @@ export default function BrandsPage() {
     fetchBrands()
   }, [])
 
-  // ✅ Loading state (skeleton)
+  //  Loading state (skeleton)
   if (loading) {
     return (
       <div className="min-h-screen bg-background">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <h1 className="text-4xl font-bold mb-4">Our Brands</h1>
+          <h1 className="text-4xl font-semibold mb-4 font-notosans">Our Brands</h1>
           <p className="text-muted-foreground mb-8">
             Shop from the world's leading technology brands
           </p>
@@ -51,7 +51,7 @@ export default function BrandsPage() {
     )
   }
 
-  // ✅ No data case
+  //  No data case
   if (brands.length === 0) {
     return (
       <div className="min-h-screen bg-background">
@@ -68,7 +68,7 @@ export default function BrandsPage() {
     )
   }
 
-  // ✅ Display actual brand logos
+  //  Display actual brand logos
   return (
     <div className="min-h-screen bg-background">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">

@@ -74,12 +74,12 @@ export function Carousel() {
   // ✅ Fallback while loading
   if (slides.length === 0) {
     return (
-      <div className="w-full h-[450px] bg-gray-200 rounded-lg animate-pulse" />
+      <div className="w-full h-[400px] bg-gray-200 rounded-lg animate-pulse" />
     );
   }
 
   return (
-    <div className="relative w-full h-[460px] overflow-hidden bg-secondary mb-0">
+    <div className="relative w-full h-[400px] overflow-hidden bg-secondary mb-0">
       {/* Slides  */}
       {slides.map((slide, index) => (
         <div
@@ -121,14 +121,14 @@ export function Carousel() {
       {/* Controls */}
       <button
         onClick={prev}
-        className="absolute left-4 top-1/2 -translate-y-1/2 z-10 bg-white/80 hover:bg-white p-2 rounded-full transition-colors"
+        className="absolute cursor-pointer left-4 top-1/2 -translate-y-1/2 z-10 bg-white/80 hover:bg-white p-2 rounded-full transition-colors"
         aria-label="Previous slide"
       >
         <ChevronLeft className="w-6 h-6 text-black" />
       </button>
       <button
         onClick={next}
-        className="absolute right-4 top-1/2 -translate-y-1/2 z-10 bg-white/80 hover:bg-white p-2 rounded-full transition-colors"
+        className="absolute cursor-pointer right-4 top-1/2 -translate-y-1/2 z-10 bg-white/80 hover:bg-white p-2 rounded-full transition-colors"
         aria-label="Next slide"
       >
         <ChevronRight className="w-6 h-6 text-black" />
@@ -144,7 +144,7 @@ export function Carousel() {
               setAutoplay(false);
               setTimeout(() => setAutoplay(true), 10000);
             }}
-            className={`w-2 h-2 rounded-full transition-all cursor-pointer ${
+            className={`w-3 h-3 rounded-full transition-all cursor-pointer ${
               index === current ? "bg-white w-6" : "bg-white/50"
             }`}
             aria-label={`Go to slide ${index + 1}`}

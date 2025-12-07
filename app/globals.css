@@ -3,6 +3,29 @@
 
 @custom-variant dark (&:is(.dark *));
 
+@layer base {
+  :root {
+    --font-geist-sans: var(--font-geist-sans);
+    --font-geist-mono: var(--font-geist-mono);
+    --font-quicksand: var(--font-quicksand);
+    --font-notosans: var(--font-notosans);
+  }
+
+  body {
+    font-family: var(--font-quicksand), sans-serif;
+  }
+}
+
+@layer utilities {
+  .font-quicksand {
+    font-family: var(--font-quicksand), sans-serif;
+  }
+
+  .font-notosans {
+    font-family: var(--font-notosans), sans-serif;
+  }
+}
+
 /* Hide scrollbar but allow scrolling */
 .no-scrollbar::-webkit-scrollbar {
   display: none;
@@ -12,6 +35,9 @@
   scrollbar-width: none;
 }
 
+.rotate-y-180 {
+  transform: rotateY(180deg);
+}
 
 :root {
   --font-sans: "Geist", "Geist Fallback";

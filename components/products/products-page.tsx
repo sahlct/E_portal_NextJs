@@ -30,7 +30,7 @@ export function ProductsPage() {
   const { addToCart, removeFromCart, items } = useCart();
   const debouncedSearch = useDebounce(searchQuery, 500);
 
-  // ✅ Load Categories
+  //  Load Categories
   const loadCategories = async () => {
     try {
       const res = await getCategories(1, 100, undefined, 1);
@@ -43,7 +43,7 @@ export function ProductsPage() {
     }
   };
 
-  // ✅ Load Products
+  //  Load Products
   const loadProducts = async () => {
     setLoading(true);
     try {
@@ -79,7 +79,9 @@ export function ProductsPage() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
         {/* Header */}
         <div className="md:mb-8 mb-4">
-          <h1 className="text-4xl font-bold mb-2 text-gray-900">Products</h1>
+          <h1 className="text-4xl font-semibold mb-2 text-gray-900 font-notosans">
+            Products
+          </h1>
           <p className="text-muted-foreground">
             Browse our collection of premium products
           </p>
@@ -140,7 +142,7 @@ export function ProductsPage() {
             No products found.
           </div>
         ) : (
-          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 md:gap-x-16 md:gap-y-10 gap-x-7">
             {products.map((product) => {
               const isInCart = items.some((item) => item.id === product._id);
               const title = product.product_sku_name;
@@ -157,7 +159,7 @@ export function ProductsPage() {
                   className="rounded-lg overflow-hidden transition-all group"
                 >
                   <Link href={`/public/products/${id}`}>
-                    <div className="relative md:h-48 h-36 overflow-hidden rounded-lg">
+                    <div className="relative md:h-56 h-36 overflow-hidden rounded-lg bg-[#f5f5f9]">
                       <img
                         src={image || "/placeholder.svg"}
                         alt={title}
@@ -173,7 +175,7 @@ export function ProductsPage() {
 
                   <div className="py-4 flex flex-col">
                     <Link href={`/public/products/${id}`}>
-                      <h3 className="font-semibold text-sm mb-2 line-clamp-2 hover:text-yellow-600 transition-colors">
+                      <h3 className="font-semibold text-md mb-2 md:line-clamp-2 hover:text-yellow-600 transition-colors font-notosans line-clamp-1">
                         {title}
                       </h3>
                     </Link>
@@ -201,8 +203,8 @@ export function ProductsPage() {
 
                     {/* Price */}
                     <div className="flex items-center gap-2 mb-4">
-                      <span className="text-lg font-bold text-blue-600">
-                        ₹{price}
+                      <span className="md:text-lg text-md font-bold text-blue-600 font-notosans">
+                        AED {price}
                       </span>
                       {originalPrice && (
                         <span className="text-sm text-muted-foreground line-through">
@@ -236,7 +238,11 @@ export function ProductsPage() {
                         {isInCart ? (
                           <>
                             <Trash2 className="w-4 h-4" />
-                            Remove<span className="hidden sm:inline px-0 mx-0">from</span>Cart
+                            Remove
+                            <span className="hidden sm:inline px-0 mx-0">
+                              from
+                            </span>
+                            Cart
                           </>
                         ) : (
                           <>

@@ -14,22 +14,22 @@ export default function ContactPage() {
 
             {/* LEFT SIDE: CONTACT INFO */}
             <div>
-              <h2 className="text-xl font-semibold mb-4">Location</h2>
+              <h2 className="text-xl font-medium mb-4 font-notosans">Location</h2>
               <p className="text-gray-600 mb-4 flex items-center gap-2">
                 <IconMapPin  size={18} /> Bin Jarsh Building, Naif-Deira, Dubai, UAE
               </p>
 
-              <h2 className="text-xl font-semibold mb-3">Phone</h2>
+              <h2 className="text-xl font-medium mb-3 font-notosans">Phone</h2>
               <p className="text-gray-700 leading-relaxed mb-6">
                 <a href="tel:+971589216757" className="flex items-center gap-2"><IconPhone size={18} /> +971 58 921 6757</a>
                 <a href="tel:+971502474482" className="flex items-center gap-2"><IconPhone size={18} /> +971 50 247 4482</a>
                 <a href="tel:+971544708620" className="flex items-center gap-2"><IconPhone size={18} /> +971 54 470 8620</a>
               </p>
 
-              <h2 className="text-xl font-semibold mb-3">Email</h2>
+              <h2 className="text-xl font-medium mb-3 font-notosans">Email</h2>
               <p className="text-gray-700 mb-6 flex items-center gap-2"><IconMail size={18} /> <a href="mailto:sales@eaportel.com">sales@eaportel.com</a></p>
 
-              <h2 className="text-xl font-semibold mb-3">Follow</h2>
+              <h2 className="text-xl font-medium mb-3 font-notosans">Follow</h2>
               <div className="flex gap-3">
                 <a href="#" className="bg-[#4267B2] text-white p-2 rounded-md">
                   <Facebook size={18} />
@@ -48,7 +48,7 @@ export default function ContactPage() {
 
             {/* RIGHT SIDE: FORM */}
             <div>
-              <h2 className="text-xl font-semibold mb-6">Enquiry Form</h2>
+              <h2 className="text-xl font-medium mb-6 font-notosans">Enquiry Form</h2>
 
               <form className="space-y-4">
                 <div>
@@ -93,9 +93,9 @@ export default function ContactPage() {
 
                 <button
                   type="submit"
-                  className="px-6 py-2 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition"
+                  className="px-6 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition font-notosans cursor-pointer"
                 >
-                  Send
+                  Submit
                 </button>
               </form>
             </div>
@@ -108,7 +108,7 @@ export default function ContactPage() {
 
           {/* LEFT INFO */}
           <div className="flex flex-col justify-center">
-            <h2 className="text-2xl font-semibold mb-4">Find us on the map</h2>
+            <h2 className="text-2xl font-medium font-notosans mb-4">Find us on the map</h2>
             <p className="text-gray-700 mb-4">
               Bin Jarsh Building, Naif-Deira,<br /> Dubai, UAE
             </p>

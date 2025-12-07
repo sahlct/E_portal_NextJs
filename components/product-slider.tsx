@@ -1,10 +1,17 @@
 "use client";
 
 import { useRef, useState, useEffect } from "react";
-import { ChevronLeft, ChevronRight, ShoppingCart, Trash2 } from "lucide-react";
+import {
+  ChevronLeft,
+  ChevronRight,
+  ShoppingCart,
+  Trash2,
+  Star,
+} from "lucide-react";
 import Link from "next/link";
 import gsap from "gsap";
 import { useCart } from "@/context/cart-context";
+import { IconStar } from "@tabler/icons-react";
 
 interface Product {
   id: string;
@@ -75,10 +82,8 @@ export function ProductSlider({ products }: Props) {
 
   return (
     <div className="relative w-full py-2">
-
       {/* OUTER WRAPPER WITH PADDING (keeps arrows off padding) */}
       <div className="px-10">
-
         {/* LEFT ARROW */}
         {showArrows.left && (
           <button
@@ -130,10 +135,10 @@ export function ProductSlider({ products }: Props) {
                 className="
                   snap-start
                   flex-shrink-0 
-                  w-[260px]
+                  w-[270px]
                   rounded-xl
                   transition
-                  gap-2
+                  gap-2 bg-white px-2 pt-2
                 "
               >
                 <Link href={`/public/products/${p.id}`}>
@@ -147,9 +152,26 @@ export function ProductSlider({ products }: Props) {
 
                 <div className="py-4">
                   <Link href={`/public/products/${p.id}`}>
-                    <h3 className="font-semibold text-sm mb-1 line-clamp-2 hover:text-blue-600">
+                    <h3 className="font-medium text-sm mb-1 line-clamp-2 hover:text-blue-600 font-notosans">
                       {p.title}
                     </h3>
+                    <div className="flex items-center gap-1 mb-2">
+                      <div className="flex items-center mb-2">
+                        {[1, 2, 3, 4, 5].map((star) => (
+                          <Star
+                            key={star}
+                            className={`w-3 h-3 fill-current ${
+                              star <= p.rating
+                                ? "text-yellow-500"
+                                : "text-yellow-300"
+                            }`}
+                          />
+                        ))}
+                        <span className="text-xs ms-3">
+                          {p?.rating || "4.5/5"}
+                        </span>
+                      </div>
+                    </div>
                   </Link>
 
                   <p className="text-xs text-gray-500 line-clamp-2">
@@ -157,12 +179,12 @@ export function ProductSlider({ products }: Props) {
                   </p>
 
                   <div className="flex gap-2 items-center mt-3">
-                    <span className="font-bold text-blue-700 text-lg">
-                      ₹{p.price}
+                    <span className="font-bold text-blue-700 text-lg font-notosans">
+                      AED {p.price}
                     </span>
                     {p.originalPrice && (
-                      <span className="line-through text-gray-400 text-sm">
-                        ₹{p.originalPrice}
+                      <span className="line-through text-gray-400 text-sm font-notosans">
+                        AED {p.originalPrice}
                       </span>
                     )}
                   </div>
