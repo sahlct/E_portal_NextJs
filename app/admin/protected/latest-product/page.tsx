@@ -29,7 +29,9 @@ export default function LatestProductPage() {
 
   const debouncedSearch = useDebounce(search, 500);
 
-  // ✅ Load only latest products
+  const server_url = process.env.NEXT_PUBLIC_SERVER_URL;
+
+  //  Load only latest products
   const loadLatestProducts = async () => {
     try {
       const res = await getProductSkus(page, 100, debouncedSearch, filters.status, undefined, undefined, true);
@@ -44,7 +46,7 @@ export default function LatestProductPage() {
     loadLatestProducts();
   }, [page, debouncedSearch, filters]);
 
-  // ✅ View modal handler
+  //  View modal handler
   const handleView = async (row: any) => {
     try {
       const res = await getProductSkuById(row._id);
@@ -62,8 +64,8 @@ export default function LatestProductPage() {
         "Single Order Limit": c.single_order_limit,
         Description: c.description || "—",
         Thumbnail: c.thumbnail_image ? (
-          <a href={c.thumbnail_image} target="_blank" className="text-blue-600 underline">
-           <img src={c.thumbnail_image} alt="sku" className="w-20 h-16 object-cover rounded border" />
+          <a href={server_url + c.thumbnail_image} target="_blank" className="text-blue-600 underline">
+           <img src={server_url + c.thumbnail_image} alt="sku" className="w-20 h-16 object-cover rounded border" />
           </a>
         ) : (
           "—"
@@ -71,8 +73,8 @@ export default function LatestProductPage() {
         Images: c.sku_image?.length ? (
           <div className="flex flex-wrap gap-2">
             {c.sku_image.map((img: string, i: number) => (
-              <a key={i} href={img} target="_blank" rel="noreferrer">
-                <img src={img} alt="sku" className="w-16 h-16 object-cover rounded border" />
+              <a key={i} href={server_url + img} target="_blank" rel="noreferrer">
+                <img src={server_url + img} alt="sku" className="w-16 h-16 object-cover rounded border" />
               </a>
             ))}
           </div>
@@ -171,7 +173,7 @@ export default function LatestProductPage() {
             render: (r: any) =>
               r.thumbnail_image ? (
                 <img
-                  src={r.thumbnail_image}
+                  src={server_url + r.thumbnail_image}
                   alt="thumbnail"
                   className="w-16 h-10 object-cover rounded border"
                 />
@@ -237,7 +239,7 @@ function AddLatestProductModal({
   const [selectedOptions, setSelectedOptions] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
 
-  // ✅ Load SKUs (status = 1)
+  //  Load SKUs (status = 1)
   useEffect(() => {
     (async () => {
       try {
@@ -296,7 +298,7 @@ function AddLatestProductModal({
           <button onClick={onClose} className="hover:scale-110 cursor-pointer">✕</button>
         </div>
 
-        {/* ✅ Multi-select Field (Dropdown scrolls independently) */}
+        {/*  Multi-select Field (Dropdown scrolls independently) */}
         <div className="mb-5 relative z-50">
           <label className="block mb-1 text-sm font-medium text-gray-700">
             Select Product SKUs

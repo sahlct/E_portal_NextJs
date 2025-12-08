@@ -28,6 +28,8 @@ export default function CarouselPage() {
   const [search, setSearch] = useState("");
   const [totalPages, setTotalPages] = useState(1);
 
+  const server_url = process.env.NEXT_PUBLIC_SERVER_URL;
+
   const debouncedSearch = useDebounce(search, 500);
 
   const loadCarousels = async () => {
@@ -72,9 +74,9 @@ export default function CarouselPage() {
           //   View Desktop Image
           // </a>
 
-          <a href={c.desktop_file} target="_blank" rel="noreferrer">
+          <a href={server_url + c.desktop_file} target="_blank" rel="noreferrer">
             <img
-              src={c.desktop_file}
+              src={server_url + c.desktop_file}
               alt="sku"
               className="max-w-40 object-cover rounded border"
             />
@@ -92,9 +94,9 @@ export default function CarouselPage() {
           //   View Mobile Image
           // </a>
 
-          <a href={c.mobile_file} target="_blank" rel="noreferrer">
+          <a href={server_url + c.mobile_file} target="_blank" rel="noreferrer">
             <img
-              src={c.mobile_file}
+              src={server_url + c.mobile_file}
               alt="sku"
               className="max-w-40 object-cover rounded border"
             />
@@ -219,7 +221,7 @@ export default function CarouselPage() {
             render: (r: any) =>
               r.desktop_file ? (
                 <a
-                  href={r.desktop_file}
+                  href={server_url + r.desktop_file}
                   target="_blank"
                   className="text-blue-600 underline"
                   onClick={(e) => {
@@ -227,7 +229,7 @@ export default function CarouselPage() {
                   }}
                 >
                   <img
-                    src={r.desktop_file}
+                    src={server_url + r.desktop_file}
                     alt=""
                     className="max-w-32 object-cover rounded border"
                   />
@@ -242,7 +244,7 @@ export default function CarouselPage() {
             render: (r: any) =>
               r.mobile_file ? (
                 <a
-                  href={r.mobile_file}
+                  href={server_url + r.mobile_file}
                   target="_blank"
                   className="text-blue-600 underline"
                   onClick={(e) => {
@@ -250,7 +252,7 @@ export default function CarouselPage() {
                   }}
                 >
                   <img
-                    src={r.mobile_file}
+                    src={server_url + r.mobile_file}
                     alt=""
                     className="max-w-32 object-cover rounded border"
                   />

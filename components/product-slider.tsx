@@ -31,6 +31,8 @@ export function ProductSlider({ products }: Props) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const { addToCart, removeFromCart, items } = useCart();
 
+  const server_url = process.env.NEXT_PUBLIC_SERVER_URL;
+
   const [showArrows, setShowArrows] = useState({
     left: false,
     right: false,
@@ -144,7 +146,7 @@ export function ProductSlider({ products }: Props) {
                 <Link href={`/public/products/${p.id}`}>
                   <div className="h-52 bg-gray-100 rounded-xl overflow-hidden">
                     <img
-                      src={p.image}
+                      src={server_url + p.image}
                       className="w-full h-full object-cover hover:scale-110 transition duration-300"
                     />
                   </div>

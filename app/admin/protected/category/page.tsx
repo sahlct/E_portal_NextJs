@@ -31,6 +31,8 @@ export default function CategoryPage() {
 
   const debouncedSearch = useDebounce(search, 500);
 
+  const server_url = process.env.NEXT_PUBLIC_SERVER_URL;
+
   const loadCategories = async () => {
     try {
       const res = await getCategories(
@@ -61,7 +63,7 @@ export default function CategoryPage() {
         "Category Name": c.category_name || "—",
         Image: c.category_image ? (
           <a
-            href={c.category_image}
+            href={server_url + c.category_image}
             target="_blank"
             rel="noopener noreferrer"
             className="text-blue-600 underline"
@@ -70,7 +72,7 @@ export default function CategoryPage() {
             }}
           >
             <img
-              src={c.category_image}
+              src={server_url + c.category_image}
               alt="sku"
               className="max-w-32 object-cover rounded border"
             />
@@ -194,7 +196,7 @@ export default function CategoryPage() {
             render: (r: any) =>
               r.category_image ? (
                 <a
-                  href={r.category_image}
+                  href={server_url + r.category_image}
                   target="_blank"
                   className="text-blue-600 underline"
                   onClick={(e) => {
@@ -202,7 +204,7 @@ export default function CategoryPage() {
                   }}
                 >
                   <img
-                    src={r.category_image}
+                    src={server_url + r.category_image}
                     alt="sku"
                     className="w-14 h-10 object-cover rounded border"
                   />

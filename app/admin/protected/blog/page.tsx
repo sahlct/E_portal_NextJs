@@ -28,6 +28,8 @@ export default function BlogPage() {
   const [search, setSearch] = useState("");
   const [totalPages, setTotalPages] = useState(1);
 
+  const server_url = process.env.NEXT_PUBLIC_SERVER_URL;
+
   const debouncedSearch = useDebounce(search, 500);
 
   // ✅ Load Blogs with latest API format (with search + filters)
@@ -65,13 +67,13 @@ export default function BlogPage() {
         ),
         "Thumbnail": b.blog_thumbnail ? (
           <a
-            href={b.blog_thumbnail}
+            href={server_url + b.blog_thumbnail}
             target="_blank"
             rel="noopener noreferrer"
             className="text-blue-600 underline"
           >
             <img
-              src={b.blog_thumbnail}
+              src={server_url + b.blog_thumbnail}
               alt="thumbnail"
               className="max-w-32 object-cover rounded border"
             />
@@ -84,12 +86,12 @@ export default function BlogPage() {
             {b.other_images.map((img: string, idx: number) => (
               <a
                 key={idx}
-                href={img}
+                href={server_url + img}
                 target="_blank"
                 className="text-blue-600 underline"
               >
                 <img
-                  src={img}
+                  src={server_url + img}
                   alt="image"
                   className="w-24 h-20 object-cover rounded border"
                 />
@@ -200,13 +202,13 @@ export default function BlogPage() {
             render: (r: any) =>
               r.blog_thumbnail ? (
                 <a
-                  href={r.blog_thumbnail}
+                  href={server_url + r.blog_thumbnail}
                   target="_blank"
                   className="text-blue-600 underline"
                   onClick={(e) => e.stopPropagation()}
                 >
                   <img
-                    src={r.blog_thumbnail}
+                    src={server_url + r.blog_thumbnail}
                     alt="thumbnail"
                     className="w-20 h-16 object-cover rounded border"
                   />

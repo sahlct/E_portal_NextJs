@@ -50,6 +50,7 @@ export default function ProductPage() {
   >([]);
 
   const debouncedSearch = useDebounce(search, 500);
+  const server_url = process.env.NEXT_PUBLIC_SERVER_URL || "";
 
   // --- Load categories
   const loadCategories = async () => {
@@ -122,7 +123,7 @@ export default function ProductPage() {
         Category: c.category_name || "—",
         "Product Image": c.product_image ? (
           <a
-            href={c.product_image}
+            href={server_url + c.product_image}
             target="_blank"
             rel="noopener noreferrer"
             className="text-blue-600 underline"
@@ -131,7 +132,7 @@ export default function ProductPage() {
             }}
           >
             <img
-              src={c.product_image}
+              src={server_url + c.product_image}
               alt="product"
               className="w-24 h-20 object-cover rounded border"
             />
@@ -250,7 +251,7 @@ export default function ProductPage() {
             render: (r: any) =>
               r.product_image ? (
                 <a
-                  href={r.product_image}
+                  href={server_url + r.product_image}
                   target="_blank"
                   className="text-blue-600 underline"
                   onClick={(e) => {
@@ -258,7 +259,7 @@ export default function ProductPage() {
                   }}
                 >
                   <img
-                    src={r.product_image}
+                    src={server_url + r.product_image}
                     alt="product"
                     className="w-14 h-10 object-cover rounded border"
                   />
@@ -352,6 +353,8 @@ function ProductFormModal({
   categories: { label: string; value: string }[];
 }) {
   const [loading, setLoading] = useState(false);
+
+  const server_url = process.env.NEXT_PUBLIC_SERVER_URL || "";
 
   // --------------------- FILE PREVIEW STATE ---------------------
   const [imagePreview, setImagePreview] = useState<{
@@ -527,7 +530,7 @@ function ProductFormModal({
 
                 {imagePreview.isImage ? (
                   <img
-                    src={imagePreview.url}
+                    src={server_url + imagePreview.url}
                     className="w-24 h-24 object-cover rounded"
                   />
                 ) : (

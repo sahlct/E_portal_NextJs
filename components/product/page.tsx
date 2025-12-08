@@ -42,6 +42,8 @@ export default function SingleProductPage() {
 
   const [mainImage, setMainImage] = useState<string | null>(null);
 
+  const server_url = process.env.NEXT_PUBLIC_SERVER_URL;
+
   // variation selections { variationId : optionId }
   const [selectedByVariation, setSelectedByVariation] = useState<
     Record<string, string>
@@ -281,7 +283,7 @@ export default function SingleProductPage() {
               <div className="w-full h-80 md:h-96 flex items-center justify-center bg-white border rounded-lg overflow-hidden">
                 {mainImage ? (
                   <img
-                    src={mainImage}
+                    src={server_url + mainImage}
                     alt="Product"
                     className="object-contain max-h-full max-w-full"
                   />
@@ -301,7 +303,7 @@ export default function SingleProductPage() {
                     }`}
                   >
                     <img
-                      src={img}
+                      src={server_url + img}
                       className="w-full h-full object-cover"
                       alt=""
                     />
@@ -327,7 +329,7 @@ export default function SingleProductPage() {
               </div>
               {currentSku.mrp ? (
                 <div className="line-through text-gray-400">
-                  ₹ {Number(currentSku.mrp).toLocaleString()}
+                  AED {Number(currentSku.mrp).toLocaleString()}
                 </div>
               ) : null}
             </div>

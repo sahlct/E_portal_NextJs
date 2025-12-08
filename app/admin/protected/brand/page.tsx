@@ -33,7 +33,9 @@ export default function BrandsPage() {
   const [search, setSearch] = useState("");
   const debouncedSearch = useDebounce(search, 500);
 
-  const limit = 18; // ✅ Show 18 items per page
+  const limit = 18; 
+
+  const server_url = process.env.NEXT_PUBLIC_SERVER_URL;
 
   const fetchBrands = async () => {
     try {
@@ -47,7 +49,7 @@ export default function BrandsPage() {
 
       setBrands(res.data || []);
 
-      // ✅ Set total pages (from meta if available)
+      //  Set total pages (from meta if available)
       if (res.meta) {
         const total = res.meta.total || 0;
         setTotalPages(Math.ceil(total / limit));
@@ -198,7 +200,7 @@ export default function BrandsPage() {
                   onChange={() => toggleSelect(brand._id)}
                 />
                 <img
-                  src={brand.brand_logo}
+                  src={server_url + brand.brand_logo}
                   alt="Brand"
                   onClick={() => setPreviewImage(brand.brand_logo)}
                   className="w-full h-32 object-contain rounded-md bg-gray-100 cursor-pointer"
@@ -240,7 +242,7 @@ export default function BrandsPage() {
             ))}
           </div>
 
-          {/* ✅ Pagination Controls */}
+          {/*  Pagination Controls */}
           {totalPages > 1 && (
             <div className="flex justify-center items-center gap-4 mt-8">
               <button
@@ -294,14 +296,14 @@ export default function BrandsPage() {
         >
           <div className="relative bg-white p-3 rounded-xl max-w-3xl w-full">
             <button
-              className="absolute top-2 right-2 text-gray-600 hover:text-red-500"
+              className="absolute cursor-pointer top-2 right-2 text-gray-600 hover:text-red-500"
               onClick={() => setPreviewImage(null)}
               aria-label="Close preview"
             >
               <IconX size={20} />
             </button>
             <img
-              src={previewImage}
+              src={server_url + previewImage}
               alt="Preview"
               className="w-full h-auto max-h-[80vh] object-contain rounded-lg"
             />

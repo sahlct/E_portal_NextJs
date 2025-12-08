@@ -30,6 +30,10 @@ export default function DynamicFormModal({
   onSuccess: () => void;
 }) {
   const [loading, setLoading] = useState(false);
+  const server_url = process.env.NEXT_PUBLIC_SERVER_URL || "";
+
+  console.log("fields", fields);
+  console.log("defaultValues", defaultValues);
 
   // Store selected files and previews
   const [filePreviews, setFilePreviews] = useState<
@@ -48,13 +52,13 @@ export default function DynamicFormModal({
       if (f.type === "file" && defaultValues[f.name]) {
         const value = defaultValues[f.name];
 
-        // ⛔ Skip if array (like other_images)
+        //  Skip if array (like other_images)
         if (Array.isArray(value)) {
           previews[f.name] = null;
           return;
         }
 
-        // ⛔ Skip if not string
+        //  Skip if not string
         if (typeof value !== "string") {
           previews[f.name] = null;
           return;
@@ -220,13 +224,13 @@ export default function DynamicFormModal({
 
                         {filePreviews[f.name]?.isImage ? (
                           <img
-                            src={filePreviews[f.name]?.url}
+                            src={server_url + filePreviews[f.name]?.url}
                             className="w-24 h-24 object-cover rounded"
                             alt="preview"
                           />
                         ) : (
                           <span className="text-gray-700 text-sm">
-                            {filePreviews[f.name]?.file
+                            {server_url + filePreviews[f.name]?.file
                               ? filePreviews[f.name]?.file?.name
                               : "Existing File"}
                           </span>

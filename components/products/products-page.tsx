@@ -27,6 +27,8 @@ export function ProductsPage() {
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(true);
 
+  const server_url = process.env.NEXT_PUBLIC_SERVER_URL;
+
   const { addToCart, removeFromCart, items } = useCart();
   const debouncedSearch = useDebounce(searchQuery, 500);
 
@@ -161,7 +163,7 @@ export function ProductsPage() {
                   <Link href={`/public/products/${id}`}>
                     <div className="relative md:h-56 h-36 overflow-hidden rounded-lg bg-[#f5f5f9]">
                       <img
-                        src={image || "/placeholder.svg"}
+                        src={server_url + image || "/placeholder.svg"}
                         alt={title}
                         className="w-full h-full object-cover rounded-lg transition-transform duration-300 group-hover:scale-110"
                       />
@@ -208,7 +210,7 @@ export function ProductsPage() {
                       </span>
                       {originalPrice && (
                         <span className="text-sm text-muted-foreground line-through">
-                          ₹{originalPrice}
+                          AED {originalPrice}
                         </span>
                       )}
                     </div>

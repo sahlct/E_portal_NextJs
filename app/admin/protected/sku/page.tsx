@@ -32,6 +32,8 @@ export default function ProductSKU() {
 
   const debouncedSearch = useDebounce(search, 500);
 
+  const server_url = process.env.NEXT_PUBLIC_SERVER_URL;
+
   // Load SKU list
   const loadSkus = async () => {
     try {
@@ -71,12 +73,12 @@ export default function ProductSKU() {
         Description: c.description || "—",
         Thumbnail: c.thumbnail_image ? (
           <a
-            href={c.thumbnail_image}
+            href={server_url + c.thumbnail_image}
             target="_blank"
             className="text-blue-600 underline"
           >
             <img
-              src={c.thumbnail_image}
+              src={server_url + c.thumbnail_image}
               alt="sku"
               className="w-16 h-16 object-cover rounded border"
             />
@@ -87,9 +89,9 @@ export default function ProductSKU() {
         Images: c.sku_image?.length ? (
           <div className="flex flex-wrap gap-2">
             {c.sku_image.map((img: string, i: number) => (
-              <a key={i} href={img} target="_blank" rel="noreferrer">
+              <a key={i} href={server_url + img} target="_blank" rel="noreferrer">
                 <img
-                  src={img}
+                  src={server_url + img}
                   alt="sku"
                   className="w-16 h-16 object-cover rounded border"
                 />
@@ -199,7 +201,7 @@ export default function ProductSKU() {
             render: (r: any) =>
               r.thumbnail_image ? (
                 <a
-                  href={r.thumbnail_image}
+                  href={server_url + r.thumbnail_image}
                   target="_blank"
                   className="text-blue-600 underline"
                   onClick={(e) => {
@@ -207,7 +209,7 @@ export default function ProductSKU() {
                   }}
                 >
                   <img
-                    src={r.thumbnail_image}
+                    src={server_url + r.thumbnail_image}
                     alt="thumbnail"
                     className="w-16 h-10 object-cover rounded border"
                   />
@@ -313,7 +315,9 @@ function SkuFormModal({
   );
   const [skuImages, setSkuImages] = useState<File[]>([]);
 
-  // ✅ Load all products for dropdown
+  const server_url = process.env.NEXT_PUBLIC_SERVER_URL || "";
+
+  //  Load all products for dropdown
   useEffect(() => {
     (async () => {
       const res = await getProducts(page, 100, undefined, undefined);
@@ -321,7 +325,7 @@ function SkuFormModal({
     })();
   }, []);
 
-  // ✅ Preload variations + selected options on edit
+  //  Preload variations + selected options on edit
   useEffect(() => {
     if (isEdit && sku?.product_id?._id) {
       setSelectedOptions(
@@ -331,7 +335,7 @@ function SkuFormModal({
     }
   }, [isEdit, sku]);
 
-  // ✅ Load variations for selected product using correct API
+  //  Load variations for selected product using correct API
   const handleProductChange = async (productId: string) => {
     try {
       setSelectedProductId(productId);
@@ -340,7 +344,7 @@ function SkuFormModal({
         return;
       }
 
-      const res = await getProductById(productId); // ✅ correct single product API
+      const res = await getProductById(productId); //  correct single product API
       if (res?.data?.variations) {
         setVariations(res.data.variations);
       } else {
@@ -352,7 +356,7 @@ function SkuFormModal({
     }
   };
 
-  // ✅ Handle image selection
+  //  Handle image selection
   const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
     if (files.length > 0) setSkuImages((p) => [...p, ...files]);
@@ -373,7 +377,7 @@ function SkuFormModal({
     }
   };
 
-  // ✅ Submit SKU
+  //  Submit SKU
    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
@@ -487,7 +491,7 @@ function SkuFormModal({
             {thumbnailPreview && (
               <div className="mt-2 w-24 h-24">
                 <img
-                  src={thumbnailPreview}
+                  src={server_url +thumbnailPreview}
                   alt="Thumbnail Preview"
                   className="object-cover w-full h-full rounded border"
                 />
@@ -517,7 +521,7 @@ function SkuFormModal({
                     className="relative w-20 h-20 border rounded overflow-hidden group"
                   >
                     <img
-                      src={img}
+                      src={server_url + img}
                       alt="existing"
                       className="object-cover w-full h-full"
                     />
