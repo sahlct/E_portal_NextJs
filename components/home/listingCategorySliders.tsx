@@ -87,9 +87,9 @@ export default function ListingCategorySliders() {
       {items.map((block, index) => (
         <section
           key={index}
-          className="max-w-8xl mx-auto px-4 sm:px-6 py-10 lg:px-14 bg-[#f5f5f9]"
+          className="max-w-8xl mx-auto px-4 sm:px-6 md:py-10 py-5 lg:px-14 bg-[#f5f5f9]"
         >
-          <h2 className="text-3xl font-semibold mb-6 ms-10 font-notosans">
+          <h2 className="md:text-3xl text-2xl font-semibold mb-6 md:ms-10 font-notosans">
             {block.category.category_name}
           </h2>
 

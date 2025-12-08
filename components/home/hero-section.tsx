@@ -12,7 +12,7 @@ export function HeroSection() {
     <section className="max-w-8xl mx-auto px-4 sm:px-6 lg:px-28 py-8 lg:py-16">
       <div className="hero-content grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
         <div>
-          <h1 className="text-4xl font-bold mb-4 text-balance font-notosans">EA Portal - The Complete Electronic Makkah</h1>
+          <h1 className="md:text-4xl text-3xl md:font-bold font-semibold mb-4 font-notosans">EA Portal - The Complete Electronic Souqe</h1>
           <p className="text-lg text-muted-foreground mb-6">
             Discover the latest technology from top brands. Quality products at competitive prices. Lorem ipsum, dolor sit amet consectetur adipisicing elit. Autem, sapiente inventore aliquam porro placeat quis totam odit earum iusto quia velit beatae perferendis exercitationem, cum impedit suscipit labore modi nemo.
           </p>

@@ -73,7 +73,7 @@ export function CategoriesGrid() {
 
   return (
     <section className="w-full max-w-8xl mx-auto px-4 sm:px-6 lg:px-20 py-10">
-      <h2 className="text-3xl font-semibold mb-8 font-notosans">Shop by Category</h2>
+      <h2 className="md:text-3xl text-2xl font-semibold mb-8 font-notosans">Shop by Category</h2>
 
       <div className="relative">
         {/* LEFT ARROW */}
@@ -98,7 +98,7 @@ export function CategoriesGrid() {
             Array.from({ length: 4 }).map((_, i) => (
               <div
                 key={i}
-                className="min-w-[320px] bg-gray-200 rounded-lg h-80 animate-pulse"
+                className="min-w-[250px] md:min-w-[320px] bg-gray-200 rounded-lg h-80 animate-pulse"
               ></div>
             ))}
 
@@ -107,7 +107,7 @@ export function CategoriesGrid() {
             grouped.map((pair, i) => (
               <div
                 key={i}
-                className="min-w-[300px] md:min-w-[300px]
+                className="min-w-[250px] md:min-w-[320px]
                            grid grid-rows-2"
               >
                 {pair.map((cat) => (

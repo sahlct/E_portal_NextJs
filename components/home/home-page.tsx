@@ -55,8 +55,8 @@ export function HomePage() {
       <TopOfferTicker />
 
       {/*  Latest Products Section */}
-      <section className="max-w-8xl mx-auto px-4 sm:px-6 py-10 lg:px-14 bg-[#f5f5f9] mb-0">
-        <h2 className="text-3xl font-semibold mb-6 ms-10 font-notosans">Latest Products</h2>
+      <section className="max-w-8xl mx-auto px-4 sm:px-6 md:py-10 py-8 lg:px-14 bg-[#f5f5f9] mb-0">
+        <h2 className="md:text-3xl text-2xl font-semibold mb-6 md:ms-10 font-notosans">Latest Products</h2>
         {loading ? (
           <div className="text-center py-10 text-gray-500">Loading latest products...</div>
         ) : latestProducts.length === 0 ? (

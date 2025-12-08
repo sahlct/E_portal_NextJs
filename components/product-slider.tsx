@@ -83,7 +83,7 @@ export function ProductSlider({ products }: Props) {
   return (
     <div className="relative w-full py-2">
       {/* OUTER WRAPPER WITH PADDING (keeps arrows off padding) */}
-      <div className="px-10">
+      <div className="md:px-10">
         {/* LEFT ARROW */}
         {showArrows.left && (
           <button
@@ -119,7 +119,7 @@ export function ProductSlider({ products }: Props) {
           ref={scrollRef}
           onScroll={checkScroll}
           className="
-            flex gap-10
+            flex md:gap-10 gap-5
             overflow-x-auto hide-scrollbar 
             scroll-smooth
             pb-3
@@ -135,14 +135,14 @@ export function ProductSlider({ products }: Props) {
                 className="
                   snap-start
                   flex-shrink-0 
-                  w-[270px]
+                  w-[250px]
                   rounded-xl
                   transition
                   gap-2 bg-white px-2 pt-2
                 "
               >
                 <Link href={`/public/products/${p.id}`}>
-                  <div className="h-48 bg-gray-100 rounded-xl overflow-hidden">
+                  <div className="h-52 bg-gray-100 rounded-xl overflow-hidden">
                     <img
                       src={p.image}
                       className="w-full h-full object-cover hover:scale-110 transition duration-300"

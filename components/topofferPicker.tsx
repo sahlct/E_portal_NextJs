@@ -9,33 +9,38 @@ export default function TopOfferTicker() {
 
   return (
     <>
-      {/* Inline CSS for animation */}
       <style jsx>{`
-        @keyframes scrollTicker {
-          0% {
+        @keyframes ticker {
+          from {
             transform: translateX(0);
           }
-          100% {
-            transform: translateX(-50%);
+          to {
+            transform: translateX(-100%);
           }
         }
 
-        .animate-ticker {
-          animation: scrollTicker 25s linear infinite;
-          white-space: nowrap;
+        .ticker-track {
+          display: flex;
+          width: max-content;
+          min-width: max-content;
+          animation: ticker 25s linear infinite;
+          will-change: transform;
         }
 
-        .animate-ticker:hover {
+        .ticker-wrap:hover .ticker-track {
           animation-play-state: paused;
         }
       `}</style>
 
-      <div className="w-full bg-[#22415a] text-white overflow-hidden py-2 my-10">
-        <div className="flex items-center animate-ticker">
+      <div className="w-full bg-[#22415a] text-white overflow-hidden py-2 my-10 ticker-wrap">
+        <div className="ticker-track">
           {[...messages, ...messages].map((msg, i) => (
-            <div key={i} className="mx-10 flex items-center text-sm md:text-base">
+            <div
+              key={i}
+              className="flex items-center whitespace-nowrap text-sm md:text-base mx-0 md:mx-12"
+            >
               {msg}
-              <span className="mx-10 h-4 w-px bg-white/40" />
+              <span className="mx-5 md:mx-12 h-4 w-px bg-white/40" />
             </div>
           ))}
         </div>

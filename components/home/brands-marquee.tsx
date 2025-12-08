@@ -20,7 +20,7 @@ export function BrandsMarquee() {
         const res = await getBrands(1, 100, undefined, 1);
         if (res?.data) setBrands(res.data);
       } catch (err) {
-        console.error("❌ Failed to load brands:", err);
+        console.error(" Failed to load brands:", err);
       } finally {
         setLoading(false);
       }
@@ -38,9 +38,9 @@ export function BrandsMarquee() {
         ];
 
   return (
-    <section className="w-full bg-[#e9ecf3] py-12">
+    <section className="w-full bg-[#e9ecf3] md:py-12 py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-14">
-        <h2 className="text-3xl font-semibold font-quicksand mb-14 text-center text-gray-900 font-notosans">
+        <h2 className="md:text-3xl text-2xl font-semibold font-quicksand md:mb-14 mb-7 text-center text-gray-900 font-notosans">
           Our Trusted Brands
         </h2>
 
@@ -60,14 +60,14 @@ export function BrandsMarquee() {
               {items.map((brand, index) => (
                 <div
                   key={brand._id + index}
-                  className="bg-white rounded-2xl px-5 shadow-sm border border-gray-200 
-                   w-52 h-32 mx-5 flex items-center justify-center 
+                  className="bg-white rounded-2xl md:px-5 px-3 shadow-sm border border-gray-200 
+                   md:w-52 w-32 md:h-32 h-20 md:mx-5 mx-3 flex items-center justify-center 
                    hover:shadow-md transition-all duration-300"
                 >
                   <img
                     src={brand.brand_logo || "/placeholder.svg"}
                     alt="Brand Logo"
-                    className="h-16 object-contain hover:scale-110 transition-transform"
+                    className="md:h-16 h-14 object-contain hover:scale-110 transition-transform"
                     draggable={false}
                   />
                 </div>
