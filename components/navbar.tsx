@@ -118,7 +118,7 @@ export function Navbar() {
           <div className="bg-white p-1 rounded-lg">
             <img src="/logo_only.png" className="h-8" />
           </div>
-          <span className="font-semibold text-2xl font-notosans">
+          <span className="font-semibold text-2xl font-notosans relative">
             EA Portal
           </span>
         </Link>
