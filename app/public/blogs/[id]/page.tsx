@@ -12,6 +12,8 @@ export default function BlogDetailsPage() {
   const [recent, setRecent] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
+  const server_url = process.env.NEXT_PUBLIC_SERVER_URL;
+
   // Load Single Blog
   const loadBlog = async () => {
     try {
@@ -90,7 +92,7 @@ export default function BlogDetailsPage() {
             {/* Main Image */}
             <div className="w-full rounded-xl overflow-hidden mb-6">
               <img
-                src={blog.blog_thumbnail}
+                src={server_url + blog.blog_thumbnail}
                 alt={blog.blog_title}
                 className="w-full h-auto object-cover"
               />
@@ -124,7 +126,7 @@ export default function BlogDetailsPage() {
                 >
                   <div className="w-20 h-20 rounded-lg overflow-hidden flex-shrink-0">
                     <img
-                      src={item.blog_thumbnail}
+                      src={server_url + item.blog_thumbnail}
                       alt={item.blog_title}
                       className="w-full h-full object-cover group-hover:scale-105 transition"
                     />

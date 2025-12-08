@@ -19,6 +19,8 @@ export function Carousel() {
   const [api, setApi] = useState<CarouselApi | null>(null);
   const [current, setCurrent] = useState(0);
 
+  const server_url = process.env.NEXT_PUBLIC_SERVER_URL;
+
   /* ---------- screen detection ---------- */
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 768);
@@ -54,10 +56,15 @@ export function Carousel() {
 
   /* ---------- loading fallback ---------- */
   if (!slides.length) {
-    return (
-      <div className="h-[400px] rounded-lg bg-muted animate-pulse" />
-    );
+    return <div className="h-[400px] rounded-lg bg-muted animate-pulse" />;
   }
+
+  const getImageUrl = (path?: string) => {
+    if (!path) return "/placeholder.svg";
+    // if (path.startsWith("http")) return path;
+    console.log('final url',`${server_url}${path}` );
+    return `${server_url}${path}`;
+  };
 
   return (
     <div className="relative">
@@ -79,8 +86,8 @@ export function Carousel() {
                 <img
                   src={
                     isMobile
-                      ? slide.mobile_file || "/placeholder.svg"
-                      : slide.desktop_file || "/placeholder.svg"
+                      ? getImageUrl(slide.mobile_file)
+                      : getImageUrl(slide.desktop_file)
                   }
                   alt={slide.title || "Slide"}
                   className="w-full h-full object-cover"

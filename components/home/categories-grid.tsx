@@ -20,6 +20,8 @@ export function CategoriesGrid() {
   const [showLeft, setShowLeft] = useState(false);
   const [showRight, setShowRight] = useState(true);
 
+  const server_url = process.env.NEXT_PUBLIC_SERVER_URL;
+
   // Fetch categories
   useEffect(() => {
     async function fetchCategories() {
@@ -128,7 +130,7 @@ export function CategoriesGrid() {
                     </div>
 
                     <img
-                      src={cat.category_image || "/placeholder.svg"}
+                      src={server_url + cat.category_image || "/placeholder.svg"}
                       className="h-20 w-20 object-contain ml-4"
                       alt={cat.category_name}
                     />

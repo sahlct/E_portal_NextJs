@@ -22,6 +22,8 @@ export default function BlogsPage() {
   const [blogs, setBlogs] = useState<Blog[]>([]);
   const [loading, setLoading] = useState(true);
 
+  // const server_url = process.env.NEXT_PUBLIC_SERVER_URL;
+
   const loadBlogs = async () => {
     try {
       setLoading(true);
@@ -113,6 +115,7 @@ export default function BlogsPage() {
 
 /* ---------------- Blog Card ---------------- */
 function BlogCard({ blog }: { blog: Blog }) {
+  const server_url = process.env.NEXT_PUBLIC_SERVER_URL || "";
   const dateStr = blog.date
     ? new Date(blog.date).toLocaleDateString("en-IN", {
         year: "numeric",
@@ -125,7 +128,7 @@ function BlogCard({ blog }: { blog: Blog }) {
     <article className="bg-card border border-border rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
       <div className="relative h-52 bg-secondary">
         <img
-          src={blog.blog_thumbnail || "/placeholder.svg"}
+          src={server_url + blog.blog_thumbnail || "/placeholder.svg"}
           alt={blog.blog_title}
           className="w-full h-full object-cover"
           loading="lazy"

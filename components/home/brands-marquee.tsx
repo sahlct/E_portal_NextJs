@@ -14,6 +14,8 @@ export function BrandsMarquee() {
   const [brands, setBrands] = useState<Brand[]>([]);
   const [loading, setLoading] = useState(true);
 
+  const server_url = process.env.NEXT_PUBLIC_SERVER_URL;
+
   useEffect(() => {
     async function fetchBrands() {
       try {
@@ -65,7 +67,7 @@ export function BrandsMarquee() {
                    hover:shadow-md transition-all duration-300"
                 >
                   <img
-                    src={brand.brand_logo || "/placeholder.svg"}
+                    src={server_url + brand.brand_logo || "/placeholder.svg"}
                     alt="Brand Logo"
                     className="md:h-16 h-14 object-contain hover:scale-110 transition-transform"
                     draggable={false}
