@@ -116,7 +116,7 @@ export function Navbar() {
 
         <Link href="/public/home" className="flex items-center gap-2">
           <div className="bg-white p-1 rounded-lg">
-            <img src="/logo_only.png" className="h-8" />
+            <img src="/logo_only.png" className="h-6" />
           </div>
           <span className="font-semibold text-2xl font-notosans relative">
             EA Portal
