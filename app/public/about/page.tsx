@@ -7,7 +7,7 @@ export default function AboutPage() {
   return (
     <div className="min-h-screen bg-background">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <h1 className="text-4xl font-semibold mb-4 font-notosans">
+        <h1 className="md:text-4xl text-3xl font-semibold mb-4 font-notosans">
           About EA Portal
         </h1>
         <p className="text-muted-foreground mb-8">
@@ -26,7 +26,7 @@ export default function AboutPage() {
               with the latest technology products at competitive prices with
               exceptional service.
             </p>
-            <div className="absolute w-32 h-32 bg-yellow-500 rounded-full bottom-0 left-0 blur-[150px] z-1"></div>
+            <div className="absolute w-32 h-32 bg-yellow-300 rounded-full bottom-0 left-0 blur-[150px] z-1"></div>
           </div>
           <div className="bg-card rounded-lg p-6 border border-border relative overflow-hidden">
             <h3 className="text-xl font-semibold mb-5 font-notosans flex gap-3">
@@ -39,7 +39,7 @@ export default function AboutPage() {
               our high quality standards. All products are carefully selected
               and tested to ensure they meet our high quality standards.
             </p>
-            <div className="absolute w-32 h-32 bg-yellow-500 rounded-full bottom-0 right-1/2 blur-[150px] z-1"></div>
+            <div className="absolute w-32 h-32 bg-yellow-300 rounded-full bottom-0 right-1/2 blur-[150px] z-1"></div>
           </div>
           <div className="bg-card rounded-lg p-6 border border-border relative overflow-hidden">
             <h3 className="text-xl font-semibold mb-5 font-notosans flex gap-3">
@@ -52,7 +52,7 @@ export default function AboutPage() {
               questions or concerns. Our dedicated support team is available
               24/7 to help you with any questions or concerns.
             </p>
-            <div className="absolute w-32 h-32 bg-yellow-500 rounded-full bottom-0 right-0 blur-[150px] z-1"></div>
+            <div className="absolute w-32 h-32 bg-yellow-300 rounded-full bottom-0 right-0 blur-[150px] z-1"></div>
           </div>
         </div>
       </div>

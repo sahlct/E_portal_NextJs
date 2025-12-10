@@ -77,7 +77,7 @@ export default function BlogDetailsPage() {
           <div className="lg:col-span-2">
 
             {/* Title */}
-            <h1 className="text-3xl md:text-4xl font-semibold text-gray-900 mb-3 font-notosans ">
+            <h1 className="text-2xl md:text-4xl font-semibold text-gray-900 mb-3 font-notosans ">
               {blog.blog_title}
             </h1>
 

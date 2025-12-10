@@ -81,7 +81,7 @@ export function ProductsPage() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
         {/* Header */}
         <div className="md:mb-8 mb-4">
-          <h1 className="text-4xl font-semibold mb-2 text-gray-900 font-notosans">
+          <h1 className="md:text-4xl text-3xl font-semibold mb-2 text-gray-900 font-notosans">
             Products
           </h1>
           <p className="text-muted-foreground">
@@ -199,17 +199,17 @@ export function ProductsPage() {
                       </span>
                     </div>
 
-                    <p className="text-xs text-gray-600 line-clamp-2 mb-3">
+                    <p className="text-xs text-gray-600 line-clamp-2 sm:mb-3 mb-2">
                       {description}
                     </p>
 
                     {/* Price */}
-                    <div className="flex items-center gap-2 mb-4">
+                    <div className="flex flex-col-reverse sm:flex-row md:items-center items-start sm:gap-2 hap-1 sm:mb-4 mb-3">
                       <span className="md:text-lg text-md font-bold text-blue-600 font-notosans">
                         AED {price}
                       </span>
                       {originalPrice && (
-                        <span className="text-sm text-muted-foreground line-through">
+                        <span className="sm:text-sm text-xs text-muted-foreground line-through">
                           AED {originalPrice}
                         </span>
                       )}

@@ -22,8 +22,12 @@
   }
 
   .font-notosans {
-    font-family: var(--font-notosans), sans-serif;
+    font-family: var(--font-notosans), sans-serif !important;
   }
+}
+
+.notosans{
+  font-family: font-notosans, sans-serif !important;
 }
 
 /* Hide scrollbar but allow scrolling */

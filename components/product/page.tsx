@@ -279,7 +279,7 @@ export default function SingleProductPage() {
         <div className="grid grid-cols-1 lg:grid-cols-12 md:gap-10 gap-6">
           {/* ---------------- LEFT (FIXED) ---------------- */}
           <div className="lg:col-span-5 lg:sticky lg:top-20 h-fit">
-            <div className="bg-gray-50 border rounded-xl p-4">
+            {/* <div className="bg-gray-50 border rounded-xl p-4"> */}
               <div className="w-full h-80 md:h-96 flex items-center justify-center bg-white border rounded-lg overflow-hidden">
                 {mainImage ? (
                   <img
@@ -310,12 +310,12 @@ export default function SingleProductPage() {
                   </button>
                 ))}
               </div>
-            </div>
+            {/* </div> */}
           </div>
 
           {/* ---------------- RIGHT ---------------- */}
           <div className="lg:col-span-7 space-y-6">
-            <h1 className="text-2xl md:text-3xl font-semibold text-gray-900 mb-3 font-notosans">
+            <h1 className="text-2xl md:text-3xl font-semibold text-gray-900 mb-1 font-notosans">
               {currentSku.product_sku_name}
             </h1>
             <p className="text-gray-500 mb-3">
@@ -323,8 +323,8 @@ export default function SingleProductPage() {
             </p>
 
             {/* Price */}
-            <div className="flex items-end gap-3">
-              <div className="text-3xl font-bold text-cyan-700 font-notosans">
+            <div className="flex items-end gap-3 mb-2 md:mb-4">
+              <div className="md:text-3xl text-2xl font-bold text-cyan-700 font-notosans">
                 AED {Number(currentSku.price).toLocaleString()}
               </div>
               {currentSku.mrp ? (
@@ -393,7 +393,7 @@ export default function SingleProductPage() {
             <div className="flex flex-col sm:flex-row gap-4 pt-4">
               <button
                 onClick={handleAddOrRemove}
-                className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-lg font-medium cursor-pointer transition ${
+                className={`flex-1 flex items-center justify-center gap-2 md:py-3 py-2 rounded-lg font-medium cursor-pointer transition ${
                   isInCart
                     ? "bg-gradient-to-r from-red-500 to-red-900 text-white hover:opacity-90"
                     : "bg-gradient-to-r from-yellow-500 to-orange-400 text-white hover:opacity-95"
@@ -412,7 +412,7 @@ export default function SingleProductPage() {
 
               <button
                 onClick={handleBuyNow}
-                className="flex-1 flex items-center justify-center gap-2 py-3 rounded-lg font-medium border border-cyan-700 text-cyan-700 hover:bg-cyan-50 cursor-pointer"
+                className="flex-1 flex items-center justify-center gap-2 md:py-3 py-2 rounded-lg font-medium border border-cyan-700 text-cyan-700 hover:bg-cyan-50 cursor-pointer"
               >
                 Buy now
               </button>

@@ -33,7 +33,7 @@ export default function BrandsPage() {
     return (
       <div className="min-h-screen bg-background">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <h1 className="text-4xl font-semibold mb-4 font-notosans">Our Brands</h1>
+          <h1 className="md:text-4xl text-2xl  font-semibold mb-4 font-notosans notosans">Our Brands</h1>
           <p className="text-muted-foreground mb-8">
             Shop from the world's leading technology brands
           </p>
