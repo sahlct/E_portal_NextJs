@@ -27,7 +27,7 @@ export function HeroSection() {
         {/* CONTENT - second on mobile, first on desktop */}
         <div className="order-2 md:order-1">
           <h1 className="md:text-4xl text-2xl md:font-bold font-semibold md:mb-4 mb-3 font-notosans">
-            EA Portal - The Complete Electronic Souqe
+            EA Portel - The Complete Electronic Souqe
           </h1>
 
           <p className="md:text-lg text-md text-muted-foreground mb-6">
@@ -38,7 +38,7 @@ export function HeroSection() {
             exercitationem, cum impedit suscipit labore modi nemo.
           </p>
 
-          <div className="flex gap-4 flex-wrap justify-between md:justify-start">
+          <div className="flex gap-4 md:gap-8 flex-wrap justify-start">
             <button className="bg-yellow-400 cursor-pointer md:px-8 px-6 md:py-2 py-1 border-2 border-yellow-400  rounded-lg font-semibold hover:opacity-90 transition-opacity text-white hover:bg-white hover:text-yellow-400">
               Shop Now
             </button>

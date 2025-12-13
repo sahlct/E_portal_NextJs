@@ -1,6 +1,6 @@
 import apiRequest from "@/lib/apiRequest";
 
-// ✅ Get all categories
+//  Get all categories
 export async function getCategories(
   page = 1,
   limit = 10,
@@ -20,22 +20,22 @@ export async function getCategories(
   return apiRequest(`/api/categories?${params.toString()}`, "GET");
 }
 
-// ✅ Get single category by ID
+//  Get single category by ID
 export async function getCategoryById(id: string) {
   return apiRequest(`/api/categories/${id}`, "GET");
 }
 
-// ✅ Create new category
+//  Create new category
 export async function createCategory(formData: FormData) {
   return apiRequest("/api/categories", "POST", formData, true);
 }
 
-// ✅ Update existing category
+//  Update existing category
 export async function updateCategory(id: string, formData: FormData) {
   return apiRequest(`/api/categories/${id}`, "PUT", formData, true);
 }
 
-// ✅ Delete category
+//  Delete category
 export async function deleteCategory(id: string) {
   return apiRequest(`/api/categories/${id}`, "DELETE");
 }

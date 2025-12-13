@@ -224,15 +224,20 @@ export default function DynamicFormModal({
 
                         {filePreviews[f.name]?.isImage ? (
                           <img
-                            src={server_url + filePreviews[f.name]?.url}
+                            src={
+                              filePreviews[f.name]?.file
+                                ? filePreviews[f.name]?.url // new file (blob)
+                                : server_url + filePreviews[f.name]?.url // old file (server)
+                            }
                             className="w-24 h-24 object-cover rounded"
                             alt="preview"
                           />
                         ) : (
                           <span className="text-gray-700 text-sm">
-                            {server_url + filePreviews[f.name]?.file
-                              ? filePreviews[f.name]?.file?.name
-                              : "Existing File"}
+                            {filePreviews[f.name]?.file
+                              ? filePreviews[f.name]?.file.name 
+                              : "Existing File"}{" "}
+                            // old file
                           </span>
                         )}
                       </div>

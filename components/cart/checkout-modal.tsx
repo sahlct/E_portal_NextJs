@@ -41,7 +41,7 @@ export function CheckoutModal({ isOpen, onClose, total }: CheckoutModalProps) {
       .join("\n")
 
     const message = `
-*New Order EA Portal*
+*New Order EA Portel*
 
 *Customer Details:*
 Name: ${formData.name}
@@ -84,15 +84,15 @@ ${orderDetails}
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
       <div className="bg-card rounded-lg md:max-w-xl w-full max-h-[90vh] overflow-y-auto">
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-border sticky top-0 bg-card">
-          <h2 className="text-2xl font-bold">Checkout</h2>
+        <div className="flex items-center justify-between md:p-6 p-4 border-b border-border sticky top-0 bg-card">
+          <h2 className="text-2xl font-semibold font-notosans">Checkout</h2>
           <button onClick={onClose} className="cursor-pointer text-muted-foreground hover:text-foreground transition-colors">
             <X className="w-6 h-6" />
           </button>
         </div>
 
         {/* Form */}
-        <form onSubmit={handleSubmit} className="p-6 space-y-4">
+        <form onSubmit={handleSubmit} className="md:p-6 p-4 space-y-4">
           {/* Name */}
           <div>
             <label className="block text-sm font-semibold mb-2">Full Name *</label>
@@ -179,7 +179,7 @@ ${orderDetails}
 
           {/* Order Summary */}
           <div className="bg-secondary rounded-lg p-4 mt-6">
-            <h3 className="font-semibold mb-3">Order Summary</h3>
+            <h3 className="font-medium font-notosans mb-3">Order Summary</h3>
             <div className="space-y-2 text-sm mb-3 pb-3 border-b border-border">
               {items.map((item) => (
                 <div key={item.id} className="flex justify-between">
@@ -191,8 +191,8 @@ ${orderDetails}
               ))}
             </div>
             <div className="flex justify-between font-bold text-lg">
-              <span>Total:</span>
-              <span className="text-primary">AED {total.toFixed(2)}</span>
+              <span className="font-notosans">Total:</span>
+              <span className="text-primary font-notosans">AED {total.toFixed(2)}</span>
             </div>
           </div>
 
@@ -200,7 +200,7 @@ ${orderDetails}
           <button
             type="submit"
             disabled={isSubmitting}
-            className="w-full cursor-pointer bg-primary text-primary-foreground py-3 rounded-lg font-semibold hover:opacity-90 transition-opacity disabled:opacity-50 mt-6"
+            className="w-full cursor-pointer bg-yellow-500 text-primary-foreground md:py-3 py-2 rounded-lg font-semibold hover:opacity-90 transition-opacity disabled:opacity-50 md:mt-6 mt-3"
           >
             {isSubmitting ? "Processing..." : "Proceed to Order"}
           </button>

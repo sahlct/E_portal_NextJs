@@ -5,6 +5,8 @@ import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
 import { Menu, X, Search, ShoppingCart } from "lucide-react";
 import { IconHeadset } from "@tabler/icons-react";
+import { Home, Info, Boxes, Briefcase, BookOpen, Phone } from "lucide-react";
+import gsap from "gsap";
 
 import { useCart } from "@/context/cart-context";
 import { Input } from "@/components/ui/input";
@@ -26,14 +28,36 @@ export function Navbar() {
   const [searchTerm, setSearchTerm] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
   const [searchResults, setSearchResults] = useState<any[]>([]);
+  const sidebarRef = useRef<HTMLDivElement>(null);
 
   const navLinks = [
-    { label: "Home", href: "/public/home" },
-    { label: "Products", href: "/public/products" },
-    { label: "Blogs", href: "/public/blogs" },
-    { label: "About", href: "/public/about" },
-    { label: "Contact", href: "/public/contact" },
+    { label: "Home", href: "/public/home", icon: Home },
+    { label: "Products", href: "/public/products", icon: Boxes },
+    { label: "Blogs", href: "/public/blogs", icon: BookOpen },
+    { label: "About", href: "/public/about", icon: Info },
+    { label: "Contact", href: "/public/contact", icon: Phone },
   ];
+
+  useEffect(() => {
+    if (!mobileOpen) return;
+
+    gsap.set(sidebarRef.current, { x: "-100%" });
+
+    gsap.to(sidebarRef.current, {
+      x: "0%",
+      duration: 0.4,
+      ease: "power3.out",
+    });
+  }, [mobileOpen]);
+
+  const closeMobile = () => {
+    gsap.to(sidebarRef.current, {
+      x: "-100%",
+      duration: 0.35,
+      ease: "power3.in",
+      onComplete: () => setMobileOpen(false),
+    });
+  };
 
   useEffect(() => {
     const handler = (e: MouseEvent) => {
@@ -119,7 +143,7 @@ export function Navbar() {
             <img src="/logo_only.png" className="h-6" />
           </div>
           <span className="font-semibold text-2xl font-notosans relative">
-            EA Portal
+            EA Portel
           </span>
         </Link>
 
@@ -141,7 +165,7 @@ export function Navbar() {
               <img src="/logo_only.png" className="h-10" />
             </div>
             <span className="text-3xl font-semibold font-notosans">
-              EA Portal
+              EA Portel
             </span>
           </Link>
 
@@ -259,35 +283,60 @@ export function Navbar() {
 
       {/* ---------------- MOBILE SIDEBAR ---------------- */}
       {mobileOpen && (
-        <div className="fixed inset-0 z-50 bg-black/40">
-          <div className="absolute left-0 top-0 h-full w-72 bg-white p-4">
-            <div className="flex justify-between items-center mb-4">
-              <span className="font-semibold">Menu</span>
-              <button onClick={() => setMobileOpen(false)}>
+        <div className="fixed inset-0 z-50">
+          {/* Overlay (BEHIND sidebar) */}
+          <div className="absolute inset-0 bg-black/40" onClick={closeMobile} />
+
+          {/* Sidebar */}
+          <div
+            ref={sidebarRef}
+            className="absolute left-0 top-0 h-full w-72 bg-white px-4 py-5 z-10"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Header */}
+            <div className="flex items-center justify-between mb-6">
+              <span className="text-lg font-semibold">Menu</span>
+              <button onClick={closeMobile}>
                 <X />
               </button>
             </div>
 
-            {navLinks.map((l) => (
-              <Link
-                key={l.href}
-                href={l.href}
-                onClick={() => setMobileOpen(false)}
-                className={`block px-3 py-2 rounded-md ${
-                  isActive(l.href)
-                    ? "bg-orange-50 text-orange-600"
-                    : "hover:bg-gray-100"
-                }`}
-              >
-                {l.label}
-              </Link>
-            ))}
+            {/* Menu */}
+            <div className="space-y-2">
+              {navLinks.map((l) => {
+                const Icon = l.icon;
+                const active = isActive(l.href);
 
-            <div className="border-t mt-4 pt-4">
-              <a href="tel:+971589216757" className="block">
+                return (
+                  <button
+                    key={l.href}
+                    onClick={() => {
+                      router.push(l.href);
+                      closeMobile();
+                    }}
+                    className={`w-full text-left flex items-center gap-3 px-4 py-3 rounded-md transition
+                ${
+                  active
+                    ? "bg-yellow-500 text-white"
+                    : "text-gray-700 hover:text-yellow-500"
+                }`}
+                  >
+                    <Icon className="w-5 h-5" />
+                    <span className="font-medium">{l.label}</span>
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* Contact */}
+            <div className="border-t mt-6 pt-4 text-sm">
+              <a href="tel:+971589216757" className="block font-medium">
                 +971 58 921 6757
               </a>
-              <a href="mailto:sales@eaportel.com" className="block text-sm">
+              <a
+                href="mailto:sales@eaportel.com"
+                className="block text-gray-600"
+              >
                 sales@eaportel.com
               </a>
             </div>

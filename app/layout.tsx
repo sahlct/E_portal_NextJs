@@ -12,7 +12,7 @@ const geistSans = Geist({ subsets: ["latin"] });
 const geistMono = Geist_Mono({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "EA Portal ",
+  title: "EA Portel ",
   description: "Premium electronics, laptops, accessories, and more",
   generator: "Sahal",
   icons: {

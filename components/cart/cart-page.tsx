@@ -9,6 +9,7 @@ import { CheckoutModal } from "@/components/cart/checkout-modal";
 export function CartPageContent() {
   const { items, removeFromCart, updateQuantity, total, clearCart } = useCart();
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
+  const server_url = process.env.NEXT_PUBLIC_SERVER_URL;
 
   if (items.length === 0) {
     return (
@@ -21,7 +22,7 @@ export function CartPageContent() {
             Add some products to get started
           </p>
           <Link
-            href="/products"
+            href="/public/products"
             className="bg-yellow-400 cursor-pointer text-primary-foreground md:px-8 px-5 md:py-3 py-1.5 rounded-lg font-semibold hover:opacity-90 transition-opacity flex justify-center items-center gap-2 mx-auto"
           >
             {/* <button > */}
@@ -54,7 +55,7 @@ export function CartPageContent() {
                     {/* Image */}
                     <div className="w-20 h-20 md:w-24 md:h-24 bg-secondary rounded-lg overflow-hidden flex-shrink-0">
                       <img
-                        src={item.image || "/placeholder.svg"}
+                        src={ server_url + item.image || "/placeholder.svg"}
                         alt={item.title}
                         className="w-full h-full object-cover"
                       />

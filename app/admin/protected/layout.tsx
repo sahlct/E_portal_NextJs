@@ -112,7 +112,7 @@ const Sidebar = memo(
                 alt="Logo"
                 className={`ms-3 pe-2 ${isCollapsed ? "h-8" : "h-12"}`}
               />
-              <h1 className={`text-white ${isCollapsed ? "hidden" : "block"} text-2xl font-bold text-yellow-500`}>EA Portal</h1>
+              <h1 className={`text-white ${isCollapsed ? "hidden" : "block"} text-2xl font-bold text-yellow-500`}>EA Portel</h1>
             </div>
 
             <button
