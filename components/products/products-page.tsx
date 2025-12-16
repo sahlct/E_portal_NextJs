@@ -9,6 +9,14 @@ import { getProductSkus } from "@/lib/api/sku";
 import { getCategories } from "@/lib/api/category";
 import { useDebounce } from "@/hooks/debounce";
 import { useCart } from "@/context/cart-context";
+import { getBrands } from "@/lib/api/brands";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 interface Category {
   _id: string;
@@ -26,6 +34,10 @@ export function ProductsPage() {
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(true);
+  const [brands, setBrands] = useState<any[]>([]);
+  const [selectedBrand, setSelectedBrand] = useState<string | undefined>(
+    undefined
+  );
 
   const server_url = process.env.NEXT_PUBLIC_SERVER_URL;
 
@@ -45,6 +57,17 @@ export function ProductsPage() {
     }
   };
 
+  // Load Brands
+  const loadBrands = async () => {
+    try {
+      const res = await getBrands(1, 100, undefined, 1);
+      setBrands(res?.data || []);
+    } catch (err) {
+      toast.error("Failed to load brands");
+      console.error(err);
+    }
+  };
+
   //  Load Products
   const loadProducts = async () => {
     setLoading(true);
@@ -55,8 +78,10 @@ export function ProductsPage() {
         debouncedSearch,
         "1",
         undefined,
-        selectedCategory === "all" ? undefined : selectedCategory
+        selectedCategory === "all" ? undefined : selectedCategory,
+        selectedBrand
       );
+
       setProducts(res?.data || []);
       const total = res?.total || 0;
       setTotalPages(Math.ceil(total / 20) || 1);
@@ -69,31 +94,62 @@ export function ProductsPage() {
   };
 
   useEffect(() => {
+    setPage(1);
+  }, [selectedBrand]);
+
+  useEffect(() => {
     loadCategories();
+    loadBrands();
   }, []);
 
   useEffect(() => {
     loadProducts();
-  }, [page, debouncedSearch, selectedCategory]);
+  }, [page, debouncedSearch, selectedCategory, selectedBrand]);
 
   return (
     <div className="min-h-screen bg-background">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
         {/* Header */}
-        <div className="md:mb-8 mb-4">
-          <h1 className="md:text-4xl text-3xl font-semibold mb-2 text-gray-900 font-notosans">
-            Products
-          </h1>
-          <p className="text-muted-foreground">
-            Browse our collection of premium products
-          </p>
+        <div className="md:mb-8 mb-4 flex justify-between">
+          <div>
+            <h1 className="md:text-4xl text-3xl font-semibold mb-2 text-gray-900 font-notosans">
+              Products
+            </h1>
+            <p className="text-muted-foreground">
+              Browse our collection of premium products
+            </p>
+          </div>
+          <div className="items-end md:flex hidden">
+            <div className="flex items-end">
+              <Select
+                value={selectedBrand ?? "all"}
+                onValueChange={(val) => {
+                  setSelectedBrand(val === "all" ? undefined : val);
+                }}
+              >
+                <SelectTrigger className="w-[200px] border-yellow-500">
+                  <SelectValue placeholder="Select Brand" />
+                </SelectTrigger>
+
+                <SelectContent className="bg-gray-100 border border-yellow-500">
+                  <SelectItem value="all">All Brands</SelectItem>
+
+                  {brands.map((brand) => (
+                    <SelectItem key={brand._id} value={brand._id}>
+                      {brand.brand_name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
         </div>
 
         {/* Search + Categories (Responsive Layout) */}
         <div className="md:mb-6 mb-4">
           <div className="flex flex-col gap-4 md:flex-row md:items-center">
             {/* Search (1/3 on desktop) */}
-            <div className="relative md:w-1/3">
+            <div className="relative md:w-1/3 flex gap-2">
               <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-muted-foreground" />
               <input
                 type="text"
@@ -103,8 +159,30 @@ export function ProductsPage() {
                   setSearchQuery(e.target.value);
                   setPage(1);
                 }}
-                className="w-full pl-12 pr-4 py-3 border border-border rounded-lg bg-card text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+                className="w-full pl-12 pr-4 md:py-3 border border-border rounded-lg bg-card text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-yellow-500"
               />
+              <div className="flex md:hidden items-end">
+                <Select
+                  value={selectedBrand ?? "all"}
+                  onValueChange={(val) => {
+                    setSelectedBrand(val === "all" ? undefined : val);
+                  }}
+                >
+                  <SelectTrigger className="w-[130px] border-yellow-500">
+                    <SelectValue placeholder="Select Brand" />
+                  </SelectTrigger>
+
+                  <SelectContent className="bg-gray-100 border border-yellow-500">
+                    <SelectItem value="all">All Brands</SelectItem>
+
+                    {brands.map((brand) => (
+                      <SelectItem key={brand._id} value={brand._id}>
+                        {brand.brand_name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
 
             {/* Categories (scrollable like YouTube) */}

@@ -226,8 +226,7 @@ export default function SingleProductPage() {
         id: currentSku._id,
         title: currentSku.product_sku_name,
         price: Number(currentSku.price || 0),
-        image:
-          currentSku.thumbnail_image || currentSku.sku_image?.[0] || null,
+        image: currentSku.thumbnail_image || currentSku.sku_image?.[0] || null,
         category: currentSku.product_id?.category_id ?? null,
       });
     }
@@ -240,8 +239,7 @@ export default function SingleProductPage() {
         id: currentSku._id,
         title: currentSku.product_sku_name,
         price: Number(currentSku.price || 0),
-        image:
-          currentSku.thumbnail_image || currentSku.sku_image?.[0] || null,
+        image: currentSku.thumbnail_image || currentSku.sku_image?.[0] || null,
         category: currentSku.product_id?.category_id ?? null,
       });
     }
@@ -280,36 +278,36 @@ export default function SingleProductPage() {
           {/* ---------------- LEFT (FIXED) ---------------- */}
           <div className="lg:col-span-5 lg:sticky lg:top-20 h-fit">
             {/* <div className="bg-gray-50 border rounded-xl p-4"> */}
-              <div className="w-full h-80 md:h-96 flex items-center justify-center bg-white border rounded-lg overflow-hidden">
-                {mainImage ? (
-                  <img
-                    src={server_url + mainImage}
-                    alt="Product"
-                    className="object-contain max-h-full max-w-full"
-                  />
-                ) : (
-                  <div>No image</div>
-                )}
-              </div>
+            <div className="w-full h-80 md:h-96 flex items-center justify-center bg-white border rounded-lg overflow-hidden">
+              {mainImage ? (
+                <img
+                  src={server_url + mainImage}
+                  alt="Product"
+                  className="object-contain max-h-full max-w-full"
+                />
+              ) : (
+                <div>No image</div>
+              )}
+            </div>
 
-              {/* Thumbnails */}
-              <div className="flex gap-3 mt-4 justify-around p-0.5 overflow-x-auto hide-scrollbar">
-                {thumbnails.map((img: string, i: number) => (
-                  <button
-                    key={i}
-                    onClick={() => setMainImage(img)}
-                    className={`sm:w-20 sm:h-20 h-16 w-16 border rounded-md overflow-hidden cursor-pointer ${
-                      img === mainImage ? "ring-2 ring-cyan-600" : ""
-                    }`}
-                  >
-                    <img
-                      src={server_url + img}
-                      className="w-full h-full object-cover"
-                      alt=""
-                    />
-                  </button>
-                ))}
-              </div>
+            {/* Thumbnails */}
+            <div className="flex gap-3 mt-4 justify-around p-0.5 overflow-x-auto hide-scrollbar">
+              {thumbnails.map((img: string, i: number) => (
+                <button
+                  key={i}
+                  onClick={() => setMainImage(img)}
+                  className={`sm:w-20 sm:h-20 h-16 w-16 border rounded-md overflow-hidden cursor-pointer ${
+                    img === mainImage ? "ring-2 ring-cyan-600" : ""
+                  }`}
+                >
+                  <img
+                    src={server_url + img}
+                    className="w-full h-full object-cover"
+                    alt=""
+                  />
+                </button>
+              ))}
+            </div>
             {/* </div> */}
           </div>
 
@@ -337,21 +335,25 @@ export default function SingleProductPage() {
             {/* Description */}
             <p className="text-gray-700">{currentSku.description}</p>
 
-            {/* Stock */}
-            <div className="flex gap-3 items-center">
-              <span
-                className={`px-3 py-1 rounded-full text-sm ${
-                  currentSku.is_out_of_stock
-                    ? "bg-red-100 text-red-700"
-                    : "bg-green-100 text-green-700"
-                }`}
-              >
-                {currentSku.is_out_of_stock ? "Out of Stock" : "In Stock"}
-              </span>
+            <div className="flex gap-3">
+              <div className="bg-pink-100 px-4 py-1 rounded-full text-black">Brand : {currentSku.product_id?.brand_id?.brand_name}</div>
 
-              {/* <span className="text-gray-500 text-sm">
+              {/* Stock */}
+              <div className="flex gap-3 items-center">
+                <span
+                  className={`px-3 py-1 rounded-full text-sm ${
+                    currentSku.is_out_of_stock
+                      ? "bg-red-100 text-red-700"
+                      : "bg-green-100 text-green-700"
+                  }`}
+                >
+                  {currentSku.is_out_of_stock ? "Out of Stock" : "In Stock"}
+                </span>
+
+                {/* <span className="text-gray-500 text-sm">
                 Max per order: {currentSku.single_order_limit}
               </span> */}
+              </div>
             </div>
 
             {/* Variations */}
@@ -362,8 +364,7 @@ export default function SingleProductPage() {
                     <h3 className="font-medium mb-2">{v.name}</h3>
                     <div className="flex flex-wrap gap-2">
                       {v.options.map((opt: any) => {
-                        const selected =
-                          selectedByVariation[v._id] === opt._id;
+                        const selected = selectedByVariation[v._id] === opt._id;
                         const disabled = !isOptionAvailable(v._id, opt._id);
 
                         return (
@@ -377,7 +378,11 @@ export default function SingleProductPage() {
                               selected
                                 ? "bg-cyan-700 text-white border-cyan-700"
                                 : "bg-white text-gray-700 border-gray-300"
-                            } ${disabled ? "opacity-40 cursor-not-allowed" : "hover:scale-[1.02]"}`}
+                            } ${
+                              disabled
+                                ? "opacity-40 cursor-not-allowed"
+                                : "hover:scale-[1.02]"
+                            }`}
                           >
                             {opt.name}
                           </button>

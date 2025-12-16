@@ -1,17 +1,19 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { getBrands } from "@/lib/api/brand"
+import { getBrands } from "@/lib/api/brands"
 
 interface Brand {
   _id: string
-  brand_logo: string
+  brand_name: string
+  brand_image: string
   status: number
 }
 
 export default function BrandsPage() {
   const [brands, setBrands] = useState<Brand[]>([])
   const [loading, setLoading] = useState(true)
+  const server_url = process.env.NEXT_PUBLIC_SERVER_URL;
 
   //  Fetch brands from backend
   useEffect(() => {
@@ -33,7 +35,7 @@ export default function BrandsPage() {
     return (
       <div className="min-h-screen bg-background">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <h1 className="md:text-4xl text-2xl  font-semibold mb-4 font-notosans notosans">Our Brands</h1>
+          <h1 className="md:text-4xl text-2xl  font-semibold mb-4 font-notosans">Our Brands</h1>
           <p className="text-muted-foreground mb-8">
             Shop from the world's leading technology brands
           </p>
@@ -72,7 +74,7 @@ export default function BrandsPage() {
   return (
     <div className="min-h-screen bg-background">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <h1 className="text-4xl font-bold mb-4">Our Brands</h1>
+        <h1 className="md:text-4xl text-3xl md:font-semibold font-medium mb-4 font-notosans">Our Brands</h1>
         <p className="text-muted-foreground mb-8">
           Shop from the world's leading technology brands
         </p>
@@ -84,7 +86,7 @@ export default function BrandsPage() {
               className="bg-card rounded-lg p-6 border border-border flex items-center justify-center h-32 hover:shadow-lg transition-shadow cursor-pointer"
             >
               <img
-                src={brand.brand_logo || "/placeholder.svg"}
+                src={server_url +brand.brand_image || "/placeholder.svg"}
                 alt="Brand Logo"
                 className="h-16 object-contain"
               />

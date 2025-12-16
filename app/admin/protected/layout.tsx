@@ -46,10 +46,15 @@ const menuItems = [
       { name: "Latest Products", path: "/admin/protected/latest-product" },
     ],
   },
+  // {
+  //   name: "Brands",
+  //   icon: Award,
+  //   path: "/admin/protected/brand",
+  // },
   {
     name: "Brands",
     icon: Award,
-    path: "/admin/protected/brand",
+    path: "/admin/protected/brands",
   },
   {
     name: "Blogs",

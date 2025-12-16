@@ -2,11 +2,12 @@
 
 import { useEffect, useState } from "react";
 import Marquee from "react-fast-marquee";
-import { getBrands } from "@/lib/api/brand";
+import { getBrands } from "@/lib/api/brands";
 
 interface Brand {
   _id: string;
-  brand_logo: string;
+  brand_name: string;
+  brand_image: string;
   status: number;
 }
 
@@ -67,7 +68,7 @@ export function BrandsMarquee() {
                    hover:shadow-md transition-all duration-300"
                 >
                   <img
-                    src={server_url + brand.brand_logo || "/placeholder.svg"}
+                    src={server_url + brand?.brand_image || "/placeholder.svg"}
                     alt="Brand Logo"
                     className="md:h-16 h-14 object-contain hover:scale-110 transition-transform"
                     draggable={false}

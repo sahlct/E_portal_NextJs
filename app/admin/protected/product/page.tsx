@@ -15,6 +15,7 @@ import {
   deleteProduct,
 } from "@/lib/api/product";
 import { getCategories } from "@/lib/api/category";
+import { getBrands } from "@/lib/api/brands";
 import toast from "react-hot-toast";
 
 interface Variation {
@@ -27,6 +28,8 @@ interface Product {
   product_name: string;
   product_image?: string;
   category_id: string;
+  brand_id?: string | null;
+  brand_name?: string | null;
   status: number;
   created_at?: string;
   updated_at?: string;
@@ -48,6 +51,7 @@ export default function ProductPage() {
   const [categories, setCategories] = useState<
     { label: string; value: string }[]
   >([]);
+  const [brands, setBrands] = useState<{ label: string; value: string }[]>([]);
 
   const debouncedSearch = useDebounce(search, 500);
   const server_url = process.env.NEXT_PUBLIC_SERVER_URL || "";
@@ -55,12 +59,7 @@ export default function ProductPage() {
   // --- Load categories
   const loadCategories = async () => {
     try {
-      const res = await getCategories(
-        page,
-        100,
-        undefined,
-        1
-      );
+      const res = await getCategories(page, 100, undefined, 1);
       if (res?.data) {
         const formatted = res.data.map((cat: any) => ({
           label: cat.category_name || "Unnamed",
@@ -70,6 +69,23 @@ export default function ProductPage() {
       }
     } catch (err) {
       console.error("Error loading categories:", err);
+    }
+  };
+
+  // --- Load brands
+  const loadBrands = async () => {
+    try {
+      const res = await getBrands(1, 100, undefined, 1);
+      if (res?.data) {
+        setBrands(
+          res.data.map((b: any) => ({
+            label: b.brand_name || "Unnamed",
+            value: b._id,
+          }))
+        );
+      }
+    } catch (err) {
+      console.error("Error loading brands:", err);
     }
   };
 
@@ -110,6 +126,7 @@ export default function ProductPage() {
 
   useEffect(() => {
     loadCategories();
+    loadBrands();
   }, []);
 
   // --- View single product
@@ -121,6 +138,7 @@ export default function ProductPage() {
       const formatted: Record<string, any> = {
         "Product Name": c.product_name || "—",
         Category: c.category_name || "—",
+        Brand: c.brand_name || "—",
         "Product Image": c.product_image ? (
           <a
             href={server_url + c.product_image}
@@ -188,6 +206,7 @@ export default function ProductPage() {
       const formatted = {
         ...c,
         status: String(c.status),
+        brand_id: c.brand_id || "",
         variations: c.variations?.map((v: any) => ({
           name: v.name,
           options: v.options.map((o: any) => o.name),
@@ -245,6 +264,7 @@ export default function ProductPage() {
             render: (_: any, i: number) => i + 1 + (page - 1) * 10,
           },
           { key: "product_name", label: "Product Name" },
+          { key: "brand_name", label: "Brand" },
           {
             key: "product_image",
             label: "Image",
@@ -304,6 +324,7 @@ export default function ProductPage() {
           isEdit={editMode}
           product={selected}
           categories={categories}
+          brands={brands}
           onClose={() => setOpenForm(false)}
           onSuccess={loadProducts}
         />
@@ -345,12 +366,14 @@ function ProductFormModal({
   onClose,
   onSuccess,
   categories,
+  brands,
 }: {
   isEdit: boolean;
   product: any;
   onClose: () => void;
   onSuccess: () => void;
   categories: { label: string; value: string }[];
+  brands: { label: string; value: string }[];
 }) {
   const [loading, setLoading] = useState(false);
 
@@ -499,6 +522,25 @@ function ProductFormModal({
               {categories.map((c) => (
                 <option key={c.value} value={c.value}>
                   {c.label}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* Brand (Optional) */}
+          <div>
+            <label className="block mb-1 font-medium text-sm">
+              Brand (Optional)
+            </label>
+            <select
+              name="brand_id"
+              defaultValue={product?.brand_id || ""}
+              className="w-full border rounded p-2"
+            >
+              <option value="">No Brand</option>
+              {brands.map((b) => (
+                <option key={b.value} value={b.value}>
+                  {b.label}
                 </option>
               ))}
             </select>
@@ -663,4 +705,3 @@ function ProductFormModal({
     </div>
   );
 }
-

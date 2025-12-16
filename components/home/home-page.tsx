@@ -26,7 +26,7 @@ export function HomePage() {
     const fetchLatestProducts = async () => {
       try {
         setLoading(true);
-        const res = await getProductSkus(1, 10, "", "1", undefined, undefined, true);
+        const res = await getProductSkus(1, 10, "", "1", undefined, undefined, "", true);
         setLatestProducts(res?.data || []);
       } catch (err) {
         console.error("Error fetching latest products:", err);

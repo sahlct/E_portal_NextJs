@@ -5,7 +5,7 @@ export async function updateMultipleSkuIsNew(sku_ids: string[], is_new: boolean)
   return apiRequest("/api/product-sku/singleEdit/is-new", "PUT", { sku_ids, is_new });
 }
 
-// ✅ Existing APIs unchanged
+//  Existing APIs unchanged
 export async function getProductSkus(
   page = 1,
   limit = 10,
@@ -13,6 +13,7 @@ export async function getProductSkus(
   status?: string,
   product_id?: string,
   category_id?: string,
+  brand_id?: string,      
   is_new?: boolean
 ) {
   const params = new URLSearchParams({
@@ -24,11 +25,11 @@ export async function getProductSkus(
   if (status) params.append("status", status);
   if (product_id) params.append("product_id", product_id);
   if (category_id) params.append("category_id", category_id);
+  if (brand_id) params.append("brand_id", brand_id); // ✅ added
   if (is_new !== undefined) params.append("is_new", String(is_new));
 
   return apiRequest(`/api/product-sku?${params.toString()}`, "GET");
 }
-
 
 // Get single SKU
 export async function getProductSkuById(id: string) {
