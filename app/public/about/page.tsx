@@ -1,11 +1,18 @@
 "use client";
 
 import BrandsPage from "@/components/home/branspage";
-import { IconBadges, IconBrandDatabricks, IconCarambola, IconSettingsCheck } from "@tabler/icons-react";
+import { HeroSection } from "@/components/home/hero-section";
+import {
+  IconBadges,
+  IconBrandDatabricks,
+  IconCarambola,
+  IconSettingsCheck,
+} from "@tabler/icons-react";
 
 export default function AboutPage() {
   return (
     <div className="min-h-screen bg-background">
+      <HeroSection />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <h1 className="md:text-4xl text-3xl font-semibold mb-4 font-notosans">
           About EA Portel
@@ -18,7 +25,8 @@ export default function AboutPage() {
           <div className="bg-card rounded-lg p-6 border border-border relative overflow-hidden">
             <h3 className="text-xl font-semibold mb-5 font-notosans flex gap-3">
               {" "}
-              <IconBrandDatabricks className="text-orange-400" /> <span>Our Mission</span>
+              <IconBrandDatabricks className="text-orange-400" />{" "}
+              <span>Our Mission</span>
             </h3>
             <p className="text-muted-foreground z-2 relative">
               To provide customers with the latest technology products at

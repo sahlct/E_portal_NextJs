@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { Carousel } from "@/components/carousel";
-import { HeroSection } from "@/components/home/hero-section";
+// import { HeroSection } from "@/components/home/hero-section";
 import { ProductSlider } from "@/components/product-slider";
 import { CategoriesGrid } from "@/components/home/categories-grid";
 import { BrandsMarquee } from "@/components/home/brands-marquee";
@@ -45,9 +45,6 @@ export function HomePage() {
       <Carousel />
 
       <FeaturesBar />
-
-      {/* Hero Section */}
-      <HeroSection />
 
       {/* Ad Section */}
       <AdSection />

@@ -17,6 +17,20 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Check, ChevronsUpDown } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+} from "@/components/ui/command";
 
 interface Category {
   _id: string;
@@ -43,6 +57,10 @@ export function ProductsPage() {
 
   const { addToCart, removeFromCart, items } = useCart();
   const debouncedSearch = useDebounce(searchQuery, 500);
+
+  const selectedBrandName = selectedBrand
+    ? brands.find((b) => b._id === selectedBrand)?.brand_name ?? "All Brands"
+    : "All Brands";
 
   //  Load Categories
   const loadCategories = async () => {
@@ -121,26 +139,47 @@ export function ProductsPage() {
           </div>
           <div className="items-end md:flex hidden">
             <div className="flex items-end">
-              <Select
-                value={selectedBrand ?? "all"}
-                onValueChange={(val) => {
-                  setSelectedBrand(val === "all" ? undefined : val);
-                }}
-              >
-                <SelectTrigger className="w-[200px] border-yellow-500">
-                  <SelectValue placeholder="Select Brand" />
-                </SelectTrigger>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <button
+                    // variant="outline"
+                    role="combobox"
+                    className="w-[200px] cursor-pointer flex border rounded-md md:px-3 py-2 justify-between items-center border-yellow-500"
+                  >
+                    {selectedBrandName}
+                    <ChevronsUpDown className="ml-2 h-4 w-4 opacity-50" />
+                  </button>
+                </PopoverTrigger>
 
-                <SelectContent className="bg-gray-100 border border-yellow-500">
-                  <SelectItem value="all">All Brands</SelectItem>
+                <PopoverContent className="w-[200px] p-0 border-yellow-500 bg-white">
+                  <Command>
+                    <CommandInput placeholder="Search brand..." />
+                    <CommandEmpty>No brand found.</CommandEmpty>
 
-                  {brands.map((brand) => (
-                    <SelectItem key={brand._id} value={brand._id}>
-                      {brand.brand_name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+                    <CommandGroup>
+                      <CommandItem onSelect={() => setSelectedBrand(undefined)} className="cursor-pointer">
+                        All Brands
+                        {!selectedBrand && (
+                          <Check className="ml-auto h-4 w-4" />
+                        )}
+                      </CommandItem>
+
+                      {brands.map((brand) => (
+                        <CommandItem
+                          key={brand._id}
+                          onSelect={() => setSelectedBrand(brand._id)}
+                          className="cursor-pointer"
+                        >
+                          {brand.brand_name}
+                          {selectedBrand === brand._id && (
+                            <Check className="ml-auto h-4 w-4" />
+                          )}
+                        </CommandItem>
+                      ))}
+                    </CommandGroup>
+                  </Command>
+                </PopoverContent>
+              </Popover>
             </div>
           </div>
         </div>
@@ -162,26 +201,50 @@ export function ProductsPage() {
                 className="w-full pl-12 pr-4 md:py-3 border border-border rounded-lg bg-card text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-yellow-500"
               />
               <div className="flex md:hidden items-end">
-                <Select
-                  value={selectedBrand ?? "all"}
-                  onValueChange={(val) => {
-                    setSelectedBrand(val === "all" ? undefined : val);
-                  }}
-                >
-                  <SelectTrigger className="w-[130px] border-yellow-500">
-                    <SelectValue placeholder="Select Brand" />
-                  </SelectTrigger>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <button
+                      // variant="outline"
+                      role="combobox"
+                      className="w-[140px] cursor-pointer flex border rounded-md px-3 py-2 justify-between items-center border-yellow-500"
+                    >
+                      {selectedBrandName}
+                      <ChevronsUpDown className="ml-2 h-4 w-4 opacity-50" />
+                    </button>
+                  </PopoverTrigger>
 
-                  <SelectContent className="bg-gray-100 border border-yellow-500">
-                    <SelectItem value="all">All Brands</SelectItem>
+                  <PopoverContent className="w-[150px] p-0 border-yellow-500 bg-white">
+                    <Command>
+                      <CommandInput placeholder="Search brand..." />
+                      <CommandEmpty>No brand found.</CommandEmpty>
 
-                    {brands.map((brand) => (
-                      <SelectItem key={brand._id} value={brand._id}>
-                        {brand.brand_name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                      <CommandGroup>
+                        <CommandItem
+                          onSelect={() => setSelectedBrand(undefined)}
+                          className="cursor-pointer"
+                        >
+                          All Brands
+                          {!selectedBrand && (
+                            <Check className="ml-auto h-4 w-4" />
+                          )}
+                        </CommandItem>
+
+                        {brands.map((brand) => (
+                          <CommandItem
+                            key={brand._id}
+                            onSelect={() => setSelectedBrand(brand._id)}
+                            className="cursor-pointer"
+                          >
+                            {brand.brand_name}
+                            {selectedBrand === brand._id && (
+                              <Check className="ml-auto h-4 w-4" />
+                            )}
+                          </CommandItem>
+                        ))}
+                      </CommandGroup>
+                    </Command>
+                  </PopoverContent>
+                </Popover>
               </div>
             </div>
 
@@ -277,9 +340,9 @@ export function ProductsPage() {
                       </span>
                     </div>
 
-                    <p className="text-xs text-gray-600 line-clamp-2 sm:mb-3 mb-2">
+                    {/* <p className="text-xs text-gray-600 line-clamp-2 sm:mb-3 mb-2">
                       {description}
-                    </p>
+                    </p> */}
 
                     {/* Price */}
                     <div className="flex flex-col-reverse sm:flex-row md:items-center items-start sm:gap-2 hap-1 sm:mb-4 mb-3">
