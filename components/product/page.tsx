@@ -5,7 +5,7 @@ import { useParams, useRouter } from "next/navigation";
 import { ChevronLeft, ShoppingCart, Trash2 } from "lucide-react";
 import toast from "react-hot-toast";
 
-import { getProductSkuById } from "@/lib/api/sku";
+import { getProductSkuById, getProductBySlug } from "@/lib/api/sku";
 import { getProductById, getVariations } from "@/lib/api/product";
 import { useCart } from "@/context/cart-context";
 
@@ -31,9 +31,11 @@ type VariationMapItem = {
 // -----------------------------------------------------
 export default function SingleProductPage() {
   const params = useParams();
-  const skuIdFromUrl = params?.id ?? "";
+  const slug = params?.id as string;
+  const paramValue = params?.id as string;
   const router = useRouter();
   const { addToCart, removeFromCart, items } = useCart();
+  const isMongoId = (value: string) => /^[0-9a-fA-F]{24}$/.test(value);
 
   const [currentSku, setCurrentSku] = useState<any>(null);
   const [product, setProduct] = useState<any>(null);
@@ -41,7 +43,6 @@ export default function SingleProductPage() {
   const [loading, setLoading] = useState(true);
 
   const [mainImage, setMainImage] = useState<string | null>(null);
-
   const server_url = process.env.NEXT_PUBLIC_SERVER_URL;
 
   // variation selections { variationId : optionId }
@@ -52,12 +53,17 @@ export default function SingleProductPage() {
   // ------------------------------------------
   // Load SKU
   // ------------------------------------------
-  const loadSkuById = async (id: string) => {
+  const loadSku = async (value: string) => {
     try {
-      const res = await getProductSkuById(id);
+      const res = isMongoId(value)
+        ? await getProductSkuById(value)
+        : await getProductBySlug(value);
+
       const s = res?.data ?? null;
+
       setCurrentSku(s);
       setMainImage(s?.sku_image?.[0] ?? null);
+
       return s;
     } catch (err) {
       console.error("Failed to load SKU:", err);
@@ -84,14 +90,14 @@ export default function SingleProductPage() {
   // Initial Load
   // ------------------------------------------
   useEffect(() => {
-    if (!skuIdFromUrl) return;
+    if (!paramValue) return;
 
     let mounted = true;
 
     (async () => {
       setLoading(true);
 
-      const sku = await loadSkuById(skuIdFromUrl);
+      const sku = await loadSku(paramValue);
       if (!sku) {
         setLoading(false);
         return;
@@ -101,7 +107,6 @@ export default function SingleProductPage() {
         await loadProductAndVariations(sku.product_id._id);
       }
 
-      // Preselect variation options for loaded SKU
       if (sku?.variation_configurations?.length) {
         const sel: Record<string, string> = {};
         for (const vc of sku.variation_configurations) {
@@ -118,7 +123,14 @@ export default function SingleProductPage() {
     return () => {
       mounted = false;
     };
-  }, [skuIdFromUrl]);
+  }, [paramValue]);
+
+  const slugify = (text: string) =>
+    text
+      .toLowerCase()
+      .trim()
+      .replace(/[^\w\s-]/g, "")
+      .replace(/\s+/g, "-");
 
   // ------------------------------------------
   // Build SKU option sets for quick availability checking
@@ -189,8 +201,15 @@ export default function SingleProductPage() {
     if (!currentSku) return;
     const id = findMatchingSkuId(selectedByVariation);
     if (id && id !== currentSku._id) {
-      loadSkuById(id);
-      router.replace(`/public/products/${id}`);
+      // loadSkuById(id);
+      const matchedSku = variationsData.find((v) => v.product_sku_id === id);
+
+      if (matchedSku) {
+        router.replace(
+          `/public/products/${slugify(matchedSku.product_sku_name)}`,
+          { scroll: false }
+        );
+      }
     }
   }, [selectedByVariation]);
 
@@ -336,7 +355,9 @@ export default function SingleProductPage() {
             <p className="text-gray-700">{currentSku.description}</p>
 
             <div className="flex gap-3">
-              <div className="bg-pink-100 px-4 py-1 rounded-full text-black">Brand : {currentSku.product_id?.brand_id?.brand_name}</div>
+              <div className="bg-pink-100 px-4 py-1 rounded-full text-black">
+                Brand : {currentSku.product_id?.brand_id?.brand_name}
+              </div>
 
               {/* Stock */}
               <div className="flex gap-3 items-center">
@@ -424,6 +445,48 @@ export default function SingleProductPage() {
             </div>
           </div>
         </div>
+        {/* ---------------- FEATURES TABLE (RESPONSIVE) ---------------- */}
+        {product.features?.length > 0 && (
+          <div className="pt-5">
+            <h3 className="text-lg font-semibold text-gray-900 mb-3 font-notosans">
+              Specifications
+            </h3>
+
+            <div
+              className="
+        grid
+        grid-cols-1
+        sm:grid-cols-2
+        lg:grid-cols-3
+        border
+        rounded-lg
+        overflow-hidden
+      "
+            >
+              {product.features.map(
+                (feature: { option: string; value: string }, index: number) => (
+                  <div
+                    key={index}
+                    className="
+              flex
+              border-b
+              sm:border-b
+              lg:border-b
+              sm:border-r
+              px-4 py-3
+              text-sm
+            "
+                  >
+                    <div className="w-1/2 text-gray-600 font-medium">
+                      {feature.option}
+                    </div>
+                    <div className="w-1/2 text-gray-900">{feature.value}</div>
+                  </div>
+                )
+              )}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

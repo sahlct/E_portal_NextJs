@@ -31,6 +31,15 @@ export async function getProductSkus(
   return apiRequest(`/api/product-sku?${params.toString()}`, "GET");
 }
 
+// Get single product by slug
+export async function getProductBySlug(slug: string) {
+  if (!slug) {
+    throw new Error("Slug is required");
+  }
+
+  return apiRequest(`/api/product-sku/slug/${slug}`, "GET");
+}
+
 // Get single SKU
 export async function getProductSkuById(id: string) {
   return apiRequest(`/api/product-sku/${id}`, "GET");

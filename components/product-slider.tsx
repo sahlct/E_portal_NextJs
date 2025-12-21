@@ -11,26 +11,37 @@ import {
 import Link from "next/link";
 import gsap from "gsap";
 import { useCart } from "@/context/cart-context";
+import { slugify } from "@/lib/slugify";
 
 interface Product {
   id: string;
   title: string;
   price: number;
   originalPrice?: number;
-  description: string;
+  description?: string;
   image: string;
   category: string;
   rating?: number;
+  sku: string;
 }
 
 interface Props {
   products: Product[];
+
+  // 🔹 NEW (optional)
+  showViewMore?: boolean;
+  viewMoreHref?: string;
+  viewMoreText?: string;
 }
 
-export function ProductSlider({ products }: Props) {
+export function ProductSlider({
+  products,
+  showViewMore = false,
+  viewMoreHref,
+  viewMoreText = "View More",
+}: Props) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const { addToCart, removeFromCart, items } = useCart();
-
   const server_url = process.env.NEXT_PUBLIC_SERVER_URL;
 
   const [showArrows, setShowArrows] = useState({
@@ -50,17 +61,9 @@ export function ProductSlider({ products }: Props) {
       el.scrollLeft + el.clientWidth < el.scrollWidth - 2;
 
     if (window.innerWidth >= 1024) {
-      // Desktop: both arrows
-      setShowArrows({
-        left: canScrollLeft,
-        right: canScrollRight,
-      });
+      setShowArrows({ left: canScrollLeft, right: canScrollRight });
     } else {
-      // Mobile: show only right arrow
-      setShowArrows({
-        left: false,
-        right: canScrollRight,
-      });
+      setShowArrows({ left: false, right: canScrollRight });
     }
   };
 
@@ -71,7 +74,7 @@ export function ProductSlider({ products }: Props) {
   }, [products]);
 
   // ----------------------------
-  // SCROLL HANDLER
+  // SCROLL HANDLER (UNCHANGED)
   // ----------------------------
   const scroll = (dir: "left" | "right") => {
     const el = scrollRef.current;
@@ -79,12 +82,8 @@ export function ProductSlider({ products }: Props) {
 
     const isMobile = window.innerWidth < 768;
 
-    const cardWidth = isMobile
-      ? el.clientWidth * 0.7 // mobile: 1 card
-      : 270; // desktop
-
+    const cardWidth = isMobile ? el.clientWidth * 0.7 : 270;
     const gap = isMobile ? 20 : 24;
-
     const scrollAmount = isMobile
       ? cardWidth + gap
       : (cardWidth + gap) * 2;
@@ -103,39 +102,30 @@ export function ProductSlider({ products }: Props) {
 
   return (
     <div className="relative w-full py-2">
-      {/* OUTER WRAPPER */}
       <div className="md:px-10">
-        {/* LEFT ARROW (desktop only) */}
+        {/* LEFT ARROW */}
         {showArrows.left && (
           <button
             onClick={() => scroll("left")}
-            className="
-              hidden lg:flex
-              absolute left-3 top-1/2 -translate-y-1/2
-              bg-white p-3 rounded-full shadow-md hover:bg-gray-100
-              cursor-pointer z-20
-            "
+            className="hidden lg:flex absolute left-3 top-1/2 -translate-y-1/2
+              bg-white p-3 rounded-full shadow-md cursor-pointer z-20"
           >
             <ChevronLeft className="w-5 h-5" />
           </button>
         )}
 
-        {/* RIGHT ARROW (mobile + desktop) */}
+        {/* RIGHT ARROW */}
         {showArrows.right && (
           <button
             onClick={() => scroll("right")}
-            className="
-              flex
-              absolute right-3 top-1/2 -translate-y-1/2
-              bg-white p-3 rounded-full shadow-md hover:bg-gray-100
-              cursor-pointer z-20
-            "
+            className="flex absolute right-3 top-1/2 -translate-y-1/2
+              bg-white p-3 rounded-full shadow-md cursor-pointer z-20"
           >
             <ChevronRight className="w-5 h-5" />
           </button>
         )}
 
-        {/* SCROLL CONTAINER */}
+        {/* SCROLL CONTAINER (UNCHANGED) */}
         <div
           ref={scrollRef}
           onScroll={checkScroll}
@@ -148,6 +138,7 @@ export function ProductSlider({ products }: Props) {
             snap-x snap-mandatory
           "
         >
+          {/* ================= PRODUCTS (UNCHANGED) ================= */}
           {products.map((p) => {
             const isInCart = items.some((i) => i.id === p.id);
 
@@ -161,7 +152,7 @@ export function ProductSlider({ products }: Props) {
                   px-2 pt-2
                 "
               >
-                <Link href={`/public/products/${p.id}`}>
+                <Link href={`/public/products/${slugify(p.sku)}`}>
                   <div className="h-36 md:h-52 bg-gray-100 rounded-xl overflow-hidden">
                     <img
                       src={server_url + p.image}
@@ -172,12 +163,11 @@ export function ProductSlider({ products }: Props) {
                 </Link>
 
                 <div className="py-3">
-                  <Link href={`/public/products/${p.id}`}>
+                  <Link href={`/public/products/${slugify(p.sku)}`}>
                     <h3 className="font-medium text-sm mb-1 line-clamp-1 hover:text-blue-600">
                       {p.title}
                     </h3>
 
-                    {/* Rating */}
                     <div className="flex items-center gap-1 mb-2">
                       {[1, 2, 3, 4, 5].map((star) => (
                         <Star
@@ -195,11 +185,6 @@ export function ProductSlider({ products }: Props) {
                     </div>
                   </Link>
 
-                  {/* <p className="text-xs text-gray-500 line-clamp-2">
-                    {p.description}
-                  </p> */}
-
-                  {/* Price */}
                   <div className="flex md:items-center flex-col-reverse md:flex-row md:gap-2 gap-1 mt-3 font-notosans">
                     <span className="font-semibold text-blue-700 md:text-lg text-md">
                       AED {p.price}
@@ -211,7 +196,6 @@ export function ProductSlider({ products }: Props) {
                     )}
                   </div>
 
-                  {/* Cart Button */}
                   <button
                     onClick={() =>
                       isInCart
@@ -226,7 +210,7 @@ export function ProductSlider({ products }: Props) {
                     }
                     className={`
                       w-full md:mt-4 mt-2 flex items-center justify-center gap-2
-                      py-2 rounded-lg text-sm font-semibold transition
+                      py-2 rounded-lg text-sm font-semibold transition cursor-pointer
                       ${
                         isInCart
                           ? "bg-gradient-to-r from-red-900 to-red-500 text-white"
@@ -250,6 +234,26 @@ export function ProductSlider({ products }: Props) {
               </div>
             );
           })}
+
+          {/* ================= VIEW MORE (NEW, SAFE) ================= */}
+          {showViewMore && viewMoreHref && (
+            <Link href={viewMoreHref}>
+              <div
+                className="
+                  snap-start flex-shrink-0
+                  max-w-40 sm:min-w-[45vw] md:min-w-[250px]
+                  bg-gray-200 h-full rounded-xl
+                  px-20 pt-2
+                  flex items-center justify-center
+                  cursor-pointer hover:bg-gray-300 transition
+                "
+              >
+                <span className="text-sm font-semibold text-gray-700">
+                  {viewMoreText}
+                </span>
+              </div>
+            </Link>
+          )}
         </div>
       </div>
     </div>

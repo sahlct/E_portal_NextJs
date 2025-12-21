@@ -89,7 +89,12 @@ export default function ProductSKU() {
         Images: c.sku_image?.length ? (
           <div className="flex flex-wrap gap-2">
             {c.sku_image.map((img: string, i: number) => (
-              <a key={i} href={server_url + img} target="_blank" rel="noreferrer">
+              <a
+                key={i}
+                href={server_url + img}
+                target="_blank"
+                rel="noreferrer"
+              >
                 <img
                   src={server_url + img}
                   alt="sku"
@@ -188,7 +193,15 @@ export default function ProductSKU() {
             label: "S.No",
             render: (_: any, i: number) => i + 1 + (page - 1) * 10,
           },
-          { key: "sku", label: "SKU" },
+          {
+            key: "sku",
+            label: "SKU",
+            render: (r: any) => (
+              <div className="max-w-[250px] line-clamp-1">
+                {r.sku}
+              </div>
+            ),
+          },
           { key: "product_sku_name", label: "SKU Name" },
           {
             key: "product_id",
@@ -378,16 +391,20 @@ function SkuFormModal({
   };
 
   //  Submit SKU
-   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
 
     try {
       const formData = new FormData(e.currentTarget);
 
-      selectedOptions.forEach((id) => formData.append("sku_variation_conf[]", id));
+      selectedOptions.forEach((id) =>
+        formData.append("sku_variation_conf[]", id)
+      );
 
-      existingImages.forEach((url) => formData.append("existing_sku_image", url));
+      existingImages.forEach((url) =>
+        formData.append("existing_sku_image", url)
+      );
 
       skuImages.forEach((file) => formData.append("sku_image", file));
 
@@ -491,7 +508,7 @@ function SkuFormModal({
             {thumbnailPreview && (
               <div className="mt-2 w-24 h-24">
                 <img
-                  src={server_url +thumbnailPreview}
+                  src={server_url + thumbnailPreview}
                   alt="Thumbnail Preview"
                   className="object-cover w-full h-full rounded border"
                 />

@@ -6,9 +6,7 @@ import { getProductSkus } from "@/lib/api/sku";
 import { ProductSlider } from "@/components/product-slider";
 
 export default function ListingCategorySliders() {
-  const [items, setItems] = useState<
-    { category: any; products: any[] }[]
-  >([]);
+  const [items, setItems] = useState<{ category: any; products: any[] }[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -34,11 +32,11 @@ export default function ListingCategorySliders() {
       for (const cat of categories) {
         const skuRes = await getProductSkus(
           1,
-          10,
+          15,
           "",
-          "1",        // only active SKUs
+          "1", // only active SKUs
           undefined,
-          cat._id     // category_id
+          cat._id // category_id
         );
 
         const skus = skuRes?.data || [];
@@ -70,9 +68,7 @@ export default function ListingCategorySliders() {
 
   if (loading)
     return (
-      <div className="text-center py-10 text-gray-500">
-        Loading products...
-      </div>
+      <div className="text-center py-10 text-gray-500">Loading products...</div>
     );
 
   if (!items.length)
@@ -93,7 +89,12 @@ export default function ListingCategorySliders() {
             {block.category.category_name}
           </h2>
 
-          <ProductSlider products={block.products} />
+          <ProductSlider
+            products={block.products}
+            showViewMore
+            viewMoreText="View All Products"
+            viewMoreHref="/public/products"
+          />
         </section>
       ))}
     </div>

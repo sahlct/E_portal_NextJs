@@ -10,13 +10,7 @@ import { getCategories } from "@/lib/api/category";
 import { useDebounce } from "@/hooks/debounce";
 import { useCart } from "@/context/cart-context";
 import { getBrands } from "@/lib/api/brands";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { slugify } from "@/lib/slugify";
 import { Check, ChevronsUpDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -295,13 +289,14 @@ export function ProductsPage() {
               const originalPrice = product.mrp > price ? product.mrp : null;
               const is_new = product.is_new === true;
               const id = product._id;
+              const sku = product.sku;
 
               return (
                 <div
                   key={id}
                   className="rounded-lg overflow-hidden transition-all group"
                 >
-                  <Link href={`/public/products/${id}`}>
+                  <Link href={`/public/products/${slugify(sku)}`}>
                     <div className="relative md:h-56 h-36 overflow-hidden rounded-lg bg-[#f5f5f9]">
                       <img
                         src={server_url + image || "/placeholder.svg"}
@@ -317,7 +312,7 @@ export function ProductsPage() {
                   </Link>
 
                   <div className="py-4 flex flex-col">
-                    <Link href={`/public/products/${id}`}>
+                    <Link href={`/public/products/${slugify(sku)}`}>
                       <h3 className="font-semibold text-md mb-2 md:line-clamp-2 hover:text-yellow-600 transition-colors font-notosans line-clamp-1">
                         {title}
                       </h3>

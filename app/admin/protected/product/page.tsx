@@ -23,6 +23,11 @@ interface Variation {
   options: string[];
 }
 
+interface Feature {
+  option: string;
+  value: string;
+}
+
 interface Product {
   _id: string;
   product_name: string;
@@ -188,6 +193,23 @@ export default function ProductPage() {
               </div>
             ))}
           </div>
+        );
+      }
+
+      if (c.features?.length) {
+        formatted["Features"] = (
+          <table className="w-full border text-sm">
+            <tbody>
+              {c.features.map((f: any, i: number) => (
+                <tr key={i} className="border-b">
+                  <td className="px-3 py-2 font-medium bg-gray-50 w-1/3">
+                    {f.option}
+                  </td>
+                  <td className="px-3 py-2">{f.value}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         );
       }
 
@@ -376,6 +398,7 @@ function ProductFormModal({
   brands: { label: string; value: string }[];
 }) {
   const [loading, setLoading] = useState(false);
+  const [features, setFeatures] = useState<Feature[]>(product?.features || []);
 
   const server_url = process.env.NEXT_PUBLIC_SERVER_URL || "";
 
@@ -400,6 +423,12 @@ function ProductFormModal({
         file: null,
         isImage,
       });
+    }
+  }, [product]);
+
+  useEffect(() => {
+    if (product?.features?.length) {
+      setFeatures(product.features);
     }
   }, [product]);
 
@@ -433,6 +462,16 @@ function ProductFormModal({
 
     try {
       const formData = new FormData(e.currentTarget);
+
+      // ------------------ FEATURES ------------------
+      const cleanFeatures = features
+        .map((f) => ({
+          option: f.option.trim(),
+          value: f.value.trim(),
+        }))
+        .filter((f) => f.option && f.value);
+
+      formData.append("features", JSON.stringify(cleanFeatures));
 
       // attach image file
       if (imagePreview?.file) {
@@ -680,6 +719,59 @@ function ProductFormModal({
               className="px-3 py-1 bg-cyan-700 text-white rounded text-sm hover:bg-cyan-800 cursor-pointer"
             >
               + Add Variation
+            </button>
+          </div>
+
+          {/* ---------------- FEATURES ---------------- */}
+          <div className="border-t pt-3">
+            <h3 className="font-medium text-gray-700 mb-2">Product Features</h3>
+
+            {features.map((f, i) => (
+              <div key={i} className="flex gap-2 items-center mb-2">
+                <input
+                  type="text"
+                  placeholder="Feature name (e.g. Display)"
+                  value={f.option}
+                  onChange={(e) => {
+                    const updated = [...features];
+                    updated[i].option = e.target.value;
+                    setFeatures(updated);
+                  }}
+                  className="border rounded p-2 flex-1"
+                />
+
+                <input
+                  type="text"
+                  placeholder="Feature value (e.g. AMOLED)"
+                  value={f.value}
+                  onChange={(e) => {
+                    const updated = [...features];
+                    updated[i].value = e.target.value;
+                    setFeatures(updated);
+                  }}
+                  className="border rounded p-2 flex-1"
+                />
+
+                <button
+                  type="button"
+                  onClick={() =>
+                    setFeatures(features.filter((_, idx) => idx !== i))
+                  }
+                  className="text-red-600 hover:text-red-800 cursor-pointer"
+                >
+                  <IconTrash size={18} />
+                </button>
+              </div>
+            ))}
+
+            <button
+              type="button"
+              onClick={() =>
+                setFeatures([...features, { option: "", value: "" }])
+              }
+              className="mt-2 px-3 py-1 bg-cyan-700 text-white rounded text-sm hover:bg-cyan-800 cursor-pointer"
+            >
+              + Add Feature
             </button>
           </div>
 

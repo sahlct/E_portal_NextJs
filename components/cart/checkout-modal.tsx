@@ -57,7 +57,7 @@ ${orderDetails}
 *Total Amount:* AED ${total.toFixed(2)}
     `.trim()
 
-    const whatsappNumber = "919876543210" // Replace with your WhatsApp number
+    const whatsappNumber = "+971589216757" 
     const encodedMessage = encodeURIComponent(message)
     const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodedMessage}`
 
