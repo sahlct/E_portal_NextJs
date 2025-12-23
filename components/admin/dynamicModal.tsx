@@ -9,6 +9,7 @@ interface Field {
   label: string;
   type: string;
   required?: boolean;
+  multiple?: boolean;
   options?: { label: string; value: string }[];
 }
 
@@ -32,15 +33,12 @@ export default function DynamicFormModal({
   const [loading, setLoading] = useState(false);
   const server_url = process.env.NEXT_PUBLIC_SERVER_URL || "";
 
-  console.log("fields", fields);
-  console.log("defaultValues", defaultValues);
-
   // Store selected files and previews
   const [filePreviews, setFilePreviews] = useState<
-    Record<string, { url: string; file: File | null; isImage: boolean } | null>
+    Record<string, { url: string; file: File | null; isImage: boolean }[] | null>
   >({});
 
-  // Load default existing image/file on edit
+  // Load default existing images/files on edit
   useEffect(() => {
     if (!defaultValues) {
       setFilePreviews({});
@@ -52,30 +50,42 @@ export default function DynamicFormModal({
       if (f.type === "file" && defaultValues[f.name]) {
         const value = defaultValues[f.name];
 
-        //  Skip if array (like other_images)
+        // Handle multiple files (array)
         if (Array.isArray(value)) {
-          previews[f.name] = null;
+          previews[f.name] = value.map((path: string) => {
+            const lower = path.toLowerCase();
+            const isImage =
+              lower.endsWith(".png") ||
+              lower.endsWith(".jpg") ||
+              lower.endsWith(".jpeg") ||
+              lower.endsWith(".webp");
+
+            return {
+              url: path,
+              file: null,
+              isImage,
+            };
+          });
           return;
         }
 
-        //  Skip if not string
-        if (typeof value !== "string") {
-          previews[f.name] = null;
-          return;
+        // Handle single file (string)
+        if (typeof value === "string") {
+          const lower = value.toLowerCase();
+          const isImage =
+            lower.endsWith(".png") ||
+            lower.endsWith(".jpg") ||
+            lower.endsWith(".jpeg") ||
+            lower.endsWith(".webp");
+
+          previews[f.name] = [
+            {
+              url: value,
+              file: null,
+              isImage,
+            },
+          ];
         }
-
-        const lower = value.toLowerCase();
-        const isImage =
-          lower.endsWith(".png") ||
-          lower.endsWith(".jpg") ||
-          lower.endsWith(".jpeg") ||
-          lower.endsWith(".webp");
-
-        previews[f.name] = {
-          url: value,
-          file: null,
-          isImage,
-        };
       }
     });
 
@@ -84,31 +94,58 @@ export default function DynamicFormModal({
 
   const handleFileChange = (
     e: React.ChangeEvent<HTMLInputElement>,
-    field: string
+    field: string,
+    multiple: boolean
   ) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
 
-    const isImage = file.type.startsWith("image/");
-    const url = URL.createObjectURL(file);
+    if (multiple) {
+      // Handle multiple files
+      const newPreviews = Array.from(files).map((file) => {
+        const isImage = file.type.startsWith("image/");
+        const url = URL.createObjectURL(file);
+        return { url, file, isImage };
+      });
 
-    setFilePreviews((prev) => ({
-      ...prev,
-      [field]: { url, file, isImage },
-    }));
+      setFilePreviews((prev) => ({
+        ...prev,
+        [field]: newPreviews,
+      }));
+    } else {
+      // Handle single file
+      const file = files[0];
+      const isImage = file.type.startsWith("image/");
+      const url = URL.createObjectURL(file);
+
+      setFilePreviews((prev) => ({
+        ...prev,
+        [field]: [{ url, file, isImage }],
+      }));
+    }
   };
 
-  const removeFile = (field: string) => {
-    setFilePreviews((prev) => ({
-      ...prev,
-      [field]: null,
-    }));
+  const removeFile = (field: string, index: number) => {
+    setFilePreviews((prev) => {
+      const current = prev[field];
+      if (!current) return prev;
 
-    // clear file input value
-    const input = document.querySelector(
-      `input[name="${field}"]`
-    ) as HTMLInputElement;
-    if (input) input.value = "";
+      const updated = current.filter((_, i) => i !== index);
+
+      return {
+        ...prev,
+        [field]: updated.length > 0 ? updated : null,
+      };
+    });
+
+    // Clear file input if no files left
+    const currentPreviews = filePreviews[field];
+    if (currentPreviews && currentPreviews.length === 1) {
+      const input = document.querySelector(
+        `input[name="${field}"]`
+      ) as HTMLInputElement;
+      if (input) input.value = "";
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -118,10 +155,21 @@ export default function DynamicFormModal({
     try {
       const formData = new FormData(e.currentTarget);
 
-      // inject actual selected files
-      Object.entries(filePreviews).forEach(([key, item]) => {
-        if (item?.file) {
-          formData.set(key, item.file);
+      // Inject actual selected files
+      Object.entries(filePreviews).forEach(([key, items]) => {
+        if (items && items.length > 0) {
+          // Remove the default form data for this field
+          formData.delete(key);
+
+          // Add only the new files
+          const newFiles = items.filter((item) => item.file !== null);
+          if (newFiles.length > 0) {
+            newFiles.forEach((item) => {
+              if (item.file) {
+                formData.append(key, item.file);
+              }
+            });
+          }
         }
       });
 
@@ -177,24 +225,16 @@ export default function DynamicFormModal({
                     required={f.required}
                     defaultValue={
                       defaultValues
-                        ? defaultValues[f.name] // Edit: show existing status
-                        : f.options?.[0]?.value // Create: default = first option (Active)
+                        ? defaultValues[f.name]
+                        : f.options?.[0]?.value
                     }
                     className="w-full border rounded-md p-2"
                   >
-                    {defaultValues
-                      ? // Edit mode: no placeholder
-                        f.options?.map((opt) => (
-                          <option key={opt.value} value={opt.value}>
-                            {opt.label}
-                          </option>
-                        ))
-                      : // Create mode: preselect Active, no "Select Status"
-                        f.options?.map((opt) => (
-                          <option key={opt.value} value={opt.value}>
-                            {opt.label}
-                          </option>
-                        ))}
+                    {f.options?.map((opt) => (
+                      <option key={opt.value} value={opt.value}>
+                        {opt.label}
+                      </option>
+                    ))}
                   </select>
                 )}
 
@@ -205,41 +245,50 @@ export default function DynamicFormModal({
                       type="file"
                       name={f.name}
                       accept="*"
+                      multiple={f.multiple}
                       required={f.required && !filePreviews[f.name]}
-                      onChange={(e) => handleFileChange(e, f.name)}
+                      onChange={(e) => handleFileChange(e, f.name, !!f.multiple)}
                       className="w-full border rounded-md p-2"
                     />
 
                     {/* PREVIEW (IMAGE OR FILE NAME) */}
-                    {filePreviews[f.name] && (
-                      <div className="mt-2 flex items-center gap-3 border p-2 rounded-md bg-gray-50 relative w-fit">
-                        {/* remove button */}
-                        <button
-                          type="button"
-                          className="absolute -top-2 -right-2 bg-red-400 text-white rounded-full p-1 cursor-pointer"
-                          onClick={() => removeFile(f.name)}
-                        >
-                          <IconX size={16} />
-                        </button>
+                    {filePreviews[f.name] && filePreviews[f.name]!.length > 0 && (
+                      <div className="mt-2 flex flex-wrap gap-3">
+                        {filePreviews[f.name]!.map((preview, idx) => (
+                          <div
+                            key={idx}
+                            className="border p-2 rounded-md bg-gray-50 relative w-fit"
+                          >
+                            {/* remove button */}
+                            <button
+                              type="button"
+                              className="absolute -top-2 -right-2 bg-red-400 text-white rounded-full p-1 cursor-pointer hover:bg-red-500 z-10"
+                              onClick={() => removeFile(f.name, idx)}
+                            >
+                              <IconX size={16} />
+                            </button>
 
-                        {filePreviews[f.name]?.isImage ? (
-                          <img
-                            src={
-                              filePreviews[f.name]?.file
-                                ? filePreviews[f.name]?.url // new file (blob)
-                                : server_url + filePreviews[f.name]?.url // old file (server)
-                            }
-                            className="w-24 h-24 object-cover rounded"
-                            alt="preview"
-                          />
-                        ) : (
-                          <span className="text-gray-700 text-sm">
-                            {filePreviews[f.name]?.file
-                              ? filePreviews[f.name]?.file.name 
-                              : "Existing File"}{" "}
-                            // old file
-                          </span>
-                        )}
+                            {preview.isImage ? (
+                              <img
+                                src={
+                                  preview.file
+                                    ? preview.url // new file (blob)
+                                    : server_url + preview.url // old file (server)
+                                }
+                                className="w-24 h-24 object-cover rounded"
+                                alt={`preview ${idx + 1}`}
+                              />
+                            ) : (
+                              <div className="w-24 h-24 flex items-center justify-center">
+                                <span className="text-gray-700 text-xs text-center px-2">
+                                  {preview.file
+                                    ? preview.file.name
+                                    : "Existing File"}
+                                </span>
+                              </div>
+                            )}
+                          </div>
+                        ))}
                       </div>
                     )}
                   </>

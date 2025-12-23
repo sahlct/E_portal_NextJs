@@ -32,7 +32,7 @@ export default function TopOfferTicker() {
         }
       `}</style>
 
-      <div className="w-full bg-[#22415a] text-white overflow-hidden py-2 my-10 ticker-wrap">
+      <div className="w-full bg-[#22415a] text-white overflow-hidden py-2  ticker-wrap">
         <div className="ticker-track">
           {[...messages, ...messages].map((msg, i) => (
             <div

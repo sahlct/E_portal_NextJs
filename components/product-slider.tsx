@@ -102,7 +102,7 @@ export function ProductSlider({
 
   return (
     <div className="relative w-full py-2">
-      <div className="md:px-10">
+      <div className="">
         {/* LEFT ARROW */}
         {showArrows.left && (
           <button
@@ -130,7 +130,7 @@ export function ProductSlider({
           ref={scrollRef}
           onScroll={checkScroll}
           className="
-            flex gap-2 md:gap-10
+            flex gap-2 md:gap-8
             overflow-x-auto hide-scrollbar
             scroll-smooth
             pb-3

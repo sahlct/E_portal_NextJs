@@ -32,7 +32,7 @@ export default function BlogPage() {
 
   const debouncedSearch = useDebounce(search, 500);
 
-  // ✅ Load Blogs with latest API format (with search + filters)
+  //  Load Blogs with latest API format (with search + filters)
   const loadBlogs = async () => {
     try {
       const res = await getBlogs(
@@ -65,6 +65,7 @@ export default function BlogPage() {
             {b.description || "—"}
           </p>
         ),
+        "Second Description": b.sec_description || "—",
         "Thumbnail": b.blog_thumbnail ? (
           <a
             href={server_url + b.blog_thumbnail}
@@ -128,6 +129,7 @@ export default function BlogPage() {
     { name: "blog_title", label: "Blog Title", type: "text", required: true },
     { name: "blog_sec_title", label: "Second Title", type: "text" },
     { name: "description", label: "Description", type: "textarea" },
+    { name: "sec_description", label: "Second Description", type: "textarea" },
     { name: "date", label: "Date", type: "date", required: true },
     { name: "place", label: "Place", type: "text" },
     {

@@ -41,8 +41,8 @@ export function BrandsMarquee() {
         ];
 
   return (
-    <section className="w-full bg-[#e9ecf3] md:py-12 py-8">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-14">
+    <section className="w-full bg-[#e9ecf3] md:py-12 py-8 px-4 sm:px-6 md:px-16">
+      <div className="max-w-7xl mx-auto">
         <h2 className="md:text-3xl text-2xl font-semibold font-quicksand md:mb-14 mb-7 text-center text-gray-900 font-notosans">
           Our Trusted Brands
         </h2>
@@ -63,7 +63,7 @@ export function BrandsMarquee() {
               {items.map((brand, index) => (
                 <div
                   key={brand._id + index}
-                  className="bg-white rounded-2xl md:px-5 px-3 shadow-sm border border-gray-200 
+                  className="bg-white rounded-2xl shadow-sm border border-gray-200 
                    md:w-52 w-32 md:h-32 h-20 md:mx-5 mx-3 flex items-center justify-center 
                    hover:shadow-md transition-all duration-300"
                 >

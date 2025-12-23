@@ -13,11 +13,11 @@ export default function FeaturesBar() {
       title: "Fast Delivery",
       subtitle: "Fast shipping on all order",
     },
-    {
-      icon: <PiggyBank className="md:w-10 md:h-10 h-8 w-8 text-orange-500" />,
-      title: "Big Saving Shop",
-      subtitle: "Save big every order",
-    },
+    // {
+    //   icon: <PiggyBank className="md:w-10 md:h-10 h-8 w-8 text-orange-500" />,
+    //   title: "Big Saving Shop",
+    //   subtitle: "Save big every order",
+    // },
     {
       icon: <Clock4 className="md:w-10 md:h-10 h-8 w-8 text-orange-500" />,
       title: "Online Support",
@@ -36,9 +36,9 @@ export default function FeaturesBar() {
   ];
 
   return (
-    <div className="p-5">
+    <div className="px-4 md:px-16 py-6">
     <div className="border overflow-hidden">
-      <div className="grid grid-cols-2 lg:grid-cols-5">
+      <div className="grid grid-cols-2 lg:grid-cols-4">
         {features.map((item, index) => (
           <div
             key={index}
@@ -46,7 +46,7 @@ export default function FeaturesBar() {
               flex flex-col lg:flex-row items-center lg:gap-4 gap-2 lg:p-6 p-2 
               border-b sm:border-b-0 border-r 
               last:border-r-0
-              transition-all duration-300 group last:col-span-2 lg:last:col-span-1
+              transition-all duration-300 group
             "
           >
             {/* ICON WITH FLIP ANIMATION ON HOVER */}

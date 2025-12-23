@@ -19,7 +19,6 @@ import {
   Newspaper,
 } from "lucide-react";
 
-
 // Example sidebar menu items (adjust as per your project routes)
 const menuItems = [
   {
@@ -38,13 +37,18 @@ const menuItems = [
   },
   {
     name: "Products",
-    icon:   ShoppingCart,
+    icon: ShoppingCart,
     children: [
       { name: "Categories", path: "/admin/protected/category" },
       { name: "Products", path: "/admin/protected/product" },
       { name: "Product SKUs", path: "/admin/protected/sku" },
       { name: "Latest Products", path: "/admin/protected/latest-product" },
     ],
+  },
+  {
+    name: "Banners",
+    icon: Award,
+    path: "/admin/protected/banners",
   },
   // {
   //   name: "Brands",
@@ -117,7 +121,13 @@ const Sidebar = memo(
                 alt="Logo"
                 className={`ms-3 pe-2 ${isCollapsed ? "h-8" : "h-12"}`}
               />
-              <h1 className={`text-white ${isCollapsed ? "hidden" : "block"} text-2xl font-bold text-yellow-500`}>EA Portel</h1>
+              <h1
+                className={`text-white ${
+                  isCollapsed ? "hidden" : "block"
+                } text-2xl font-bold text-yellow-500`}
+              >
+                EA Portel
+              </h1>
             </div>
 
             <button
