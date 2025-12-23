@@ -14,20 +14,10 @@ import { getCarousels } from "@/lib/api/carousel";
 
 export function Carousel() {
   const [slides, setSlides] = useState<any[]>([]);
-  const [isMobile, setIsMobile] = useState(false);
-
   const [api, setApi] = useState<CarouselApi | null>(null);
   const [current, setCurrent] = useState(0);
 
-  const server_url = process.env.NEXT_PUBLIC_SERVER_URL;
-
-  /* ---------- screen detection ---------- */
-  useEffect(() => {
-    const check = () => setIsMobile(window.innerWidth < 768);
-    check();
-    window.addEventListener("resize", check);
-    return () => window.removeEventListener("resize", check);
-  }, []);
+  const server_url = process.env.NEXT_PUBLIC_SERVER_URL || "";
 
   /* ---------- fetch slides ---------- */
   useEffect(() => {
@@ -56,13 +46,11 @@ export function Carousel() {
 
   /* ---------- loading fallback ---------- */
   if (!slides.length) {
-    return <div className="h-[400px] rounded-lg bg-muted animate-pulse" />;
+    return <div className="h-[300px] md:h-[400px] rounded-lg bg-muted animate-pulse" />;
   }
 
   const getImageUrl = (path?: string) => {
     if (!path) return "/placeholder.svg";
-    // if (path.startsWith("http")) return path;
-    console.log('final url',`${server_url}${path}` );
     return `${server_url}${path}`;
   };
 
@@ -77,38 +65,35 @@ export function Carousel() {
             stopOnInteraction: true,
           }),
         ]}
-        className="relative w-full h-[400px]"
+        className="relative w-full"
       >
         <CarouselContent>
           {slides.map((slide) => (
             <CarouselItem key={slide._id}>
-              <div className="relative w-full h-[400px] overflow-hidden">
+              <div className="relative w-full h-[180px] sm:h-[300px] md:h-[400px] overflow-hidden">
+                {/* IMAGE */}
                 <img
-                  src={
-                    isMobile
-                      ? getImageUrl(slide.mobile_file)
-                      : getImageUrl(slide.desktop_file)
-                  }
+                  src={getImageUrl(slide.desktop_file)}
                   alt={slide.title || "Slide"}
                   className="w-full h-full object-cover"
                 />
 
-                {/* Overlay content */}
+                {/* OVERLAY */}
                 <div className="absolute inset-0 bg-black/10 flex flex-col justify-center items-center text-center px-6">
                   {slide.title && (
-                    <h2 className="text-3xl sm:text-4xl font-bold text-white mb-2">
+                    <h2 className="text-2xl sm:text-4xl font-bold text-white mb-2">
                       {slide.title}
                     </h2>
                   )}
 
                   {slide.sub_title && (
-                    <p className="text-base sm:text-lg text-white/90 mb-4">
+                    <p className="text-sm sm:text-lg text-white/90 mb-4">
                       {slide.sub_title}
                     </p>
                   )}
 
                   {slide.description && (
-                    <p className="max-w-xl text-sm sm:text-base text-white/80 mb-5">
+                    <p className="max-w-xl text-xs sm:text-base text-white/80 mb-5">
                       {slide.description}
                     </p>
                   )}
@@ -124,13 +109,9 @@ export function Carousel() {
           ))}
         </CarouselContent>
 
-        {/* Desktop arrows only */}
-        {!isMobile && (
-          <>
-            <CarouselPrevious className="left-4 bg-white/80 hover:bg-white cursor-pointer hover:text-black" />
-            <CarouselNext className="right-4 bg-white/80 hover:bg-white cursor-pointer hover:text-black" />
-          </>
-        )}
+        {/* Desktop arrows */}
+        <CarouselPrevious className="left-4 bg-white/80 hover:bg-white cursor-pointer hover:text-black hidden md:flex" />
+        <CarouselNext className="right-4 bg-white/80 hover:bg-white cursor-pointer hover:text-black hidden md:flex" />
       </ShadcnCarousel>
 
       {/* Bottom dots */}
@@ -139,10 +120,10 @@ export function Carousel() {
           <button
             key={index}
             onClick={() => api?.scrollTo(index)}
-            className={`h-3 rounded-full transition-all duration-300 cursor-pointer ${
+            className={`md:h-3 h-2 rounded-full transition-all duration-300 cursor-pointer ${
               current === index
-                ? "w-6 bg-white"
-                : "w-3 bg-white/50 hover:bg-white/70"
+                ? "md:w-6 w-4 bg-white"
+                : "md:w-3 w-2 bg-white/50 hover:bg-white/70"
             }`}
             aria-label={`Go to slide ${index + 1}`}
           />

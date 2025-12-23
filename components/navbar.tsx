@@ -131,9 +131,9 @@ export function Navbar() {
   }, [pathname]);
 
   return (
-    <header className="sticky top-0 z-50">
+    <header className="sticky top-0 z-50 bg-[#ffcc00]">
       {/* ---------------- MOBILE TOP BAR ---------------- */}
-      <div className="bg-[#ffcc00] px-4 py-3 flex items-center justify-between lg:hidden">
+      <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between lg:hidden">
         <button onClick={() => setMobileOpen(true)}>
           <Menu className="w-6 h-6" />
         </button>

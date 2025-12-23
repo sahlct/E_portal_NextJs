@@ -37,7 +37,7 @@ export default function FeaturesBar() {
 
   return (
     <div className="px-4 md:px-16 py-6">
-    <div className="border overflow-hidden">
+    <div className="border overflow-hidden max-w-7xl mx-auto">
       <div className="grid grid-cols-2 lg:grid-cols-4">
         {features.map((item, index) => (
           <div

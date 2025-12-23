@@ -197,9 +197,7 @@ export default function ProductSKU() {
             key: "sku",
             label: "SKU",
             render: (r: any) => (
-              <div className="max-w-[250px] line-clamp-1">
-                {r.sku}
-              </div>
+              <div className="max-w-[250px] line-clamp-1">{r.sku}</div>
             ),
           },
           { key: "product_sku_name", label: "SKU Name" },
@@ -383,6 +381,16 @@ function SkuFormModal({
     setExistingImages((prev) => prev.filter((_, i) => i !== index));
   };
 
+  const handleThumbnailRemove = () => {
+    setThumbnailPreview(null);
+
+    const input = document.querySelector(
+      'input[name="thumbnail_image"]'
+    ) as HTMLInputElement;
+
+    if (input) input.value = "";
+  };
+
   const handleThumbnailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -506,12 +514,25 @@ function SkuFormModal({
               onChange={handleThumbnailChange}
             />
             {thumbnailPreview && (
-              <div className="mt-2 w-24 h-24">
+              <div className="relative w-24 h-24 border rounded overflow-hidden group mt-2">
                 <img
-                  src={server_url + thumbnailPreview}
+                  src={
+                    thumbnailPreview.startsWith("blob:")
+                      ? thumbnailPreview
+                      : server_url + thumbnailPreview
+                  }
                   alt="Thumbnail Preview"
-                  className="object-cover w-full h-full rounded border"
+                  className="object-cover w-full h-full"
                 />
+
+                {/* remove button */}
+                <button
+                  type="button"
+                  onClick={handleThumbnailRemove}
+                  className="absolute top-1 right-1 cursor-pointer bg-red-500 text-white rounded-full w-5 h-5 text-xs flex items-center justify-center"
+                >
+                  ✕
+                </button>
               </div>
             )}
           </div>
@@ -545,7 +566,7 @@ function SkuFormModal({
                     <button
                       type="button"
                       onClick={() => handleExistingImageRemove(i)}
-                      className="absolute top-1 right-1 bg-black/60 text-white rounded-full w-5 h-5 text-xs hidden group-hover:flex items-center justify-center"
+                      className="absolute top-1 right-1 bg-red-500 text-white rounded-full w-5 h-5 text-xs flex items-center justify-center"
                     >
                       ✕
                     </button>
@@ -570,7 +591,7 @@ function SkuFormModal({
                     <button
                       type="button"
                       onClick={() => handleImageRemove(i)}
-                      className="absolute top-1 right-1 bg-black/60 text-white rounded-full w-5 h-5 text-xs hidden group-hover:flex items-center justify-center"
+                      className="absolute top-1 right-1 bg-black/60 text-white rounded-full w-5 h-5 text-xs  cursor-pointer flex items-center justify-center"
                     >
                       ✕
                     </button>

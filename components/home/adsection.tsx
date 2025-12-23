@@ -25,8 +25,8 @@ export default function AdSection() {
   if (!banners.length) return null;
 
   return (
-    <section className="max-w-8xl mx-auto md:px-16 px-4 py-10">
-      <div className="grid grid-cols-1 md:grid-cols-3 md:gap-10 gap-5 md:h-48">
+    <section className="md:px-16 px-4 py-10 pt-0 md:pt-10">
+      <div className="grid grid-cols-1 md:grid-cols-3 md:gap-10 gap-5 md:h-48 max-w-7xl mx-auto">
         {banners.map((banner) => {
           const categoryName =
             banner.connected_category?.category_name || "";

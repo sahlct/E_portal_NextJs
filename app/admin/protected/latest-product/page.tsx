@@ -34,7 +34,7 @@ export default function LatestProductPage() {
   //  Load only latest products
   const loadLatestProducts = async () => {
     try {
-      const res = await getProductSkus(page, 100, debouncedSearch, filters.status, undefined, undefined, true);
+      const res = await getProductSkus(page, 100, debouncedSearch, filters.status, undefined, undefined, undefined, true);
       setData(res?.data || []);
       setTotalPages(Math.ceil(res?.total / 100) || 1);
     } catch (err) {

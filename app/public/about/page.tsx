@@ -11,9 +11,9 @@ import {
 
 export default function AboutPage() {
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background  px-4 sm:px-6 lg:px-8 py-8">
       <HeroSection />
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-7xl mx-auto my-10">
         <h1 className="md:text-4xl text-3xl font-semibold mb-4 font-notosans">
           About EA Portel
         </h1>

@@ -1,18 +1,36 @@
 import type React from "react";
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
+
+import { Geist, Geist_Mono } from "next/font/google";
+import { Quicksand, Noto_Sans } from "next/font/google";
+
 import { ThemeProvider } from "@/components/theme-provider";
 import { QueryProvider } from "@/components/query-provider";
 import { CartProvider } from "@/context/cart-context";
 import { Toaster } from "react-hot-toast";
-import { Quicksand, Noto_Sans } from "next/font/google";
+import Analytics from "./analytics";
 
+/* ---------- Fonts ---------- */
 const geistSans = Geist({ subsets: ["latin"] });
 const geistMono = Geist_Mono({ subsets: ["latin"] });
 
+const quicksand = Quicksand({
+  subsets: ["latin"],
+  variable: "--font-quicksand",
+  weight: ["300", "400", "500", "600", "700"],
+});
+
+const notoSans = Noto_Sans({
+  subsets: ["latin"],
+  variable: "--font-notosans",
+  weight: ["300", "400", "500", "600", "700"],
+});
+
+/* ---------- Metadata ---------- */
 export const metadata: Metadata = {
-  title: "EA Portel ",
+  title: "EA Portel",
   description: "Premium electronics, laptops, accessories, and more",
   generator: "Sahal",
   icons: {
@@ -24,26 +42,13 @@ export const metadata: Metadata = {
         rel: "icon",
         url: "/favicon-32x32.png",
         sizes: "32x32",
-      }
+      },
     ],
   },
   manifest: "/site.webmanifest",
 };
 
-// Quicksand
-const quicksand = Quicksand({
-  subsets: ["latin"],
-  variable: "--font-quicksand",
-  weight: ["300", "400", "500", "600", "700"],
-});
-
-// Noto Sans
-const notoSans = Noto_Sans({
-  subsets: ["latin"],
-  variable: "--font-notosans",
-  weight: ["300", "400", "500", "600", "700"],
-});
-
+/* ---------- Root Layout ---------- */
 export default function RootLayout({
   children,
 }: {
@@ -55,7 +60,31 @@ export default function RootLayout({
       suppressHydrationWarning
       className={`${quicksand.variable} ${notoSans.variable}`}
     >
+      <head>
+        {/* Google Analytics */}
+        <Script
+          src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_ID}`}
+          strategy="afterInteractive"
+        />
+
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+
+            // IMPORTANT: disable auto page_view
+            gtag('config', '${process.env.NEXT_PUBLIC_GA_ID}', {
+              send_page_view: false
+            });
+          `}
+        </Script>
+      </head>
+
       <body className="bg-background text-foreground font-quicksand">
+        {/* SPA page view tracking */}
+        <Analytics />
+
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
           <QueryProvider>
             <CartProvider>

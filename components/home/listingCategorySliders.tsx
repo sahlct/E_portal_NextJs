@@ -79,12 +79,13 @@ export default function ListingCategorySliders() {
     );
 
   return (
-    <div className="">
+    <div className="px-4 sm:px-6 md:py-10 py-5 lg:px-16 bg-[#f5f5f9]">
       {items.map((block, index) => (
         <section
           key={index}
-          className="max-w-8xl mx-auto px-4 sm:px-6 md:py-10 py-5 lg:px-16 bg-[#f5f5f9]"
+          className="max-w-7xl mx-auto"
         >
+          
           <h2 className="md:text-3xl text-2xl font-semibold mb-6  font-notosans">
             {block.category.category_name}
           </h2>
