@@ -12,7 +12,8 @@ import { useCart } from "@/context/cart-context";
 import { Input } from "@/components/ui/input";
 
 import { getCategories } from "@/lib/api/category";
-import { getProducts } from "@/lib/api/product";
+import { getProductSkus } from "@/lib/api/sku";
+import { slugify } from "@/lib/slugify";
 
 export function Navbar() {
   const router = useRouter();
@@ -59,6 +60,16 @@ export function Navbar() {
     });
   };
 
+  const handleSearchSubmit = () => {
+    const value = searchTerm.trim();
+    if (!value) return;
+
+    setSearchResults([]);
+    setSearchTerm("");
+
+    router.push(`/public/products?search=${encodeURIComponent(value)}`);
+  };
+
   useEffect(() => {
     const handler = (e: MouseEvent) => {
       const target = e.target as Node;
@@ -82,15 +93,15 @@ export function Navbar() {
       ? pathname.startsWith("/public/products")
       : pathname === href;
 
-  const goCategory = (id: string) => {
+  const goCategory = (category_name: string) => {
     setCategoryOpen(false);
-    router.push(`/public/products?category=${id}`);
+    router.push(`/public/products?category=${slugify(category_name)}`);
   };
 
   const goSearchItem = (name: string) => {
     setSearchTerm("");
     setSearchResults([]);
-    router.push(`/public/products?search=${encodeURIComponent(name)}`);
+    router.push(`/public/products/${slugify(name)}`);
   };
 
   /* ---------------- fetch categories ---------------- */
@@ -113,13 +124,14 @@ export function Navbar() {
       return;
     }
 
-    getProducts(1, 100, debouncedSearch, 1)
+    getProductSkus(1, 100, debouncedSearch, 1)
       .then((res) => setSearchResults(res?.data || []))
       .catch(console.error);
   }, [debouncedSearch]);
 
   /* ---------------- search grid rules ---------------- */
   const results = searchResults.slice(0, 15);
+  console.log("results", results);
 
   let gridCols = "grid-cols-1";
   if (results.length >= 10) gridCols = "grid-cols-3";
@@ -190,7 +202,7 @@ export function Navbar() {
                   {categories.map((cat) => (
                     <button
                       key={cat._id}
-                      onClick={() => goCategory(cat._id)}
+                      onClick={() => goCategory(cat.category_name)}
                       className="border cursor-pointer rounded-md py-2 px-3 hover:bg-orange-50 hover:border-orange-500 text-sm font-medium transition"
                     >
                       <span className="line-clamp-1 text-start">
@@ -205,14 +217,34 @@ export function Navbar() {
 
           {/* Search */}
           <div ref={searchRef} className="relative w-[320px]">
-            <div className="flex items-center gap-2 rounded-md bg-white px-3 ring-1 ring-border focus-within:ring-2 focus-within:ring-orange-500">
-              <Search className="w-4 h-4 text-muted-foreground" />
+            <div className="flex items-center gap-2 rounded-md bg-white px-3 pe-0.5 ring-1 ring-border focus-within:ring-2 focus-within:ring-orange-500">
               <Input
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    e.preventDefault();
+                    handleSearchSubmit();
+                  }
+                }}
                 placeholder="Search products..."
                 className="border-hidden shadow-none p-0 h-9 focus-visible:ring-0 focus-visible:ring-offset-0"
               />
+
+              <button
+                type="button"
+                onClick={handleSearchSubmit}
+                disabled={!searchTerm.trim()}
+                className={`h-full p-2 rounded-md transition cursor-pointer
+    ${
+      searchTerm.trim()
+        ? "bg-gray-300 hover:bg-gray-400"
+        : "bg-transparent cursor-not-allowed"
+    }
+  `}
+              >
+                <Search className="w-4 h-4 text-gray-700" />
+              </button>
             </div>
 
             {!!results.length && (
@@ -221,7 +253,7 @@ export function Navbar() {
                   {results.map((p) => (
                     <button
                       key={p._id}
-                      onClick={() => goSearchItem(p.product_name)}
+                      onClick={() => goSearchItem(p.sku)}
                       className="flex cursor-pointer items-center border rounded-md p-2 hover:bg-orange-50 text-xs"
                     >
                       {/* {p.product_image && (
@@ -231,7 +263,7 @@ export function Navbar() {
                         />
                       )} */}
                       <span className="line-clamp-1 text-start">
-                        {p.product_name}
+                        {p.product_sku_name}
                       </span>
                     </button>
                   ))}

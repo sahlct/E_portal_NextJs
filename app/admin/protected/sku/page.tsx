@@ -16,6 +16,7 @@ import {
   deleteProductSku,
 } from "@/lib/api/sku";
 import { getProductById, getProducts } from "@/lib/api/product";
+import Select from "react-select";
 
 export default function ProductSKU() {
   const [data, setData] = useState<any[]>([]);
@@ -398,6 +399,11 @@ function SkuFormModal({
     }
   };
 
+  const productOptions = products.map((p) => ({
+    label: p.product_name,
+    value: p._id,
+  }));
+
   //  Submit SKU
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -451,20 +457,26 @@ function SkuFormModal({
             <label className="block mb-1 font-medium text-sm">
               Select Product
             </label>
-            <select
-              name="product_id"
-              required
-              value={selectedProductId}
-              onChange={(e) => handleProductChange(e.target.value)}
-              className="w-full border rounded p-2"
-            >
-              <option value="">Select Product</option>
-              {products.map((p) => (
-                <option key={p._id} value={p._id}>
-                  {p.product_name}
-                </option>
-              ))}
-            </select>
+
+            <Select
+              options={productOptions}
+              isSearchable
+              placeholder="Search & select product..."
+              value={
+                productOptions.find((opt) => opt.value === selectedProductId) ||
+                null
+              }
+              onChange={(opt) => {
+                const productId = opt?.value || "";
+                setSelectedProductId(productId);
+                handleProductChange(productId);
+              }}
+              className="react-select-container"
+              classNamePrefix="react-select"
+            />
+
+            {/* hidden input so FormData still works */}
+            <input type="hidden" name="product_id" value={selectedProductId} />
           </div>
 
           {/* SKU Basic Fields */}

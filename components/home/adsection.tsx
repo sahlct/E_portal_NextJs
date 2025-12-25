@@ -32,7 +32,7 @@ export default function AdSection() {
             banner.connected_category?.category_name || "";
 
           const href = categoryName
-            ? `/public/products?${slugify(categoryName)}`
+            ? `/public/products?category=${slugify(categoryName)}`
             : "#";
 
           return (

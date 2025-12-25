@@ -17,6 +17,7 @@ import {
 import { getCategories } from "@/lib/api/category";
 import { getBrands } from "@/lib/api/brands";
 import toast from "react-hot-toast";
+import Select from "react-select";
 
 interface Variation {
   name: string;
@@ -94,21 +95,6 @@ export default function ProductPage() {
     }
   };
 
-  // const loadCategories = async () => {
-  //   try {
-  //     const res = await getCategories(
-  //       page,
-  //       10,
-  //       debouncedSearch,
-  //       filters.status ? Number(filters.status) : undefined
-  //     );
-  //     setData(res?.data || []);
-  //     setTotalPages(res?.meta?.pages || 1);
-  //   } catch (err) {
-  //     console.error("Error loading categories:", err);
-  //   }
-  // };
-
   // --- Load products
   const loadProducts = async () => {
     try {
@@ -142,7 +128,21 @@ export default function ProductPage() {
 
       const formatted: Record<string, any> = {
         "Product Name": c.product_name || "—",
-        Category: c.category_name || "—",
+        Categories: c.categories?.length ? (
+          <div className="flex flex-wrap gap-2">
+            {c.categories.map((cat: any) => (
+              <span
+                key={cat._id}
+                className="bg-cyan-100 text-cyan-800 px-3 py-1 rounded-full text-xs font-medium"
+              >
+                {cat.category_name}
+              </span>
+            ))}
+          </div>
+        ) : (
+          "—"
+        ),
+
         Brand: c.brand_name || "—",
         "Product Image": c.product_image ? (
           <a
@@ -176,6 +176,16 @@ export default function ProductPage() {
         "Created At": new Date(c.created_at).toLocaleString("en-IN"),
         "Updated At": new Date(c.updated_at).toLocaleString("en-IN"),
       };
+
+      if (c.advantages?.length) {
+        formatted["Advantages"] = (
+          <ul className="list-disc pl-5 space-y-1 text-gray-700">
+            {c.advantages.map((adv: string, i: number) => (
+              <li key={i}>{adv}</li>
+            ))}
+          </ul>
+        );
+      }
 
       if (c.variations?.length) {
         formatted["Variations"] = (
@@ -310,7 +320,7 @@ export default function ProductPage() {
                 "—"
               ),
           },
-          { key: "category_name", label: "Category" },
+          // { key: "category_name", label: "Category" },
           {
             key: "status",
             label: "Status",
@@ -399,7 +409,12 @@ function ProductFormModal({
 }) {
   const [loading, setLoading] = useState(false);
   const [features, setFeatures] = useState<Feature[]>(product?.features || []);
-
+  const [selectedCategories, setSelectedCategories] = useState<
+    { label: string; value: string }[]
+  >([]);
+  const [advantagesInput, setAdvantagesInput] = useState(
+    product?.advantages?.join(", ") || ""
+  );
   const server_url = process.env.NEXT_PUBLIC_SERVER_URL || "";
 
   // --------------------- FILE PREVIEW STATE ---------------------
@@ -408,6 +423,17 @@ function ProductFormModal({
     file: File | null;
     isImage: boolean;
   } | null>(null);
+
+  useEffect(() => {
+    if (product?.categories?.length) {
+      setSelectedCategories(
+        product.categories.map((c: any) => ({
+          label: c.category_name,
+          value: c._id,
+        }))
+      );
+    }
+  }, [product]);
 
   // Load existing image preview on edit
   useEffect(() => {
@@ -462,6 +488,16 @@ function ProductFormModal({
 
     try {
       const formData = new FormData(e.currentTarget);
+
+      const categoryIds = selectedCategories.map((c) => c.value);
+      formData.set("category_id", JSON.stringify(categoryIds));
+
+      const advantages = advantagesInput
+        .split(",")
+        .map((a: any) => a.trim())
+        .filter(Boolean);
+
+      formData.set("advantages", JSON.stringify(advantages));
 
       // ------------------ FEATURES ------------------
       const cleanFeatures = features
@@ -550,20 +586,17 @@ function ProductFormModal({
 
           {/* Category */}
           <div>
-            <label className="block mb-1 font-medium text-sm">Category</label>
-            <select
-              name="category_id"
-              required
-              defaultValue={product?.category_id || ""}
-              className="w-full border rounded p-2"
-            >
-              <option value="">Select category</option>
-              {categories.map((c) => (
-                <option key={c.value} value={c.value}>
-                  {c.label}
-                </option>
-              ))}
-            </select>
+            <label className="block mb-1 font-medium text-sm">Categories</label>
+
+            <Select
+              isMulti
+              options={categories}
+              value={selectedCategories}
+              onChange={(vals) => setSelectedCategories(vals as any)}
+              placeholder="Select categories"
+              className="react-select-container"
+              classNamePrefix="react-select"
+            />
           </div>
 
           {/* Brand (Optional) */}
@@ -583,6 +616,19 @@ function ProductFormModal({
                 </option>
               ))}
             </select>
+          </div>
+
+          <div>
+            <label className="block mb-1 font-medium text-sm">
+              Advantages (comma separated)
+            </label>
+            <input
+              type="text"
+              placeholder="13 inch display, 2kw battery, automatic"
+              value={advantagesInput}
+              onChange={(e) => setAdvantagesInput(e.target.value)}
+              className="w-full border rounded p-2 placeholder:text-gray-400"
+            />
           </div>
 
           {/* Product Image + PREVIEW */}
@@ -611,7 +657,11 @@ function ProductFormModal({
 
                 {imagePreview.isImage ? (
                   <img
-                    src={server_url + imagePreview.url}
+                    src={
+                      imagePreview.file
+                        ? imagePreview.url // blob URL → create time
+                        : server_url + imagePreview.url // server file → edit time
+                    }
                     className="w-24 h-24 object-cover rounded"
                   />
                 ) : (

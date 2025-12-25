@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { Search, ShoppingCart, Star, Trash2 } from "lucide-react";
 import Link from "next/link";
@@ -10,7 +10,7 @@ import { getCategories } from "@/lib/api/category";
 import { useDebounce } from "@/hooks/debounce";
 import { useCart } from "@/context/cart-context";
 import { getBrands } from "@/lib/api/brands";
-import { slugify } from "@/lib/slugify";
+import { deslugify, slugify } from "@/lib/slugify";
 import { Check, ChevronsUpDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -33,16 +33,19 @@ interface Category {
 
 export function ProductsPage() {
   const searchParams = useSearchParams();
-  const initialCategory = searchParams.get("category") || "all";
+  const categorySlugFromUrl = searchParams.get("category");
+  const searchFromUrl = searchParams.get("search") || "";
+  const [categoryReady, setCategoryReady] = useState(false);
 
   const [categories, setCategories] = useState<Category[]>([]);
-  const [selectedCategory, setSelectedCategory] = useState(initialCategory);
-  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState<string>("all");
+  const [searchQuery, setSearchQuery] = useState(searchFromUrl);
   const [products, setProducts] = useState<any[]>([]);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(true);
   const [brands, setBrands] = useState<any[]>([]);
+  const categoryRefs = useRef<Record<string, HTMLButtonElement | null>>({});
   const [selectedBrand, setSelectedBrand] = useState<string | undefined>(
     undefined
   );
@@ -68,6 +71,30 @@ export function ProductsPage() {
       console.error(err);
     }
   };
+
+  useEffect(() => {
+    if (categories.length === 0) return;
+
+    if (!categorySlugFromUrl || categorySlugFromUrl === "all") {
+      setSelectedCategory("all");
+      setCategoryReady(true);
+      return;
+    }
+
+    const decodedName = deslugify(categorySlugFromUrl);
+
+    const matched = categories.find(
+      (c) => c.category_name.toLowerCase() === decodedName
+    );
+
+    if (matched) {
+      setSelectedCategory(matched._id);
+    } else {
+      setSelectedCategory("all");
+    }
+
+    setCategoryReady(true);
+  }, [categorySlugFromUrl, categories]);
 
   // Load Brands
   const loadBrands = async () => {
@@ -106,6 +133,35 @@ export function ProductsPage() {
   };
 
   useEffect(() => {
+    if (!selectedCategory) return;
+
+    const el = categoryRefs.current[selectedCategory];
+    if (!el) return;
+
+    el.scrollIntoView({
+      behavior: "smooth",
+      inline: "center",
+      block: "nearest",
+    });
+  }, [selectedCategory]);
+
+  useEffect(() => {
+    const params = new URLSearchParams(searchParams.toString());
+
+    if (debouncedSearch) {
+      params.set("search", debouncedSearch);
+    } else {
+      params.delete("search");
+    }
+
+    window.history.replaceState(
+      null,
+      "",
+      `${window.location.pathname}?${params.toString()}`
+    );
+  }, [debouncedSearch]);
+
+  useEffect(() => {
     setPage(1);
   }, [selectedBrand]);
 
@@ -115,8 +171,9 @@ export function ProductsPage() {
   }, []);
 
   useEffect(() => {
+    if (!categoryReady) return;
     loadProducts();
-  }, [page, debouncedSearch, selectedCategory, selectedBrand]);
+  }, [page, debouncedSearch, selectedCategory, selectedBrand, categoryReady]);
 
   return (
     <div className="min-h-screen bg-background">
@@ -151,7 +208,10 @@ export function ProductsPage() {
                     <CommandEmpty>No brand found.</CommandEmpty>
 
                     <CommandGroup>
-                      <CommandItem onSelect={() => setSelectedBrand(undefined)} className="cursor-pointer">
+                      <CommandItem
+                        onSelect={() => setSelectedBrand(undefined)}
+                        className="cursor-pointer"
+                      >
                         All Brands
                         {!selectedBrand && (
                           <Check className="ml-auto h-4 w-4" />
@@ -252,8 +312,26 @@ export function ProductsPage() {
               {categories.map((cat) => (
                 <button
                   key={cat._id}
+                  ref={(el) => {
+                    categoryRefs.current[cat._id] = el;
+                  }}
                   onClick={() => {
-                    setSelectedCategory(cat._id);
+                    const params = new URLSearchParams(searchParams.toString());
+
+                    if (cat._id === "all") {
+                      params.delete("category");
+                      setSelectedCategory("all");
+                    } else {
+                      params.set("category", slugify(cat.category_name));
+                      setSelectedCategory(cat._id);
+                    }
+
+                    window.history.replaceState(
+                      null,
+                      "",
+                      `${window.location.pathname}?${params.toString()}`
+                    );
+
                     setPage(1);
                   }}
                   className={`px-4 py-2 rounded-full border text-sm font-medium shrink-0 transition-all cursor-pointer ${

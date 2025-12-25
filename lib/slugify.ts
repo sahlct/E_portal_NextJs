@@ -9,3 +9,8 @@ export function slugify(text?: string) {
     .replace(/\s+/g, "-")
     .replace(/-+/g, "-");
 }
+
+export function deslugify(slug?: string) {
+  if (!slug) return "";
+  return slug.replace(/-/g, " ").toLowerCase();
+}
