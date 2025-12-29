@@ -41,3 +41,18 @@ export async function updateProductWithVariation(id: string, formData: FormData)
 export async function deleteProduct(id: string) {
   return apiRequest(`/api/products/${id}`, "DELETE");
 }
+
+// Get similar products by product id
+export async function getSimilarProducts(
+  productId: string,
+  limit: number = 8
+) {
+  const params = new URLSearchParams({
+    limit: String(limit),
+  });
+
+  return apiRequest(
+    `/api/products/${productId}/similar?${params.toString()}`,
+    "GET"
+  );
+}

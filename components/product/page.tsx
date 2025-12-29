@@ -2,12 +2,13 @@
 
 import React, { useEffect, useMemo, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { ChevronLeft, ShoppingCart, Trash2 } from "lucide-react";
+import { CheckCircle, ChevronLeft, ShoppingCart, Trash2 } from "lucide-react";
 import toast from "react-hot-toast";
 
 import { getProductSkuById, getProductBySlug } from "@/lib/api/sku";
 import { getProductById, getVariations } from "@/lib/api/product";
 import { useCart } from "@/context/cart-context";
+import SimilarProducts from "./similarProducts";
 
 // -----------------------------------------------------
 // Types
@@ -38,6 +39,7 @@ export default function SingleProductPage() {
   const isMongoId = (value: string) => /^[0-9a-fA-F]{24}$/.test(value);
 
   const [currentSku, setCurrentSku] = useState<any>(null);
+  const [showFullDesc, setShowFullDesc] = useState(false);
   const [product, setProduct] = useState<any>(null);
   const [variationsData, setVariationsData] = useState<VariationMapItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -295,14 +297,14 @@ export default function SingleProductPage() {
 
         <div className="grid grid-cols-1 lg:grid-cols-12 md:gap-10 gap-6">
           {/* ---------------- LEFT (FIXED) ---------------- */}
-          <div className="lg:col-span-5 lg:sticky lg:top-20 h-fit">
+          <div className="lg:col-span-5 lg:sticky lg:top-40 h-fit">
             {/* <div className="bg-gray-50 border rounded-xl p-4"> */}
             <div className="w-full h-80 md:h-96 flex items-center justify-center bg-white border rounded-lg overflow-hidden">
               {mainImage ? (
                 <img
                   src={server_url + mainImage}
                   alt="Product"
-                  className="object-contain max-h-full max-w-full"
+                  className="object-contain h-full w-full"
                 />
               ) : (
                 <div>No image</div>
@@ -352,7 +354,24 @@ export default function SingleProductPage() {
             </div>
 
             {/* Description */}
-            <p className="text-gray-700">{currentSku.description}</p>
+            <div className="text-gray-700 text-sm leading-relaxed">
+              <p
+                className={`transition-all ${
+                  showFullDesc ? "" : "line-clamp-3"
+                }`}
+              >
+                {currentSku.description}
+              </p>
+
+              {currentSku.description?.length > 150 && (
+                <button
+                  onClick={() => setShowFullDesc((p) => !p)}
+                  className="mt-1 cursor-pointer text-cyan-700 font-medium text-sm hover:underline"
+                >
+                  {showFullDesc ? "Read less" : "Read more"}
+                </button>
+              )}
+            </div>
 
             <div className="flex gap-3">
               <div className="bg-pink-100 px-4 py-1 rounded-full text-black">
@@ -443,50 +462,67 @@ export default function SingleProductPage() {
                 Buy now
               </button>
             </div>
+
+            {/* features */}
+            {product?.advantages?.length > 0 && (
+              <div className="pt-4 border-t">
+                <h3 className="text-sm font-semibold text-gray-900 mb-3">
+                  Key Advantages
+                </h3>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-2 gap-x-4">
+                  {product.advantages.map((adv: string, i: number) => (
+                    <div
+                      key={i}
+                      className="flex items-start gap-2 text-sm text-gray-700"
+                    >
+                      <CheckCircle className="w-4 h-4 text-green-600 mt-0.5 shrink-0" />
+                      <span>{adv}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* specifications  */}
+            {product?.features?.length > 0 && (
+              <div className="pt-4">
+                <h3 className="text-sm font-semibold text-gray-900 mb-3">
+                  Specifications
+                </h3>
+
+                <div className="border rounded-lg overflow-hidden">
+                  {product.features.map(
+                    (
+                      feature: { option: string; value: string },
+                      index: number
+                    ) => (
+                      <div
+                        key={index}
+                        className={`flex items-center text-sm px-4 py-3 ${
+                          index !== product.features.length - 1
+                            ? "border-b"
+                            : ""
+                        }`}
+                      >
+                        <div className="w-1/3 text-gray-600 font-medium">
+                          {feature.option}
+                        </div>
+                        <div className="w-2/3 text-gray-900">
+                          {feature.value}
+                        </div>
+                      </div>
+                    )
+                  )}
+                </div>
+              </div>
+            )}
           </div>
         </div>
-        {/* ---------------- FEATURES TABLE (RESPONSIVE) ---------------- */}
-        {product.features?.length > 0 && (
-          <div className="pt-5">
-            <h3 className="text-lg font-semibold text-gray-900 mb-3 font-notosans">
-              Specifications
-            </h3>
 
-            <div
-              className="
-        grid
-        grid-cols-1
-        sm:grid-cols-2
-        lg:grid-cols-3
-        border
-        rounded-lg
-        overflow-hidden
-      "
-            >
-              {product.features.map(
-                (feature: { option: string; value: string }, index: number) => (
-                  <div
-                    key={index}
-                    className="
-              flex
-              border-b
-              sm:border-b
-              lg:border-b
-              sm:border-r
-              px-4 py-3
-              text-sm
-            "
-                  >
-                    <div className="w-1/2 text-gray-600 font-medium">
-                      {feature.option}
-                    </div>
-                    <div className="w-1/2 text-gray-900">{feature.value}</div>
-                  </div>
-                )
-              )}
-            </div>
-          </div>
-        )}
+        {/* SIMILAR PRODUCTS */}
+        {product?._id && <SimilarProducts productId={product._id} />}
+        
       </div>
     </div>
   );
