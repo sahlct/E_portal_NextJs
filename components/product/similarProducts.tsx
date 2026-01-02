@@ -23,6 +23,7 @@ export default function SimilarProducts({ productId }: Props) {
       try {
         setLoading(true);
         const res = await getSimilarProducts(productId, 8);
+        console.log("simlar data", res);
         setProducts(res?.data || []);
       } catch (err) {
         console.error("Failed to load similar products", err);
@@ -52,7 +53,7 @@ export default function SimilarProducts({ productId }: Props) {
         {products.map((p) => (
           <Link
             key={p._id}
-            href={`/public/products/${slugify(p.skus[0].product_sku_name)}`}
+            href={`/public/products/${slugify(p.skus[0].sku)}`}
             className="group border rounded-lg p-3 hover:shadow-md transition"
           >
             <div className="h-32 md:h-60 flex items-center justify-center bg-gray-50 rounded-md mb-3 overflow-hidden">

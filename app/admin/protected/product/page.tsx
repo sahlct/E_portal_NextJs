@@ -412,8 +412,8 @@ function ProductFormModal({
   const [selectedCategories, setSelectedCategories] = useState<
     { label: string; value: string }[]
   >([]);
-  const [advantagesInput, setAdvantagesInput] = useState(
-    product?.advantages?.join(", ") || ""
+  const [advantages, setAdvantages] = useState<string[]>(
+    product?.advantages?.length ? product.advantages : [""]
   );
   const server_url = process.env.NEXT_PUBLIC_SERVER_URL || "";
 
@@ -492,12 +492,16 @@ function ProductFormModal({
       const categoryIds = selectedCategories.map((c) => c.value);
       formData.set("category_id", JSON.stringify(categoryIds));
 
-      const advantages = advantagesInput
-        .split(",")
-        .map((a: any) => a.trim())
-        .filter(Boolean);
+      // const advantages = advantagesInput
+      //   .split(",")
+      //   .map((a: any) => a.trim())
+      //   .filter(Boolean);
 
-      formData.set("advantages", JSON.stringify(advantages));
+      // formData.set("advantages", JSON.stringify(advantages));
+
+      const advantagesClean = advantages.map((a) => a.trim()).filter(Boolean);
+
+      formData.set("advantages", JSON.stringify(advantagesClean));
 
       // ------------------ FEATURES ------------------
       const cleanFeatures = features
@@ -618,7 +622,7 @@ function ProductFormModal({
             </select>
           </div>
 
-          <div>
+          {/* <div>
             <label className="block mb-1 font-medium text-sm">
               Advantages (comma separated)
             </label>
@@ -629,6 +633,62 @@ function ProductFormModal({
               onChange={(e) => setAdvantagesInput(e.target.value)}
               className="w-full border rounded p-2 placeholder:text-gray-400"
             />
+          </div> */}
+
+          <div>
+            <label className="block mb-1 font-medium text-sm">Advantages</label>
+
+            <div className="border rounded p-2 space-y-3 bg-white">
+              {advantages.map((adv, i) => (
+                <div key={i} className="flex gap-2 items-start">
+                  <span className="mt-2 text-lg leading-none">•</span>
+
+                  <textarea
+                    value={adv}
+                    rows={1}
+                    placeholder="Type advantage… (Enter = new bullet, Shift+Enter = new line)"
+                    className="flex-1 resize-none overflow-hidden outline-none border-b border-gray-200 focus:border-cyan-600 py-1 text-sm leading-relaxed placeholder:text-gray-500"
+                    onChange={(e) => {
+                      const updated = [...advantages];
+                      updated[i] = e.target.value;
+                      setAdvantages(updated);
+                    }}
+                    onKeyDown={(e) => {
+                      // ENTER → new bullet
+                      if (e.key === "Enter" && !e.shiftKey) {
+                        e.preventDefault();
+                        const updated = [...advantages];
+                        updated.splice(i + 1, 0, "");
+                        setAdvantages(updated);
+                      }
+
+                      // BACKSPACE on empty → remove bullet
+                      if (
+                        e.key === "Backspace" &&
+                        !adv &&
+                        advantages.length > 1
+                      ) {
+                        e.preventDefault();
+                        const updated = advantages.filter(
+                          (_, idx) => idx !== i
+                        );
+                        setAdvantages(updated);
+                      }
+                    }}
+                    onInput={(e) => {
+                      // Auto-grow textarea height
+                      const el = e.currentTarget;
+                      el.style.height = "auto";
+                      el.style.height = el.scrollHeight + "px";
+                    }}
+                  />
+                </div>
+              ))}
+            </div>
+
+            <p className="text-xs text-gray-500 mt-1">
+              Enter → new bullet · Shift + Enter → new line
+            </p>
           </div>
 
           {/* Product Image + PREVIEW */}
