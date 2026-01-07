@@ -153,11 +153,11 @@ export function ProductSlider({
                 "
               >
                 <Link href={`/public/products/${slugify(p.sku)}`}>
-                  <div className="h-36 md:h-52 bg-gray-100 rounded-xl overflow-hidden">
+                  <div className=" bg-gray-100 rounded-xl overflow-hidden p-2">
                     <img
                       src={server_url + p.image}
                       alt={p.title}
-                      className="w-full h-full object-cover transition duration-300 hover:scale-110"
+                      className="w-full h-full object-cover transition duration-300 hover:scale-105"
                     />
                   </div>
                 </Link>

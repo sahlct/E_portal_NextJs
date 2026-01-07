@@ -375,11 +375,11 @@ export function ProductsPage() {
                   className="rounded-lg overflow-hidden transition-all group"
                 >
                   <Link href={`/public/products/${slugify(sku)}`}>
-                    <div className="relative md:h-56 h-36 overflow-hidden rounded-lg bg-[#f5f5f9]">
+                    <div className="relative md:h-56 h-36 overflow-hidden rounded-lg bg-[#f5f5f9] p-2">
                       <img
                         src={server_url + image || "/placeholder.svg"}
                         alt={title}
-                        className="w-full h-full object-cover rounded-lg transition-transform duration-300 group-hover:scale-110"
+                        className="w-full h-full object-contain rounded-lg transition-transform duration-300 group-hover:scale-105  "
                       />
                       {is_new && (
                         <div className="absolute top-2 right-2 bg-green-500 text-white px-2 py-0.5 rounded-full text-xs font-semibold">

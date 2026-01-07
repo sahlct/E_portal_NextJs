@@ -65,12 +65,12 @@ export function BrandsMarquee() {
                   key={brand._id + index}
                   className="bg-white rounded-2xl shadow-sm border border-gray-200 
                    md:w-52 w-32 md:h-32 h-20 md:mx-5 mx-3 flex items-center justify-center 
-                   hover:shadow-md transition-all duration-300"
+                   hover:shadow-md transition-all duration-300 px-4 overflow-hidden"
                 >
                   <img
                     src={server_url + brand?.brand_image || "/placeholder.svg"}
                     alt="Brand Logo"
-                    className="md:h-16 h-14 object-contain hover:scale-110 transition-transform"
+                    className="h-fullobject-contain hover:scale-105 transition-transform"
                     draggable={false}
                   />
                 </div>

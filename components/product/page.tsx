@@ -10,9 +10,7 @@ import { getProductById, getVariations } from "@/lib/api/product";
 import { useCart } from "@/context/cart-context";
 import SimilarProducts from "./similarProducts";
 
-// -----------------------------------------------------
 // Types
-// -----------------------------------------------------
 type VariationMapItem = {
   product_sku_id: string;
   product_sku_name: string;
@@ -27,9 +25,7 @@ type VariationMapItem = {
   }>;
 };
 
-// -----------------------------------------------------
 // Component
-// -----------------------------------------------------
 export default function SingleProductPage() {
   const params = useParams();
   const slug = params?.id as string;
@@ -52,9 +48,7 @@ export default function SingleProductPage() {
     Record<string, string>
   >({});
 
-  // ------------------------------------------
   // Load SKU
-  // ------------------------------------------
   const loadSku = async (value: string) => {
     try {
       const res = isMongoId(value)
@@ -73,9 +67,7 @@ export default function SingleProductPage() {
     }
   };
 
-  // ------------------------------------------
   // Load product + variations
-  // ------------------------------------------
   const loadProductAndVariations = async (productId: string) => {
     try {
       const pRes = await getProductById(productId);
@@ -88,9 +80,7 @@ export default function SingleProductPage() {
     }
   };
 
-  // ------------------------------------------
   // Initial Load
-  // ------------------------------------------
   useEffect(() => {
     if (!paramValue) return;
 
@@ -134,9 +124,7 @@ export default function SingleProductPage() {
       .replace(/[^\w\s-]/g, "")
       .replace(/\s+/g, "-");
 
-  // ------------------------------------------
   // Build SKU option sets for quick availability checking
-  // ------------------------------------------
   const skuOptionSetMap = useMemo(() => {
     const map = new Map<string, Set<string>>();
     for (const item of variationsData) {
@@ -149,9 +137,7 @@ export default function SingleProductPage() {
     return map;
   }, [variationsData]);
 
-  // ------------------------------------------
   // Find matching SKU for selected options
-  // ------------------------------------------
   const findMatchingSkuId = (selectedMap: Record<string, string>) => {
     const selectedOptionIds = Object.values(selectedMap).filter(Boolean);
 
@@ -171,9 +157,7 @@ export default function SingleProductPage() {
     return null;
   };
 
-  // ------------------------------------------
   // Check whether option is clickable
-  // ------------------------------------------
   const isOptionAvailable = (variationId: string, optionId: string) => {
     const sel = { ...selectedByVariation };
     sel[variationId] = optionId;
@@ -196,9 +180,7 @@ export default function SingleProductPage() {
     return false;
   };
 
-  // ------------------------------------------
   // React to selection changes -> update SKU
-  // ------------------------------------------
   useEffect(() => {
     if (!currentSku) return;
     const id = findMatchingSkuId(selectedByVariation);
@@ -215,9 +197,7 @@ export default function SingleProductPage() {
     }
   }, [selectedByVariation]);
 
-  // ------------------------------------------
   // Variation click handler
-  // ------------------------------------------
   const handleSelectOption = (variationId: string, optionId: string) => {
     setSelectedByVariation((prev) => {
       const updated = { ...prev };
@@ -230,9 +210,7 @@ export default function SingleProductPage() {
     });
   };
 
-  // ------------------------------------------
   // Cart Logic
-  // ------------------------------------------
   const isInCart = currentSku
     ? items.some((item) => item.id === currentSku._id)
     : false;
@@ -267,9 +245,7 @@ export default function SingleProductPage() {
     router.push("/public/cart");
   };
 
-  // ------------------------------------------
   // UI Loading
-  // ------------------------------------------
   if (loading || !currentSku) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -280,9 +256,7 @@ export default function SingleProductPage() {
 
   const thumbnails = currentSku.sku_image ?? [];
 
-  // -----------------------------------------------------
   // UI Layout
-  // -----------------------------------------------------
   return (
     <div className="min-h-screen bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 md:py-12 lg:px-12">
@@ -373,10 +347,27 @@ export default function SingleProductPage() {
               )}
             </div>
 
-            <div className="flex gap-3">
-              <div className="bg-pink-100 px-4 py-1 rounded-full text-black">
+            <div className="flex gap-5 items-end">
+              {/* <div className="bg-pink-100 px-4 py-1 rounded-full text-black">
                 Brand : {currentSku.product_id?.brand_id?.brand_name}
-              </div>
+              </div> */}
+
+              {/* brand */}
+              {currentSku.product_id?.brand_id?.brand_image && (
+                <div className=" text-black">
+                  <span>Brand : {currentSku.product_id?.brand_id?.brand_name} </span>
+                  <div className="px-2 bg-sky-100 rounded flex justify-center">
+                    <img
+                      src={
+                        server_url +
+                        currentSku.product_id?.brand_id?.brand_image
+                      }
+                      alt="brand logo"
+                      className="max-h-9"
+                    />
+                  </div>
+                </div>
+              )}
 
               {/* Stock */}
               <div className="flex gap-3 items-center">
@@ -484,7 +475,7 @@ export default function SingleProductPage() {
               </div>
             )}
 
-            {/* specifications  */}
+            {/* specifications */}
             {product?.features?.length > 0 && (
               <div className="pt-4">
                 <h3 className="text-sm font-semibold text-gray-900 mb-3">
@@ -499,16 +490,19 @@ export default function SingleProductPage() {
                     ) => (
                       <div
                         key={index}
-                        className={`flex items-center text-sm px-4 py-3 ${
+                        className={`flex items-stretch text-sm px-4 py-2 ${
                           index !== product.features.length - 1
                             ? "border-b"
                             : ""
                         }`}
                       >
-                        <div className="w-1/3 text-gray-600 font-medium">
+                        {/* KEY */}
+                        <div className="w-1/3 text-gray-600 font-medium py-1 pr-4 !border-r-2 border-r-gray-300">
                           {feature.option}
                         </div>
-                        <div className="w-2/3 text-gray-900">
+
+                        {/* VALUE */}
+                        <div className="w-2/3 text-gray-900 pl-4 py-1">
                           {feature.value}
                         </div>
                       </div>
@@ -522,7 +516,6 @@ export default function SingleProductPage() {
 
         {/* SIMILAR PRODUCTS */}
         {product?._id && <SimilarProducts productId={product._id} />}
-        
       </div>
     </div>
   );
