@@ -153,7 +153,7 @@ export function ProductSlider({
                 "
               >
                 <Link href={`/public/products/${slugify(p.sku)}`}>
-                  <div className=" bg-gray-100 rounded-xl overflow-hidden p-2">
+                  <div className=" bg-gray-100 rounded-xl overflow-hidden p-2 md:h-56 h-36 w-full">
                     <img
                       src={server_url + p.image}
                       alt={p.title}

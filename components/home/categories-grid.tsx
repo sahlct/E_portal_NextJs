@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { getCategories } from "@/lib/api/category";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { slugify } from "@/lib/slugify";
 
 interface Category {
   _id: string;
@@ -118,7 +119,7 @@ export function CategoriesGrid() {
                   {pair.map((cat) => (
                     <Link
                       key={cat._id}
-                      href={`/public/products?category=${cat._id}`}
+                      href={`/public/products?category=${slugify(cat.category_name)}`}
                       className="w-full border  px-5 py-8 bg-white 
                                flex justify-between items-center 
                                hover:shadow-md transition-all group"
