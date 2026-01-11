@@ -15,6 +15,8 @@ import {
   deleteProduct,
 } from "@/lib/api/product";
 import { getCategories } from "@/lib/api/category";
+import { getSubCategories } from "@/lib/api/subCategory";
+import { getInnerCategories } from "@/lib/api/innerCategory";
 import { getBrands } from "@/lib/api/brands";
 import toast from "react-hot-toast";
 import Select from "react-select";
@@ -128,21 +130,9 @@ export default function ProductPage() {
 
       const formatted: Record<string, any> = {
         "Product Name": c.product_name || "—",
-        Categories: c.categories?.length ? (
-          <div className="flex flex-wrap gap-2">
-            {c.categories.map((cat: any) => (
-              <span
-                key={cat._id}
-                className="bg-cyan-100 text-cyan-800 px-3 py-1 rounded-full text-xs font-medium"
-              >
-                {cat.category_name}
-              </span>
-            ))}
-          </div>
-        ) : (
-          "—"
-        ),
-
+        Category: c.category_name,
+        "Sub Category": c.sub_category_name,
+        "Inner Category": c.inner_category_name,
         Brand: c.brand_name || "—",
         "Product Image": c.product_image ? (
           <a
@@ -297,6 +287,9 @@ export default function ProductPage() {
           },
           { key: "product_name", label: "Product Name" },
           { key: "brand_name", label: "Brand" },
+          { key: "category_name", label: "Category" },
+          { key: "sub_category_name", label: "Sub Category" },
+          { key: "inner_category_name", label: "Inner Category" },
           {
             key: "product_image",
             label: "Image",
@@ -409,9 +402,10 @@ function ProductFormModal({
 }) {
   const [loading, setLoading] = useState(false);
   const [features, setFeatures] = useState<Feature[]>(product?.features || []);
-  const [selectedCategories, setSelectedCategories] = useState<
-    { label: string; value: string }[]
-  >([]);
+  const [selectedCategory, setSelectedCategory] = useState<any>(null);
+  const [selectedSubCategory, setSelectedSubCategory] = useState<any>(null);
+  const [subCategories, setSubCategories] = useState<any[]>([]);
+  const [innerCategories, setInnerCategories] = useState<any[]>([]);
   const [advantages, setAdvantages] = useState<string[]>(
     product?.advantages?.length ? product.advantages : [""]
   );
@@ -424,16 +418,58 @@ function ProductFormModal({
     isImage: boolean;
   } | null>(null);
 
+  // useEffect(() => {
+  //   if (product?.categories?.length) {
+  //     setSelectedCategories(
+  //       product.categories.map((c: any) => ({
+  //         label: c.category_name,
+  //         value: c._id,
+  //       }))
+  //     );
+  //   }
+  // }, [product]);
+
   useEffect(() => {
-    if (product?.categories?.length) {
-      setSelectedCategories(
-        product.categories.map((c: any) => ({
-          label: c.category_name,
-          value: c._id,
+    if (!selectedCategory) {
+      setSubCategories([]);
+      setSelectedSubCategory(null);
+      return;
+    }
+
+    getSubCategories(1, 100, undefined, 1, selectedCategory.value).then(
+      (res) => {
+        setSubCategories(
+          res.data.map((s: any) => ({
+            label: s.sub_category_name,
+            value: s._id,
+          }))
+        );
+      }
+    );
+  }, [selectedCategory]);
+
+  useEffect(() => {
+    if (!selectedSubCategory) {
+      setInnerCategories([]);
+      return;
+    }
+
+    getInnerCategories(
+      1,
+      100,
+      undefined,
+      1,
+      selectedCategory?.value,
+      selectedSubCategory.value
+    ).then((res) => {
+      setInnerCategories(
+        res.data.map((i: any) => ({
+          label: i.inner_category_name,
+          value: i._id,
         }))
       );
-    }
-  }, [product]);
+    });
+  }, [selectedSubCategory]);
 
   // Load existing image preview on edit
   useEffect(() => {
@@ -489,8 +525,8 @@ function ProductFormModal({
     try {
       const formData = new FormData(e.currentTarget);
 
-      const categoryIds = selectedCategories.map((c) => c.value);
-      formData.set("category_id", JSON.stringify(categoryIds));
+      formData.set("category_id", selectedCategory.value);
+      formData.set("sub_category_id", selectedSubCategory.value);
 
       // const advantages = advantagesInput
       //   .split(",")
@@ -587,22 +623,43 @@ function ProductFormModal({
               className="w-full border rounded p-2"
             />
           </div>
-
           {/* Category */}
           <div>
             <label className="block mb-1 font-medium text-sm">Categories</label>
 
             <Select
-              isMulti
               options={categories}
-              value={selectedCategories}
-              onChange={(vals) => setSelectedCategories(vals as any)}
-              placeholder="Select categories"
-              className="react-select-container"
-              classNamePrefix="react-select"
+              value={selectedCategory}
+              onChange={(v) => setSelectedCategory(v)}
+              placeholder="Select category"
+            />
+          </div>
+          {/* Subcategories */}
+          <div>
+            <label className="block mb-1 font-medium text-sm">
+              Subcategories
+            </label>
+            <Select
+              options={subCategories}
+              value={selectedSubCategory}
+              onChange={(v) => setSelectedSubCategory(v)}
+              isDisabled={!selectedCategory}
+              placeholder="Select sub category"
             />
           </div>
 
+          {/* inner category */}
+          <div>
+            <label className="block mb-1 font-medium text-sm">
+              Inner Category
+            </label>
+            <Select
+              options={innerCategories}
+              name="inner_category_id"
+              isDisabled={!selectedSubCategory}
+              placeholder="Select inner category"
+            />
+          </div>
           {/* Brand (Optional) */}
           <div>
             <label className="block mb-1 font-medium text-sm">
@@ -621,7 +678,6 @@ function ProductFormModal({
               ))}
             </select>
           </div>
-
           {/* <div>
             <label className="block mb-1 font-medium text-sm">
               Advantages (comma separated)
@@ -634,7 +690,6 @@ function ProductFormModal({
               className="w-full border rounded p-2 placeholder:text-gray-400"
             />
           </div> */}
-
           <div>
             <label className="block mb-1 font-medium text-sm">Advantages</label>
 
@@ -690,7 +745,6 @@ function ProductFormModal({
               Enter → new bullet · Shift + Enter → new line
             </p>
           </div>
-
           {/* Product Image + PREVIEW */}
           <div>
             <label className="block mb-1 font-medium text-sm">
@@ -732,7 +786,6 @@ function ProductFormModal({
               </div>
             )}
           </div>
-
           {/* Status */}
           <div>
             <label className="block mb-1 font-medium text-sm">Status</label>
@@ -746,7 +799,6 @@ function ProductFormModal({
               <option value="0">Inactive</option>
             </select>
           </div>
-
           {/* Variations */}
           <div className="border-t pt-3">
             <h3 className="font-medium text-gray-700 mb-2">Variations</h3>
@@ -831,7 +883,6 @@ function ProductFormModal({
               + Add Variation
             </button>
           </div>
-
           {/* ---------------- FEATURES ---------------- */}
           <div className="border-t pt-3">
             <h3 className="font-medium text-gray-700 mb-2">Product Features</h3>
@@ -884,7 +935,6 @@ function ProductFormModal({
               + Add Feature
             </button>
           </div>
-
           {/* Footer */}
           <div className="flex justify-end gap-2 border-t pt-3">
             <button

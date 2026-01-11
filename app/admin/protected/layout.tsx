@@ -15,6 +15,7 @@ import {
   Settings,
   LogOut,
   Fan,
+  Settings2,
   ShoppingCart,
   Newspaper,
 } from "lucide-react";
@@ -30,16 +31,20 @@ const menuItems = [
     name: "Carousel",
     icon: Fan,
     path: "/admin/protected/carousel",
-    // children: [
-    //   { name: "Users", path: "/admin/protected/users" },
-    //   { name: "Roles", path: "/admin/protected/roles" },
-    // ],
+  },
+  {
+    name: "Categories",
+    icon: Settings2,
+    children: [
+      { name: "Categories", path: "/admin/protected/category" },
+      { name: "Sub Categories", path: "/admin/protected/subcategory" },
+      { name: "Inner Categories", path: "/admin/protected/innercategory" },
+    ],
   },
   {
     name: "Products",
     icon: ShoppingCart,
     children: [
-      { name: "Categories", path: "/admin/protected/category" },
       { name: "Products", path: "/admin/protected/product" },
       { name: "Product SKUs", path: "/admin/protected/sku" },
       { name: "Latest Products", path: "/admin/protected/latest-product" },
