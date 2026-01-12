@@ -117,6 +117,9 @@ export default function ProductSKU() {
               Inactive
             </span>
           ),
+        meta_title: c.meta_title || "—",
+        meta_description: c.meta_description || "—",
+        meta_keywords: c.meta_keywords || "—",
       };
 
       if (c.variation_configurations?.length) {
@@ -749,6 +752,29 @@ function SkuFormModal({
               </div>
             </div>
           )}
+
+          <div>
+            <label className="block mb-1 font-medium text-sm">Meta Title</label>
+            <input
+              name="meta_title"
+              defaultValue={sku?.meta_title || ""}
+              placeholder="Enter Meta Title"
+              required
+              className="w-full border p-2 rounded"
+            />
+          </div>
+
+          <div>
+            <label className="block mb-1 font-medium text-sm">
+              Meta Description
+            </label>
+            <textarea
+              name="meta_description"
+              defaultValue={sku?.meta_description || ""}
+              placeholder="Enter Meta Description"
+              className="w-full border p-2 rounded"
+            />
+          </div>
 
           {/* Footer */}
           <div className="flex justify-end gap-2 border-t pt-3">

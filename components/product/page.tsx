@@ -363,7 +363,7 @@ export default function SingleProductPage() {
                         currentSku.product_id?.brand_id?.brand_image
                       }
                       alt="brand logo"
-                      className="max-h-9"
+                      className="max-h-9 max-w-32 object-cover"
                     />
                   </div>
                 </div>
