@@ -42,8 +42,8 @@ export function HomePage() {
     <div>
       <Carousel />
       <CategoriesGrid />
-      <FeaturesBar />
       <AdSection />
+      <FeaturesBar />
 
       {/* Latest Products */}
       <div className="bg-[#f5f5f9] px-4 md:px-16 md:py-10 py-8">
