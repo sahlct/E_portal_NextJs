@@ -41,6 +41,7 @@ export function HomePage() {
   return (
     <div>
       <Carousel />
+      <CategoriesGrid />
       <FeaturesBar />
       <AdSection />
 
@@ -76,8 +77,6 @@ export function HomePage() {
         </section>
       </div>
       <TopOfferTicker />
-      <CategoriesGrid />
-
       <BrandsMarquee />
       <ListingCategorySliders />
     </div>
