@@ -84,7 +84,7 @@ export default function CarouselPage() {
         ) : (
           "—"
         ),
-        // "Mobile File": c.mobile_file ? (
+        "Mobile File": c.mobile_file ? (
           // <a
           //   href={c.mobile_file}
           //   target="_blank"
@@ -94,16 +94,16 @@ export default function CarouselPage() {
           //   View Mobile Image
           // </a>
 
-        //   <a href={server_url + c.mobile_file} target="_blank" rel="noreferrer">
-        //     <img
-        //       src={server_url + c.mobile_file}
-        //       alt="sku"
-        //       className="max-w-40 object-cover rounded border"
-        //     />
-        //   </a>
-        // ) : (
-        //   "—"
-        // ),
+          <a href={server_url + c.mobile_file} target="_blank" rel="noreferrer">
+            <img
+              src={server_url + c.mobile_file}
+              alt="sku"
+              className="max-w-40 object-cover rounded border"
+            />
+          </a>
+        ) : (
+          "—"
+        ),
         Status:
           c.status === 1 ? (
             <span className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-xs font-medium">
@@ -140,12 +140,12 @@ export default function CarouselPage() {
       type: "file",
       required: !selected,
     },
-    // {
-    //   name: "mobile_file",
-    //   label: "Mobile Image",
-    //   type: "file",
-    //   required: !selected,
-    // },
+    {
+      name: "mobile_file",
+      label: "Mobile Image",
+      type: "file",
+      required: !selected,
+    },
     {
       name: "status",
       label: "Status",
@@ -238,29 +238,29 @@ export default function CarouselPage() {
                 "—"
               ),
           },
-          // {
-          //   key: "mobile_file",
-          //   label: "Mobile Image",
-          //   render: (r: any) =>
-          //     r.mobile_file ? (
-          //       <a
-          //         href={server_url + r.mobile_file}
-          //         target="_blank"
-          //         className="text-blue-600 underline"
-          //         onClick={(e) => {
-          //           e.stopPropagation();
-          //         }}
-          //       >
-          //         <img
-          //           src={server_url + r.mobile_file}
-          //           alt=""
-          //           className="max-w-32 object-cover rounded border"
-          //         />
-          //       </a>
-          //     ) : (
-          //       "—"
-          //     ),
-          // },
+          {
+            key: "mobile_file",
+            label: "Mobile Image",
+            render: (r: any) =>
+              r.mobile_file ? (
+                <a
+                  href={server_url + r.mobile_file}
+                  target="_blank"
+                  className="text-blue-600 underline"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                  }}
+                >
+                  <img
+                    src={server_url + r.mobile_file}
+                    alt=""
+                    className="max-w-32 object-cover rounded border"
+                  />
+                </a>
+              ) : (
+                "—"
+              ),
+          },
           {
             key: "status",
             label: "Status",

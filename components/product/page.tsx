@@ -9,6 +9,7 @@ import { getProductSkuById, getProductBySlug } from "@/lib/api/sku";
 import { getProductById, getVariations } from "@/lib/api/product";
 import { useCart } from "@/context/cart-context";
 import SimilarProducts from "./similarProducts";
+import { IconBrandWhatsapp } from "@tabler/icons-react";
 
 // Types
 type VariationMapItem = {
@@ -210,6 +211,12 @@ export default function SingleProductPage() {
     });
   };
 
+  const isPriceUnavailable =
+    !currentSku?.price ||
+    currentSku.price <= 0 ||
+    !currentSku?.mrp ||
+    currentSku.mrp <= 0;
+
   // Cart Logic
   const isInCart = currentSku
     ? items.some((item) => item.id === currentSku._id)
@@ -317,9 +324,16 @@ export default function SingleProductPage() {
 
             {/* Price */}
             <div className="flex items-end gap-3 mb-2 md:mb-4">
-              <div className="md:text-3xl text-2xl font-bold text-cyan-700 font-notosans">
-                AED {Number(currentSku.price).toLocaleString()}
-              </div>
+              {currentSku.price ? (
+                <div className="md:text-3xl text-2xl font-bold text-cyan-700 font-notosans">
+                  AED {Number(currentSku.price).toLocaleString()}
+                </div>
+              ) : (
+                <div className="md:text-2xl text-xl font-bold text-cyan-700 font-notosans">
+                  Product Coming Soon!
+                </div>
+              )}
+
               {currentSku.mrp ? (
                 <div className="line-through text-gray-400">
                   AED {Number(currentSku.mrp).toLocaleString()}
@@ -347,7 +361,7 @@ export default function SingleProductPage() {
               )}
             </div>
 
-            <div className="flex gap-5 items-end">
+            <div className="flex gap-3 items-end">
               {/* <div className="bg-pink-100 px-4 py-1 rounded-full text-black">
                 Brand : {currentSku.product_id?.brand_id?.brand_name}
               </div> */}
@@ -355,15 +369,17 @@ export default function SingleProductPage() {
               {/* brand */}
               {currentSku.product_id?.brand_id?.brand_image && (
                 <div className=" text-black">
-                  <span>Brand : {currentSku.product_id?.brand_id?.brand_name} </span>
-                  <div className="px-2 bg-sky-100 rounded flex justify-center">
+                  <span>
+                    Brand :{/* {currentSku.product_id?.brand_id?.brand_name} */}
+                  </span>
+                  <div className="p-2 w-fit bg-gray-100 rounded flex justify-center">
                     <img
                       src={
                         server_url +
                         currentSku.product_id?.brand_id?.brand_image
                       }
                       alt="brand logo"
-                      className="max-h-9 max-w-32 object-cover"
+                      className="max-h-10 max-w-10 object-cover"
                     />
                   </div>
                 </div>
@@ -427,31 +443,52 @@ export default function SingleProductPage() {
 
             {/* ACTION BUTTONS */}
             <div className="flex flex-col sm:flex-row gap-4 pt-4">
-              <button
-                onClick={handleAddOrRemove}
-                className={`flex-1 flex items-center justify-center gap-2 md:py-3 py-2 rounded-lg font-medium cursor-pointer transition ${
-                  isInCart
-                    ? "bg-gradient-to-r from-red-500 to-red-900 text-white hover:opacity-90"
-                    : "bg-gradient-to-r from-yellow-500 to-orange-400 text-white hover:opacity-95"
-                }`}
-              >
-                {isInCart ? (
-                  <>
-                    <Trash2 className="w-4 h-4" /> Remove from cart
-                  </>
-                ) : (
-                  <>
-                    <ShoppingCart className="w-4 h-4" /> Add to cart
-                  </>
-                )}
-              </button>
+              {isPriceUnavailable ? (
+                <a
+                  href="https://wa.me/971589216757"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex-1"
+                >
+                  <button
+                    className="w-full flex items-center justify-center gap-2 md:py-3 py-2 rounded-lg
+        font-medium transition bg-gradient-to-r from-yellow-500 to-orange-400
+        text-white hover:opacity-90 cursor-pointer"
+                  >
+                    <IconBrandWhatsapp className="w-4 h-4" />
+                    Pre-Order Now
+                  </button>
+                </a>
+              ) : (
+                <>
+                  <button
+                    onClick={handleAddOrRemove}
+                    className={`flex-1 flex items-center justify-center gap-2 md:py-3 py-2 rounded-lg font-medium cursor-pointer transition ${
+                      isInCart
+                        ? "bg-gradient-to-r from-red-500 to-red-900 text-white hover:opacity-90"
+                        : "bg-gradient-to-r from-yellow-500 to-orange-400 text-white hover:opacity-95"
+                    }`}
+                  >
+                    {isInCart ? (
+                      <>
+                        <Trash2 className="w-4 h-4" /> Remove from cart
+                      </>
+                    ) : (
+                      <>
+                        <ShoppingCart className="w-4 h-4" /> Add to cart
+                      </>
+                    )}
+                  </button>
 
-              <button
-                onClick={handleBuyNow}
-                className="flex-1 flex items-center justify-center gap-2 md:py-3 py-2 rounded-lg font-medium border border-cyan-700 text-cyan-700 hover:bg-cyan-50 cursor-pointer"
-              >
-                Buy now
-              </button>
+                  <button
+                    onClick={handleBuyNow}
+                    className="flex-1 flex items-center justify-center gap-2 md:py-3 py-2 rounded-lg
+        font-medium border border-cyan-700 text-cyan-700 hover:bg-cyan-50 cursor-pointer"
+                  >
+                    Buy now
+                  </button>
+                </>
+              )}
             </div>
 
             {/* features */}

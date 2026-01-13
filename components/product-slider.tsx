@@ -12,6 +12,7 @@ import Link from "next/link";
 import gsap from "gsap";
 import { useCart } from "@/context/cart-context";
 import { slugify } from "@/lib/slugify";
+import { IconBrandWhatsapp } from "@tabler/icons-react";
 
 interface Product {
   id: string;
@@ -57,8 +58,7 @@ export function ProductSlider({
     if (!el) return;
 
     const canScrollLeft = el.scrollLeft > 2;
-    const canScrollRight =
-      el.scrollLeft + el.clientWidth < el.scrollWidth - 2;
+    const canScrollRight = el.scrollLeft + el.clientWidth < el.scrollWidth - 2;
 
     if (window.innerWidth >= 1024) {
       setShowArrows({ left: canScrollLeft, right: canScrollRight });
@@ -84,9 +84,7 @@ export function ProductSlider({
 
     const cardWidth = isMobile ? el.clientWidth * 0.7 : 270;
     const gap = isMobile ? 20 : 24;
-    const scrollAmount = isMobile
-      ? cardWidth + gap
-      : (cardWidth + gap) * 2;
+    const scrollAmount = isMobile ? cardWidth + gap : (cardWidth + gap) * 2;
 
     gsap.to(el, {
       scrollLeft:
@@ -179,36 +177,41 @@ export function ProductSlider({
                           }`}
                         />
                       ))}
-                      <span className="text-xs ms-2">
-                        {p.rating || "4.5"}
-                      </span>
+                      <span className="text-xs ms-2">{p.rating || "4.5"}</span>
                     </div>
                   </Link>
 
                   <div className="flex md:items-center flex-col-reverse md:flex-row md:gap-2 gap-1 mt-3 font-notosans">
-                    <span className="font-semibold text-blue-700 md:text-lg text-md">
-                      AED {p.price}
-                    </span>
-                    {p.originalPrice && (
-                      <span className="line-through text-gray-400 md:text-sm text-xs">
-                        AED {p.originalPrice}
+                    {p.originalPrice ? (
+                      <div className="flex gap-2 items-center">
+                        <span className="font-semibold text-blue-700 md:text-lg text-md">
+                          AED {p.price}
+                        </span>
+                        <span className="line-through text-gray-400 md:text-sm text-xs">
+                          AED {p.originalPrice}
+                        </span>
+                      </div>
+                    ) : (
+                      <span className="font-semibold text-blue-700 md:text-lg text-md">
+                        Coming Soon!
                       </span>
                     )}
                   </div>
 
-                  <button
-                    onClick={() =>
-                      isInCart
-                        ? removeFromCart(p.id)
-                        : addToCart({
-                            id: p.id,
-                            title: p.title,
-                            price: p.price,
-                            image: p.image,
-                            category: p.category,
-                          })
-                    }
-                    className={`
+                  {p.originalPrice ? (
+                    <button
+                      onClick={() =>
+                        isInCart
+                          ? removeFromCart(p.id)
+                          : addToCart({
+                              id: p.id,
+                              title: p.title,
+                              price: p.price,
+                              image: p.image,
+                              category: p.category,
+                            })
+                      }
+                      className={`
                       w-full md:mt-4 mt-2 flex items-center justify-center gap-2
                       py-2 rounded-lg text-sm font-semibold transition cursor-pointer
                       ${
@@ -217,19 +220,34 @@ export function ProductSlider({
                           : "bg-gradient-to-r from-yellow-500 to-orange-400 text-white"
                       }
                     `}
-                  >
-                    {isInCart ? (
-                      <>
-                        <Trash2 className="w-4 h-4" />
-                        Remove from Cart
-                      </>
-                    ) : (
-                      <>
-                        <ShoppingCart className="w-4 h-4" />
-                        Add to Cart
-                      </>
-                    )}
-                  </button>
+                    >
+                      {isInCart ? (
+                        <>
+                          <Trash2 className="w-4 h-4" />
+                          Remove from Cart
+                        </>
+                      ) : (
+                        <>
+                          <ShoppingCart className="w-4 h-4" />
+                          Add to Cart
+                        </>
+                      )}
+                    </button>
+                  ) : (
+                    <a
+                      href="https://wa.me/971589216757"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex-1"
+                    >
+                      <button
+                        className="w-full md:mt-4 mt-2 py-2 rounded-lg text-sm font-semibold transition-all flex items-center justify-center gap-2
+        bg-gradient-to-r from-yellow-500 to-orange-400 cursor-pointer text-white hover:opacity-90"
+                      >
+                        <IconBrandWhatsapp className="w-4 h-4" /> Pre-Order Now
+                      </button>
+                    </a>
+                  )}
                 </div>
               </div>
             );

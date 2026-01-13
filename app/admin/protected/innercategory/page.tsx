@@ -87,14 +87,14 @@ export default function InnerCategoryPage() {
       "Inner Category Name": c.inner_category_name,
       Category: c.category_name,
       "Sub Category": c.sub_category_name,
-      Image: c.inner_category_image ? (
-        <img
-          src={server_url + c.inner_category_image}
-          className="max-w-32 rounded border"
-        />
-      ) : (
-        "—"
-      ),
+      // Image: c.inner_category_image ? (
+      //   <img
+      //     src={server_url + c.inner_category_image}
+      //     className="max-w-32 rounded border"
+      //   />
+      // ) : (
+      //   "—"
+      // ),
       Status:
         c.status === 1 ? (
           <span className="bg-green-100 px-3 py-1 rounded-full text-xs">
@@ -140,12 +140,12 @@ export default function InnerCategoryPage() {
       type: "text",
       required: true,
     },
-    {
-      name: "inner_category_image",
-      label: "Inner Category Image",
-      type: "file",
-      required: !selected,
-    },
+    // {
+    //   name: "inner_category_image",
+    //   label: "Inner Category Image",
+    //   type: "file",
+    //   required: !selected,
+    // },
     {
       name: "status",
       label: "Status",
@@ -221,19 +221,19 @@ export default function InnerCategoryPage() {
           { key: "inner_category_name", label: "Inner Category" },
           { key: "category_name", label: "Category" },
           { key: "sub_category_name", label: "Sub Category" },
-          {
-            key: "inner_category_image",
-            label: "Image",
-            render: (r: any) =>
-              r.inner_category_image ? (
-                <img
-                  src={server_url + r.inner_category_image}
-                  className="w-14 h-10 rounded border object-cover"
-                />
-              ) : (
-                "—"
-              ),
-          },
+          // {
+          //   key: "inner_category_image",
+          //   label: "Image",
+          //   render: (r: any) =>
+          //     r.inner_category_image ? (
+          //       <img
+          //         src={server_url + r.inner_category_image}
+          //         className="w-14 h-10 rounded border object-cover"
+          //       />
+          //     ) : (
+          //       "—"
+          //     ),
+          // },
           {
             key: "status",
             label: "Status",

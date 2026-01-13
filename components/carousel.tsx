@@ -16,8 +16,17 @@ export function Carousel() {
   const [slides, setSlides] = useState<any[]>([]);
   const [api, setApi] = useState<CarouselApi | null>(null);
   const [current, setCurrent] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
 
   const server_url = process.env.NEXT_PUBLIC_SERVER_URL || "";
+
+  /* ---------- detect mobile (SSR safe) ---------- */
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 640);
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, []);
 
   /* ---------- fetch slides ---------- */
   useEffect(() => {
@@ -46,7 +55,9 @@ export function Carousel() {
 
   /* ---------- loading fallback ---------- */
   if (!slides.length) {
-    return <div className="h-[300px] md:h-[400px] rounded-lg bg-muted animate-pulse" />;
+    return (
+      <div className="w-full aspect-square sm:aspect-[16/9] md:h-[400px] rounded-lg bg-muted animate-pulse" />
+    );
   }
 
   const getImageUrl = (path?: string) => {
@@ -54,8 +65,15 @@ export function Carousel() {
     return `${server_url}${path}`;
   };
 
+  const getSlideImage = (slide: any) => {
+    if (isMobile && slide.mobile_file) {
+      return getImageUrl(slide.mobile_file);
+    }
+    return getImageUrl(slide.desktop_file);
+  };
+
   return (
-    <div className="relative">
+    <div className="relative max-w-400 mx-auto">
       <ShadcnCarousel
         opts={{ loop: true }}
         setApi={setApi}
@@ -70,10 +88,10 @@ export function Carousel() {
         <CarouselContent>
           {slides.map((slide) => (
             <CarouselItem key={slide._id}>
-              <div className="relative w-full h-[180px] sm:h-[300px] md:h-[400px] overflow-hidden">
+              <div className="relative w-full aspect-square sm:aspect-[16/9] md:h-[400px] overflow-hidden">
                 {/* IMAGE */}
                 <img
-                  src={getImageUrl(slide.desktop_file)}
+                  src={getSlideImage(slide)}
                   alt={slide.title || "Slide"}
                   className="w-full h-full object-cover"
                 />

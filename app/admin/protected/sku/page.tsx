@@ -65,8 +65,8 @@ export default function ProductSKU() {
         SKU: c.sku,
         "SKU Name": c.product_sku_name,
         Product: c.product_id?.product_name || "—",
-        MRP: c.mrp,
-        Price: c.price,
+        MRP: c.mrp || "—",
+        Price: c.price || "—",
         Quantity: c.quantity,
         "Is New": c.is_new ? "Yes" : "No",
         "Out of Stock": c.is_out_of_stock ? "Yes" : "No",
@@ -624,7 +624,7 @@ function SkuFormModal({
                 name="mrp"
                 type="number"
                 defaultValue={sku?.mrp || ""}
-                required
+                // required
                 className="w-full border p-2 rounded"
               />
             </div>
@@ -634,7 +634,7 @@ function SkuFormModal({
                 name="price"
                 type="number"
                 defaultValue={sku?.price || ""}
-                required
+                // required
                 className="w-full border p-2 rounded"
               />
             </div>

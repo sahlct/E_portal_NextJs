@@ -29,7 +29,6 @@ export async function createInnerCategory(formData: FormData) {
   return apiRequest("/api/inner-category", "POST", formData, true);
 }
 
-
 export async function updateInnerCategory(id: string, formData: FormData) {
   return apiRequest(`/api/inner-category/${id}`, "PUT", formData, true);
 }

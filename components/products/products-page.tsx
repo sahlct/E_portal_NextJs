@@ -25,6 +25,7 @@ import {
   CommandInput,
   CommandItem,
 } from "@/components/ui/command";
+import { IconBrandWhatsapp } from "@tabler/icons-react";
 
 interface Category {
   _id: string;
@@ -418,61 +419,78 @@ export function ProductsPage() {
                     </p> */}
 
                     {/* Price */}
-                    <div className="flex flex-col-reverse sm:flex-row md:items-center items-start sm:gap-2 hap-1 sm:mb-4 mb-3">
-                      <span className="md:text-lg text-md font-bold text-blue-600 font-notosans">
-                        AED {price}
-                      </span>
-                      {originalPrice && (
-                        <span className="sm:text-sm text-xs text-muted-foreground line-through">
-                          AED {originalPrice}
+                    <div className="flex flex-col-reverse sm:flex-row md:items-center items-start sm:gap-2 gap-1 sm:mb-4 mb-3">
+                      {originalPrice ? (
+                        <div className="flex gap-2 items-center">
+                          <span className="md:text-lg text-md font-bold text-blue-600 font-notosans">
+                            AED {price}
+                          </span>
+
+                          {originalPrice && (
+                            <span className="sm:text-sm text-xs text-muted-foreground line-through">
+                              AED {originalPrice}
+                            </span>
+                          )}
+                        </div>
+                      ) : (
+                        <span className="md:text-lg text-md font-semibold text-sky-500 font-notosans">
+                          Coming soon!
                         </span>
                       )}
                     </div>
 
                     {/* Buttons */}
                     <div className="flex w-full">
-                      <button
-                        onClick={() => {
-                          if (isInCart) {
-                            removeFromCart(id);
-                          } else {
-                            addToCart({
-                              id,
-                              title,
-                              price,
-                              image,
-                              category: product.product_id?.category_id || "",
-                            });
-                          }
-                        }}
-                        className={`flex-1 cursor-pointer py-1.5 rounded-lg text-sm font-semibold transition-all flex items-center justify-center gap-2 ${
-                          isInCart
-                            ? "bg-gradient-to-r from-red-900 to-red-500 text-white hover:opacity-90"
-                            : "bg-gradient-to-r from-yellow-500 to-orange-400 text-white hover:opacity-90"
-                        }`}
-                      >
-                        {isInCart ? (
-                          <>
-                            <Trash2 className="w-4 h-4" />
-                            Remove
-                            <span className="hidden sm:inline px-0 mx-0">
-                              from
-                            </span>
-                            Cart
-                          </>
-                        ) : (
-                          <>
-                            <ShoppingCart className="w-4 h-4" />
-                            Add to Cart
-                          </>
-                        )}
-                      </button>
-
-                      {/* <Link href={`/product/${id}`} className="flex-1">
-                        <button className="w-full border border-yellow-600 text-yellow-600 py-1.5 rounded-lg text-sm font-semibold hover:bg-yellow-500/10 transition-colors">
-                          Details
+                      {originalPrice ? (
+                        <button
+                          onClick={() => {
+                            if (isInCart) {
+                              removeFromCart(id);
+                            } else {
+                              addToCart({
+                                id,
+                                title,
+                                price,
+                                image,
+                                category: product.product_id?.category_id || "",
+                              });
+                            }
+                          }}
+                          className={`flex-1 cursor-pointer py-1.5 rounded-lg text-sm font-semibold transition-all flex items-center justify-center gap-2 ${
+                            isInCart
+                              ? "bg-gradient-to-r from-red-900 to-red-500 text-white hover:opacity-90"
+                              : "bg-gradient-to-r from-yellow-500 to-orange-400 text-white hover:opacity-90"
+                          }`}
+                        >
+                          {isInCart ? (
+                            <>
+                              <Trash2 className="w-4 h-4" />
+                              Remove
+                              <span className="hidden sm:inline"> from </span>
+                              Cart
+                            </>
+                          ) : (
+                            <>
+                              <ShoppingCart className="w-4 h-4" />
+                              Add to Cart
+                            </>
+                          )}
                         </button>
-                      </Link> */}
+                      ) : (
+                        <a
+                          href="https://wa.me/971589216757"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex-1"
+                        >
+                          <button
+                            className="w-full py-1.5 rounded-lg text-sm font-semibold transition-all flex items-center justify-center gap-2
+        bg-gradient-to-r from-yellow-500 to-orange-400 cursor-pointer text-white hover:opacity-90"
+                          >
+                           <IconBrandWhatsapp className="w-4 h-4" /> Pre-Order Now
+                          </button>
+                        </a>
+                      )}
                     </div>
                   </div>
                 </div>
