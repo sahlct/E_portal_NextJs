@@ -9,6 +9,7 @@ import { getProductSkuById, getProductBySlug } from "@/lib/api/sku";
 import { getProductById, getVariations } from "@/lib/api/product";
 import { useCart } from "@/context/cart-context";
 import SimilarProducts from "./similarProducts";
+import ProductReviews from "./reviews";
 import { IconBrandWhatsapp } from "@tabler/icons-react";
 
 // Types
@@ -549,6 +550,11 @@ export default function SingleProductPage() {
               </div>
             )}
           </div>
+        </div>
+
+        {/* REVIEWS SECTION */}
+        <div className="mt-0 md:mt-8 pt-8 md:pt-12 border-t">
+          <ProductReviews />
         </div>
 
         {/* SIMILAR PRODUCTS */}
