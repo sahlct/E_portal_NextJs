@@ -404,8 +404,10 @@ function ProductFormModal({
   const [features, setFeatures] = useState<Feature[]>(product?.features || []);
   const [selectedCategory, setSelectedCategory] = useState<any>(null);
   const [selectedSubCategory, setSelectedSubCategory] = useState<any>(null);
+  const [selectedInnerCategory, setSelectedInnerCategory] = useState<any>(null);
   const [subCategories, setSubCategories] = useState<any[]>([]);
   const [innerCategories, setInnerCategories] = useState<any[]>([]);
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
   const [advantages, setAdvantages] = useState<string[]>(
     product?.advantages?.length ? product.advantages : [""]
   );
@@ -433,24 +435,39 @@ function ProductFormModal({
     if (!selectedCategory) {
       setSubCategories([]);
       setSelectedSubCategory(null);
+      setSelectedInnerCategory(null);
       return;
     }
 
     getSubCategories(1, 100, undefined, 1, selectedCategory.value).then(
       (res) => {
-        setSubCategories(
-          res.data.map((s: any) => ({
-            label: s.sub_category_name,
-            value: s._id,
-          }))
-        );
+        const formattedSubCats = res.data.map((s: any) => ({
+          label: s.sub_category_name,
+          value: s._id,
+        }));
+        setSubCategories(formattedSubCats);
+
+        // Auto-select subcategory only on initial load from product data
+        if (isInitialLoad && product?.sub_category_id) {
+          const subCatOption = formattedSubCats.find(
+            (sc :any) => sc.value === product.sub_category_id
+          );
+          if (subCatOption) {
+            setSelectedSubCategory(subCatOption);
+          }
+        } else {
+          // User manually changed category - clear sub and inner categories
+          setSelectedSubCategory(null);
+          setSelectedInnerCategory(null);
+        }
       }
     );
-  }, [selectedCategory]);
+  }, [selectedCategory, product?.sub_category_id, isInitialLoad]);
 
   useEffect(() => {
     if (!selectedSubCategory) {
       setInnerCategories([]);
+      setSelectedInnerCategory(null);
       return;
     }
 
@@ -462,14 +479,37 @@ function ProductFormModal({
       selectedCategory?.value,
       selectedSubCategory.value
     ).then((res) => {
-      setInnerCategories(
-        res.data.map((i: any) => ({
-          label: i.inner_category_name,
-          value: i._id,
-        }))
-      );
+      const formattedInnerCats = res.data.map((i: any) => ({
+        label: i.inner_category_name,
+        value: i._id,
+      }));
+      setInnerCategories(formattedInnerCats);
+
+      // Auto-select inner category only on initial load from product data
+      if (isInitialLoad && product?.inner_category_id) {
+        const innerCatOption = formattedInnerCats.find(
+          (ic : any) => ic.value === product.inner_category_id
+        );
+        if (innerCatOption) {
+          setSelectedInnerCategory(innerCatOption);
+        }
+      } else {
+        // User manually changed subcategory - clear inner category
+        setSelectedInnerCategory(null);
+      }
     });
-  }, [selectedSubCategory]);
+  }, [selectedSubCategory, product?.inner_category_id, selectedCategory?.value, isInitialLoad]);
+
+  // Auto-select category on edit
+  useEffect(() => {
+    if (product?.category_id && categories.length > 0) {
+      const catOption = categories.find((c) => c.value === product.category_id);
+      if (catOption) {
+        setSelectedCategory(catOption);
+        setIsInitialLoad(true);
+      }
+    }
+  }, [product?.category_id, categories]);
 
   // Load existing image preview on edit
   useEffect(() => {
@@ -527,6 +567,9 @@ function ProductFormModal({
 
       formData.set("category_id", selectedCategory.value);
       formData.set("sub_category_id", selectedSubCategory.value);
+      if (selectedInnerCategory) {
+        formData.set("inner_category_id", selectedInnerCategory.value);
+      }
 
       // const advantages = advantagesInput
       //   .split(",")
@@ -630,7 +673,10 @@ function ProductFormModal({
             <Select
               options={categories}
               value={selectedCategory}
-              onChange={(v) => setSelectedCategory(v)}
+              onChange={(v) => {
+                setSelectedCategory(v);
+                setIsInitialLoad(false);
+              }}
               placeholder="Select category"
             />
           </div>
@@ -642,7 +688,10 @@ function ProductFormModal({
             <Select
               options={subCategories}
               value={selectedSubCategory}
-              onChange={(v) => setSelectedSubCategory(v)}
+              onChange={(v) => {
+                setSelectedSubCategory(v);
+                setIsInitialLoad(false);
+              }}
               isDisabled={!selectedCategory}
               placeholder="Select sub category"
             />
@@ -655,7 +704,8 @@ function ProductFormModal({
             </label>
             <Select
               options={innerCategories}
-              name="inner_category_id"
+              value={selectedInnerCategory}
+              onChange={(v) => setSelectedInnerCategory(v)}
               isDisabled={!selectedSubCategory}
               placeholder="Select inner category"
             />

@@ -23,7 +23,7 @@ const DUMMY_REVIEWS: Review[] = [
     date: "2025-01-15",
     title: "Excellent Product Quality",
     content:
-      "This product exceeded my expectations. The build quality is outstanding and it arrived in perfect condition. The packaging was secure and the delivery was quick. I'm very satisfied with my purchase and would highly recommend this to anyone looking for reliability and value for money.",
+      "Outstanding build quality with secure packaging. Delivery was quick and product is perfect. Highly recommended!",
     verified: true,
   },
   {
@@ -33,7 +33,7 @@ const DUMMY_REVIEWS: Review[] = [
     date: "2025-01-12",
     title: "Great Value and Performance",
     content:
-      "Amazing product! It works exactly as described. The performance is smooth and efficient. I've been using it for a couple of weeks now and it hasn't disappointed me once. Great customer service too. Will definitely purchase again.",
+      "Works exactly as described. Smooth performance and great customer service. Will purchase again!",
     verified: true,
   },
   {
@@ -43,7 +43,7 @@ const DUMMY_REVIEWS: Review[] = [
     date: "2025-01-10",
     title: "Good Quality, Fast Delivery",
     content:
-      "Very pleased with this purchase. The item is well-made and functions perfectly. Delivery was faster than expected. Minor note: the product could come with more accessories, but overall it's a solid purchase at this price point.",
+      "Well-made and functions perfectly. Faster delivery than expected. Solid purchase at this price point.",
     verified: true,
   },
   {
@@ -53,7 +53,7 @@ const DUMMY_REVIEWS: Review[] = [
     date: "2025-01-08",
     title: "Best Purchase This Month",
     content:
-      "Absolutely fantastic! The quality is premium and it arrived promptly. The product is exactly what I was looking for. Very impressed with the attention to detail in the packaging and product design. Definitely worth the investment.",
+      "Premium quality with excellent packaging. Exactly what I was looking for. Definitely worth the investment!",
     verified: true,
   },
   {
@@ -63,7 +63,7 @@ const DUMMY_REVIEWS: Review[] = [
     date: "2025-01-05",
     title: "Highly Recommended",
     content:
-      "Outstanding product! I was initially skeptical but after receiving and using it, I'm completely satisfied. The quality is exceptional and it performs flawlessly. The seller was also very responsive to my questions. Highly recommended for anyone considering this product.",
+      "Exceptional quality and flawless performance. Seller was responsive. Highly recommended!",
     verified: true,
   },
   {
@@ -73,7 +73,7 @@ const DUMMY_REVIEWS: Review[] = [
     date: "2025-01-02",
     title: "Reliable and Durable",
     content:
-      "Great product overall. Very reliable and built to last. The design is sleek and modern. It arrived in excellent condition. The only reason I'm giving 4 stars instead of 5 is that the manual could be more detailed, but the product itself is superb.",
+      "Reliable and built to last. Sleek design, arrived in excellent condition. Product is superb!",
     verified: true,
   },
   {
@@ -83,7 +83,7 @@ const DUMMY_REVIEWS: Review[] = [
     date: "2024-12-30",
     title: "Perfect Quality and Service",
     content:
-      "I couldn't ask for better. The product quality is top-notch and the customer service was exceptional. Every aspect of my experience was positive, from ordering to delivery. This company clearly cares about customer satisfaction. Will be ordering again!",
+      "Top-notch quality and exceptional service. Positive experience from ordering to delivery. Will order again!",
     verified: true,
   },
   {
@@ -93,7 +93,7 @@ const DUMMY_REVIEWS: Review[] = [
     date: "2024-12-28",
     title: "Solid Product",
     content:
-      "This is a solid, well-engineered product. It does exactly what it's supposed to do without any issues. The design is practical and user-friendly. Good value for the money. Arrived safely and quickly. Would recommend to friends and family.",
+      "Well-engineered and practical. Good value for money, arrived safely and quickly. Recommended!",
     verified: true,
   },
   {
@@ -103,7 +103,7 @@ const DUMMY_REVIEWS: Review[] = [
     date: "2024-12-25",
     title: "Exceeded Expectations",
     content:
-      "I was expecting a decent product but this is truly exceptional. The attention to detail is remarkable. It feels premium and works flawlessly. The delivery team was professional and helpful. This is exactly what quality looks like. Highly satisfied!",
+      "Truly exceptional with remarkable details. Premium feel and flawless performance. Professional delivery. Highly satisfied!",
     verified: true,
   },
 //   {
@@ -121,8 +121,8 @@ const DUMMY_REVIEWS: Review[] = [
 export default function ProductReviews() {
   const [showAllReviews, setShowAllReviews] = useState(false);
   const displayedReviews = showAllReviews
-    ? DUMMY_REVIEWS
-    : DUMMY_REVIEWS.slice(0, 3);
+    ? DUMMY_REVIEWS.slice(0, 5)
+    : DUMMY_REVIEWS.slice(0, 1);
 
   const averageRating =
     (DUMMY_REVIEWS.reduce((sum, review) => sum + review.rating, 0) /
