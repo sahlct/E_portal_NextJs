@@ -56,7 +56,7 @@ export function Carousel() {
   /* ---------- loading fallback ---------- */
   if (!slides.length) {
     return (
-      <div className="w-full aspect-square sm:aspect-[16/9] md:h-[400px] rounded-lg bg-muted animate-pulse" />
+      <div className="w-full aspect-square sm:aspect-[320/97] lg:max-h-[400px] rounded-lg bg-muted animate-pulse" />
     );
   }
 
@@ -88,7 +88,7 @@ export function Carousel() {
         <CarouselContent>
           {slides.map((slide) => (
             <CarouselItem key={slide._id}>
-              <div className="relative w-full aspect-square sm:aspect-[16/9] md:h-[400px] overflow-hidden">
+              <div className="relative w-full aspect-square sm:aspect-[320/97] lg:max-h-[400px] overflow-hidden">
                 {/* IMAGE */}
                 <img
                   src={getSlideImage(slide)}
