@@ -10,6 +10,7 @@ import FeaturesBar from "../featuresBar";
 import AdSection from "./adsection";
 import TopOfferTicker from "../topofferPicker";
 import ListingCategorySliders from "./listingCategorySliders";
+import CategoryTopbar from "./categorytopbar";
 
 export function HomePage() {
   const [latestProducts, setLatestProducts] = useState<any[]>([]);
@@ -40,6 +41,7 @@ export function HomePage() {
 
   return (
     <div>
+      <CategoryTopbar />
       <Carousel />
       <CategoriesGrid />
       <AdSection />
