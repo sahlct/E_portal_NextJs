@@ -20,14 +20,16 @@ export function HomePage() {
     const fetchLatestProducts = async () => {
       try {
         const res = await getProductSkus(
-          1,
-          10,
-          "",
-          "1",
-          undefined,
-          undefined,
-          "",
-          true
+          1,           // page
+          10,          // limit
+          "",          // search
+          "1",         // status
+          undefined,   // product_id
+          undefined,   // category_id
+          undefined,   // sub_category_id
+          undefined,   // inner_category_id
+          undefined,   // brand_id
+          true         // is_new
         );
         setLatestProducts(res?.data || []);
       } catch (err) {

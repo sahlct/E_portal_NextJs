@@ -166,13 +166,16 @@ export default function CategoryTopbar() {
             "
           >
             {categories.map((category) => (
-              <div
+              <Link
                 key={category._id}
+                href={`/public/category?category=${slugify(category.category_name)}`}
                 className="flex-shrink-0"
-                onMouseEnter={(e) => handleMouseEnter(e, category)}
-                onMouseLeave={handleMouseLeave}
               >
-                <div className="flex flex-col items-center gap-2 cursor-pointer">
+                <div
+                  className="flex flex-col items-center gap-2 cursor-pointer"
+                  onMouseEnter={(e) => handleMouseEnter(e as any, category)}
+                  onMouseLeave={handleMouseLeave}
+                >
                   <div
                     className="
                       w-16 h-16 sm:w-20 sm:h-20
@@ -200,7 +203,7 @@ export default function CategoryTopbar() {
                     {category.category_name}
                   </span>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
 
@@ -237,7 +240,7 @@ export default function CategoryTopbar() {
             {subCategories.map((subCat) => (
               <Link
                 key={subCat._id}
-                href={`/public/products?category=${slugify(
+                href={`/public/category?category=${slugify(
                   dropdown.category!.category_name,
                 )}&subCategory=${slugify(subCat.sub_category_name)}`}
                 className="

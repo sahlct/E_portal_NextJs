@@ -13,6 +13,8 @@ export async function getProductSkus(
   status?: string,
   product_id?: string,
   category_id?: string,
+  sub_category_id?: string,
+  inner_category_id?: string,
   brand_id?: string,      
   is_new?: boolean
 ) {
@@ -23,9 +25,11 @@ export async function getProductSkus(
 
   if (search) params.append("search", search);
   if (status) params.append("status", status);
-  if (product_id) params.append("product_id", product_id);
-  if (category_id) params.append("category_id", category_id);
-  if (brand_id) params.append("brand_id", brand_id); // ✅ added
+  if (product_id && typeof product_id === "string" && product_id.length > 0) params.append("product_id", product_id);
+  if (category_id && typeof category_id === "string" && category_id.length > 0) params.append("category_id", category_id);
+  if (sub_category_id && typeof sub_category_id === "string" && sub_category_id.length > 0) params.append("sub_category_id", sub_category_id);
+  if (inner_category_id && typeof inner_category_id === "string" && inner_category_id.length > 0) params.append("inner_category_id", inner_category_id);
+  if (brand_id && typeof brand_id === "string" && brand_id.length > 0) params.append("brand_id", brand_id);
   if (is_new !== undefined) params.append("is_new", String(is_new));
 
   return apiRequest(`/api/product-sku?${params.toString()}`, "GET");

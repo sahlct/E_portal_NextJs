@@ -1,8 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import Marquee from "react-fast-marquee";
 import { getBrands } from "@/lib/api/brands";
+import { slugify } from "@/lib/slugify";
 
 interface Brand {
   _id: string;
@@ -35,9 +37,9 @@ export function BrandsMarquee() {
     Array.isArray(brands) && brands.length > 0
       ? brands
       : [
-          { _id: "fallback-1", brand_logo: "/placeholder.svg" },
-          { _id: "fallback-2", brand_logo: "/placeholder.svg" },
-          { _id: "fallback-3", brand_logo: "/placeholder.svg" },
+          { _id: "fallback-1", brand_name: "Brand", brand_image: "/placeholder.svg" },
+          { _id: "fallback-2", brand_name: "Brand", brand_image: "/placeholder.svg" },
+          { _id: "fallback-3", brand_name: "Brand", brand_image: "/placeholder.svg" },
         ];
 
   return (
@@ -61,19 +63,23 @@ export function BrandsMarquee() {
           >
             <div className="flex items-center">
               {items.map((brand, index) => (
-                <div
+                <Link
                   key={brand._id + index}
-                  className="bg-white rounded-2xl shadow-sm border border-gray-200 
-                   md:w-52 w-32 md:h-32 h-20 md:mx-5 mx-3 flex items-center justify-center 
-                   hover:shadow-md transition-all duration-300 p-4 overflow-hidden"
+                  href={`/public/brand?brand=${slugify(brand.brand_name)}`}
                 >
-                  <img
-                    src={server_url + brand?.brand_image || "/placeholder.svg"}
-                    alt="Brand Logo"
-                    className="h-full object-contain hover:scale-105 transition-transform"
-                    draggable={false}
-                  />
-                </div>
+                  <div
+                    className="bg-white rounded-2xl shadow-sm border border-gray-200 
+                     md:w-52 w-32 md:h-32 h-20 md:mx-5 mx-3 flex items-center justify-center 
+                     hover:shadow-md transition-all duration-300 p-4 overflow-hidden cursor-pointer"
+                  >
+                    <img
+                      src={server_url + brand?.brand_image || "/placeholder.svg"}
+                      alt={brand.brand_name}
+                      className="h-full object-contain hover:scale-105 transition-transform"
+                      draggable={false}
+                    />
+                  </div>
+                </Link>
               ))}
             </div>
           </Marquee>

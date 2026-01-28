@@ -15,8 +15,8 @@ export async function getInnerCategories(
 
   if (search) params.append("search", search);
   if (status !== undefined) params.append("status", String(status));
-  if (category_id) params.append("category_id", category_id);
-  if (sub_category_id) params.append("sub_category_id", sub_category_id);
+  if (category_id && typeof category_id === "string" && category_id.length > 0) params.append("category_id", category_id);
+  if (sub_category_id && typeof sub_category_id === "string" && sub_category_id.length > 0) params.append("sub_category_id", sub_category_id);
 
   return apiRequest(`/api/inner-category?${params.toString()}`, "GET");
 }

@@ -117,17 +117,22 @@ export function ProductsPage() {
         20,
         debouncedSearch,
         "1",
-        undefined,
-        selectedCategory === "all" ? undefined : selectedCategory,
-        selectedBrand
+        undefined, // product_id
+        selectedCategory === "all" ? undefined : selectedCategory, // category_id
+        undefined, // sub_category_id
+        undefined, // inner_category_id
+        selectedBrand, // brand_id
+        undefined // is_new
       );
 
       setProducts(res?.data || []);
       const total = res?.total || 0;
       setTotalPages(Math.ceil(total / 20) || 1);
     } catch (err) {
-      toast.error("Failed to load products");
-      console.error(err);
+      // Log error but don't show toast - let the "No products found" message show instead
+      console.error("Error loading products:", err);
+      setProducts([]);
+      setTotalPages(1);
     } finally {
       setLoading(false);
     }
